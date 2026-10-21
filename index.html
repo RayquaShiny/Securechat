@@ -36,7 +36,6 @@
   </script>
 
   <style>
-    /* Global scrollbar and touchscreen polish */
     body {
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
@@ -55,9 +54,6 @@
       background: rgba(55, 65, 81, 0.8);
       border-radius: 9999px;
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(75, 85, 99, 1);
-    }
 
     .glass-panel {
       background: rgba(17, 24, 39, 0.85);
@@ -65,15 +61,7 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
-    
-    .glass-card {
-      background: rgba(31, 41, 55, 0.6);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
 
-    /* Pulse animation for active encryption status */
     @keyframes pulse-glow {
       0%, 100% { box-shadow: 0 0 15px rgba(34, 197, 94, 0.3); }
       50% { box-shadow: 0 0 25px rgba(34, 197, 94, 0.6); }
@@ -85,9 +73,7 @@
 </head>
 <body class="min-h-screen min-h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-x-hidden">
 
-  <!-- ========================================== -->
-  <!-- 1. SCREEN DE CONNEXION (MOBILE ACCESSIBLE) -->
-  <!-- ========================================== -->
+  <!-- 1. ECRAN DE CONNEXION -->
   <div id="authScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-darkbg/95 backdrop-blur-xl overflow-y-auto -webkit-overflow-scrolling-touch">
     <div class="w-full max-w-md my-auto glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl border border-white/10 space-y-6">
       <div class="text-center space-y-2">
@@ -141,15 +127,11 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- 2. APPLICATION PRINCIPALE (MAIN CHAT UI)   -->
-  <!-- ========================================== -->
+  <!-- 2. APPLICATION PRINCIPALE -->
   <div id="appContainer" class="hidden min-h-screen min-h-[100dvh] flex flex-col bg-darkbg">
     
-    <!-- TOP HEADER BAR -->
     <header class="h-16 border-b border-gray-800 bg-darkpanel/80 backdrop-blur-md px-4 flex items-center justify-between shrink-0 sticky top-0 z-30">
       <div class="flex items-center gap-3">
-        <!-- Drawer Toggle Mobile -->
         <button onclick="toggleSidebar()" class="lg:hidden p-2 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800">
           <i data-lucide="menu" class="w-6 h-6"></i>
         </button>
@@ -171,20 +153,16 @@
         </div>
       </div>
 
-      <!-- Header Right Controls -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Rayqua Admin Button -->
         <button id="adminBtn" onclick="openAdminModal()" class="hidden px-3 py-1.5 text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 transition flex items-center gap-1.5 font-medium">
           <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Créer un compte</span>
         </button>
 
-        <!-- Help/GitHub Deployment Modal Toggle -->
         <button onclick="openHelpModal()" class="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition" title="Guide GitHub Pages">
           <i data-lucide="help-circle" class="w-5 h-5"></i>
         </button>
 
-        <!-- User Profile Tag & Logout -->
         <div class="flex items-center gap-2 pl-2 border-l border-gray-800">
           <div id="userAvatar" class="w-8 h-8 rounded-full bg-brand-700 text-white font-bold flex items-center justify-center text-xs">
             U
@@ -200,16 +178,10 @@
       </div>
     </header>
 
-    <!-- MAIN CHAT BODY -->
     <div class="flex-1 flex overflow-hidden relative">
-      
-      <!-- BACKDROP MOBILE FOR SIDEBAR -->
       <div id="sidebarOverlay" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/60 z-30 lg:hidden backdrop-blur-sm"></div>
 
-      <!-- SIDEBAR (CHANNELS & CONTACTS) -->
       <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-darkpanel border-r border-gray-800 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0">
-        
-        <!-- Channels Section -->
         <div class="p-4 border-b border-gray-800">
           <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Salons Chiffrés</p>
           <nav class="space-y-1">
@@ -235,7 +207,6 @@
           </nav>
         </div>
 
-        <!-- Direct Call Actions -->
         <div class="p-4 border-b border-gray-800 space-y-2">
           <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Appels Chiffrés (WebRTC)</p>
           <button onclick="startCall('audio')" class="w-full py-2.5 px-3 bg-gray-800 hover:bg-gray-700 text-xs font-medium rounded-xl text-gray-200 border border-gray-700/80 flex items-center justify-center gap-2 transition active:scale-[0.98]">
@@ -248,28 +219,21 @@
           </button>
         </div>
 
-        <!-- Users List -->
         <div class="flex-1 overflow-y-auto p-4 space-y-3">
           <div class="flex items-center justify-between">
             <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Membres Autorisés</p>
             <span id="usersCount" class="text-[10px] bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded">0</span>
           </div>
-          <div id="usersListContainer" class="space-y-1.5">
-            <!-- Dynamic Users Injected Here -->
-          </div>
+          <div id="usersListContainer" class="space-y-1.5"></div>
         </div>
 
-        <!-- Security Footer Badge -->
         <div class="p-3 border-t border-gray-800 bg-gray-950/50 text-[11px] text-gray-400 flex items-center gap-2">
           <i data-lucide="key" class="w-4 h-4 text-brand-400 shrink-0"></i>
           <span>Clé dynamique unique / message</span>
         </div>
       </aside>
 
-      <!-- CHAT MAIN CONTENT AREA -->
       <main class="flex-1 flex flex-col h-full overflow-hidden bg-darkbg">
-        
-        <!-- Channel Info Header -->
         <div class="h-12 border-b border-gray-800/80 px-4 flex items-center justify-between bg-darkpanel/40 shrink-0">
           <div class="flex items-center gap-2">
             <i data-lucide="hash" class="w-4 h-4 text-gray-400"></i>
@@ -285,12 +249,8 @@
           </div>
         </div>
 
-        <!-- Messages Area -->
-        <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4 -webkit-overflow-scrolling-touch">
-          <!-- Messages will be injected here dynamically -->
-        </div>
+        <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4 -webkit-overflow-scrolling-touch"></div>
 
-        <!-- Message Input Box -->
         <div class="p-3 sm:p-4 border-t border-gray-800 bg-darkpanel/80 shrink-0">
           <form onsubmit="sendMessage(event)" class="flex items-center gap-2">
             <button type="button" onclick="triggerEmojiPicker()" class="p-2.5 text-gray-400 hover:text-white rounded-xl hover:bg-gray-800 transition">
@@ -303,14 +263,11 @@
             </button>
           </form>
         </div>
-
       </main>
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- 3. WEBRTC CALL OVERLAY MODAL              -->
-  <!-- ========================================== -->
+  <!-- APPEL WEBRTC OVERLAY -->
   <div id="callOverlay" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col p-4 sm:p-6 overflow-y-auto">
     <div class="flex items-center justify-between text-white border-b border-gray-800 pb-4 mb-4">
       <div class="flex items-center gap-2">
@@ -337,7 +294,6 @@
       </div>
     </div>
 
-    <!-- Call Actions -->
     <div class="flex items-center justify-center gap-4 pt-4 border-t border-gray-800">
       <button onclick="toggleMute()" id="muteBtn" class="p-3.5 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-full transition">
         <i data-lucide="mic" class="w-5 h-5"></i>
@@ -348,9 +304,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- 4. RAYQUA ADMIN PANEL MODAL               -->
-  <!-- ========================================== -->
+  <!-- PANNEAU ADMIN RAYQUA -->
   <div id="adminModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="w-full max-w-md glass-panel p-6 rounded-2xl border border-amber-500/20 space-y-4 max-h-[85vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-gray-800 pb-3">
@@ -384,16 +338,12 @@
 
       <div class="pt-3 border-t border-gray-800">
         <p class="text-[11px] font-bold text-gray-400 uppercase mb-2">Comptes enregistrés</p>
-        <div id="adminUsersList" class="space-y-1.5 text-xs max-h-32 overflow-y-auto">
-          <!-- Account list -->
-        </div>
+        <div id="adminUsersList" class="space-y-1.5 text-xs max-h-32 overflow-y-auto"></div>
       </div>
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- 5. GUIDE DÉPLOIEMENT GITHUB PAGES MODAL   -->
-  <!-- ========================================== -->
+  <!-- GUIDE HELP -->
   <div id="helpModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="w-full max-w-xl glass-panel p-6 rounded-2xl border border-gray-800 space-y-4 max-h-[85vh] overflow-y-auto text-xs sm:text-sm">
       <div class="flex items-center justify-between border-b border-gray-800 pb-3">
@@ -412,20 +362,13 @@
         <li>Collez l'intégralité du code de cette page dans ce fichier et enregistrez (<code class="bg-gray-800 px-1.5 py-0.5 rounded">Commit</code>).</li>
         <li>Dans les paramètres du dépôt (<code class="bg-gray-800 px-1.5 py-0.5 rounded">Settings</code> &gt; <code class="bg-gray-800 px-1.5 py-0.5 rounded">Pages</code>), choisissez la branche <code class="bg-gray-800 px-1.5 py-0.5 rounded text-brand-400">main</code> / <code class="bg-gray-800 px-1.5 py-0.5 rounded">root</code> et sauvegardez.</li>
       </ol>
-
-      <div class="p-3 bg-brand-500/10 border border-brand-500/20 rounded-xl text-brand-300 text-xs">
-        Votre site sera disponible sur : <br>
-        <span class="font-mono text-white">https://[votre-pseudo].github.io/mon-chat-securise/</span>
-      </div>
     </div>
   </div>
 
-  <!-- Javascript Application Logic -->
+  <!-- LOGIQUE JS SÉCURISÉE & CORRIGÉE -->
   <script>
-    // System Database Initialization
     const DEFAULT_ACCOUNTS = {
-      'rayqua': { username: 'Rayqua', name: 'Rayqua (Admin)', role: 'Admin', pass: 'popopoPO99+' },
-      'ami1': { username: 'ami1', name: 'Ami Invité 1', role: 'Membre', pass: 'pass123' }
+      'rayqua': { username: 'rayqua', name: 'Rayqua (Admin)', role: 'Admin', pass: 'popopoPO99+' }
     };
 
     let accounts = JSON.parse(localStorage.getItem('crypt_accounts')) || DEFAULT_ACCOUNTS;
@@ -433,7 +376,6 @@
     let currentChannel = 'general';
     let callTimerInterval = null;
 
-    // Messages storage
     let messages = JSON.parse(localStorage.getItem('crypt_messages')) || [
       { id: 1, sender: 'Rayqua (Admin)', text: 'Bienvenue sur le chat chiffré x3 !', time: '12:00', nonce: 'a8f9c1...3b', channel: 'general' }
     ];
@@ -451,18 +393,18 @@
       localStorage.setItem('crypt_messages', JSON.stringify(messages));
     }
 
-    // LOGIN LOGIC
+    // CORRECTION CONNEXION Insensible à la casse sur le username
     function handleLogin(e) {
       e.preventDefault();
-      const u = document.getElementById('loginUsername').value.trim().toLowerCase();
-      const p = document.getElementById('loginPassword').value;
+      const uInput = document.getElementById('loginUsername').value.trim();
+      const uKey = uInput.toLowerCase();
+      const pInput = document.getElementById('loginPassword').value;
       const errorEl = document.getElementById('loginError');
 
-      if (accounts[u] && accounts[u].pass === p) {
-        currentUser = accounts[u];
+      if (accounts[uKey] && accounts[uKey].pass === pInput) {
+        currentUser = accounts[uKey];
         errorEl.classList.add('hidden');
         
-        // Setup UI for User
         document.getElementById('authScreen').classList.add('hidden');
         document.getElementById('appContainer').classList.remove('hidden');
         document.getElementById('userNameDisplay').textContent = currentUser.name;
@@ -490,7 +432,7 @@
       document.getElementById('loginPassword').value = '';
     }
 
-    // RAYQUA ADMIN MANAGEMENT
+    // CREATION DE COMPTES PAR RAYQUA
     function openAdminModal() {
       if (currentUser && currentUser.role === 'Admin') {
         document.getElementById('adminModal').classList.remove('hidden');
@@ -503,13 +445,14 @@
 
     function handleCreateUser(e) {
       e.preventDefault();
-      const u = document.getElementById('newUsername').value.trim().toLowerCase();
+      const rawUser = document.getElementById('newUsername').value.trim();
+      const keyUser = rawUser.toLowerCase();
       const name = document.getElementById('newDisplayName').value.trim();
       const pass = document.getElementById('newPassword').value;
 
-      if (!u || !pass) return;
+      if (!keyUser || !pass) return;
 
-      accounts[u] = { username: u, name: name || u, role: 'Membre', pass: pass };
+      accounts[keyUser] = { username: rawUser, name: name || rawUser, role: 'Membre', pass: pass };
       saveAccounts();
       updateAdminUsersList();
       renderUsersList();
@@ -518,7 +461,7 @@
       document.getElementById('newDisplayName').value = '';
       document.getElementById('newPassword').value = '';
 
-      alert('Compte pour ' + u + ' créé avec succès !');
+      alert('Le compte "' + rawUser + '" a été créé ! Ton ami peut maintenant se connecter avec ce mot de passe.');
     }
 
     function updateAdminUsersList() {
@@ -565,7 +508,6 @@
       });
     }
 
-    // CHAT & MESSAGING (DYNAMIC NONCE ENCRYPTION)
     function selectChannel(chan) {
       currentChannel = chan;
       document.getElementById('currentChannelTitle').textContent = 
@@ -656,7 +598,6 @@
       input.focus();
     }
 
-    // WEBRTC CALL SIMULATION
     function startCall(type) {
       document.getElementById('callOverlay').classList.remove('hidden');
       document.getElementById('callTypeTitle').textContent = type === 'video' ? 'Visio Chiffrée (WebRTC)' : 'Appel Vocal Chiffré';
@@ -687,7 +628,6 @@
       btn.classList.toggle('bg-red-600');
     }
 
-    // UI SIDEBAR & MODAL CONTROLS
     function toggleSidebar(forceState) {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('sidebarOverlay');
