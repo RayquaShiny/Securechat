@@ -66,6 +66,11 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
+
+    .msg-bubble {
+      background-clip: padding-box;
+      -webkit-background-clip: padding-box;
+    }
   </style>
 </head>
 <body class="h-screen h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-hidden">
@@ -122,7 +127,7 @@
     
     <header class="h-16 border-b border-gray-800 bg-darkpanel/80 backdrop-blur-md px-4 flex items-center justify-between shrink-0 z-30">
       <div class="flex items-center gap-3">
-        <button onclick="toggleSidebar()" class="lg:hidden p-2 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800">
+        <button onclick="toggleSidebar()" class="lg:hidden p-2 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800" title="Ouvrir le menu">
           <i data-lucide="menu" class="w-6 h-6"></i>
         </button>
         
@@ -136,7 +141,7 @@
               <!-- BOUTON CHANGELOG VERSION -->
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v1.8.0</span>
+                <span>v1.8.1</span>
               </button>
             </h2>
           </div>
@@ -165,12 +170,19 @@
     </header>
 
     <div class="flex-1 flex overflow-hidden relative">
-      <div id="sidebarOverlay" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/60 z-30 lg:hidden backdrop-blur-sm"></div>
+      <!-- OVERLAY MOBILES -->
+      <div id="sidebarOverlay" onclick="toggleSidebar(false)" class="hidden fixed inset-0 bg-black/70 z-40 lg:hidden backdrop-blur-sm"></div>
 
-      <!-- SIDEBAR INDÉPENDANTE AVEC SON PROPRE SCROLL -->
-      <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-darkpanel border-r border-gray-800 flex flex-col h-full overflow-y-auto transition-transform duration-300 -translate-x-full lg:translate-x-0 shrink-0">
+      <!-- SIDEBAR COMPATIBLE IPHONE ET PC -->
+      <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-72 bg-darkpanel border-r border-gray-800 flex flex-col h-full overflow-y-auto transition-transform duration-300 -translate-x-full lg:translate-x-0 shrink-0">
+        <div class="p-4 border-b border-gray-800 shrink-0 flex items-center justify-between">
+          <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Salons Chiffrés</p>
+          <button onclick="toggleSidebar(false)" class="lg:hidden text-gray-400 hover:text-white p-1">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
         <div class="p-4 border-b border-gray-800 shrink-0">
-          <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Salons Chiffrés</p>
           <nav class="space-y-1">
             <button onclick="selectChannel('general')" id="chan-general" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between bg-brand-500/10 text-brand-400 border border-brand-500/20">
               <span class="flex items-center gap-2">
@@ -178,7 +190,7 @@
                 <span>Général</span>
               </span>
               <div class="flex items-center gap-2">
-                <span id="dot-general" class="w-2 h-2 rounded-full bg-brand-500 hidden" title="Nouveau message"></span>
+                <span id="dot-general" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span>
                 <span class="w-2 h-2 rounded-full bg-brand-500" id="indicator-general"></span>
               </div>
             </button>
@@ -188,7 +200,7 @@
                 <span>Salon Vocal</span>
               </span>
               <div class="flex items-center gap-2">
-                <span id="dot-vocal" class="w-2 h-2 rounded-full bg-brand-500 hidden" title="Nouveau message"></span>
+                <span id="dot-vocal" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span>
                 <span class="w-2 h-2 rounded-full bg-brand-500 hidden" id="indicator-vocal"></span>
               </div>
             </button>
@@ -198,14 +210,14 @@
                 <span>Projets Privés</span>
               </span>
               <div class="flex items-center gap-2">
-                <span id="dot-projets" class="w-2 h-2 rounded-full bg-brand-500 hidden" title="Nouveau message"></span>
+                <span id="dot-projets" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span>
                 <span class="w-2 h-2 rounded-full bg-brand-500 hidden" id="indicator-projets"></span>
               </div>
             </button>
           </nav>
         </div>
 
-        <div class="p-4 space-y-3">
+        <div class="p-4 space-y-3 flex-1 overflow-y-auto">
           <div class="flex items-center justify-between">
             <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Membres (Clique pour DM)</p>
             <span id="usersCount" class="text-[10px] bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded">0</span>
@@ -226,19 +238,19 @@
           </div>
         </div>
 
-        <!-- ZONE DE MESSAGES SCROLLABLE INDÉPENDANTE -->
+        <!-- ZONE DE MESSAGES -->
         <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
 
         <div class="p-3 sm:p-4 border-t border-gray-800 bg-darkpanel/80 shrink-0">
           <form onsubmit="sendMessage(event)" class="flex items-center gap-2">
             <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
-            <button type="button" onclick="triggerImageUpload()" class="p-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition flex items-center justify-center" title="Envoyer une photo">
+            <button type="button" onclick="triggerImageUpload()" class="p-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition flex items-center justify-center shrink-0" title="Envoyer une photo">
               <i data-lucide="image" class="w-5 h-5"></i>
             </button>
 
             <input type="text" id="messageInput" placeholder="Écrire un message..." 
               class="flex-1 py-2.5 px-4 bg-gray-900 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs sm:text-sm text-white placeholder-gray-500">
-            <button type="submit" class="p-2.5 bg-brand-600 hover:bg-brand-500 active:scale-95 text-white rounded-xl shadow-md transition flex items-center justify-center">
+            <button type="submit" class="p-2.5 bg-brand-600 hover:bg-brand-500 active:scale-95 text-white rounded-xl shadow-md transition flex items-center justify-center shrink-0">
               <i data-lucide="send" class="w-5 h-5"></i>
             </button>
           </form>
@@ -309,10 +321,15 @@
       <div class="space-y-4 text-gray-300">
         <div class="border-l-2 border-brand-500 pl-3 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v1.8.0</span>
+            <span class="font-bold text-white text-sm">v1.8.1</span>
             <span class="text-[10px] bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
           </div>
-          <p class="text-xs text-gray-400">Ajout d'indicateurs de nouveaux messages (<code class="text-brand-300">points verts</code>) sur les salons et les discussions privées (DMs) non lus.</p>
+          <p class="text-xs text-gray-400">Correction d'affichage sur iPhone : menu latéral réparé pour l'accès aux salons/DMs, et suppression du carré blanc lors de l'envoi d'émojis sur Safari/iOS.</p>
+        </div>
+
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <span class="font-bold text-white text-sm">v1.8.0</span>
+          <p class="text-xs text-gray-400">Ajout d'indicateurs de nouveaux messages (<code class="text-brand-300">points verts</code>) sur les salons et DMs non lus.</p>
         </div>
 
         <div class="border-l-2 border-gray-700 pl-3 space-y-1">
@@ -449,7 +466,6 @@
       const msgs = snapshot.val() || {};
       messagesList = Object.values(msgs);
 
-      // Gestion des unreads (points verts)
       if (currentUser) {
         messagesList.forEach(m => {
           const chan = m.isGlobalAnnouncement ? 'general' : (m.channel || 'general');
@@ -501,7 +517,6 @@
         renderChannels();
         renderMessages();
       } else {
-        errorEl.classList.add('hidden'); // wait, errorEl.classList.remove('hidden')
         errorEl.classList.remove('hidden');
       }
     }
@@ -697,13 +712,12 @@
           dotColorClass = 'bg-brand-500';
         }
 
-        // Vérification si un DM non lu existe avec ce membre
         let unreadDotHtml = '';
         if (currentUser && k !== myKey) {
           const sortedKeys = [myKey, k.toLowerCase()].sort();
           const dmChan = 'dm_' + sortedKeys[0] + '_' + sortedKeys[1];
           if (unreadChannels[dmChan] && currentChannel !== dmChan) {
-            unreadDotHtml = `<span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse" title="Nouveau message privé"></span>`;
+            unreadDotHtml = `<span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>`;
           }
         }
 
@@ -735,7 +749,7 @@
 
     function selectChannel(chan) {
       currentChannel = chan;
-      unreadChannels[chan] = false; // Efface le point vert
+      unreadChannels[chan] = false;
 
       document.getElementById('currentChannelTitle').textContent = 
         chan === 'general' ? 'Général' : (chan === 'vocal' ? 'Salon Vocal' : 'Projets Privés');
@@ -776,7 +790,7 @@
 
       const sortedKeys = [myKey, keyClean].sort();
       currentChannel = 'dm_' + sortedKeys[0] + '_' + sortedKeys[1];
-      unreadChannels[currentChannel] = false; // Efface le point vert
+      unreadChannels[currentChannel] = false;
 
       document.getElementById('currentChannelTitle').textContent = `DM : ${targetUser.name}`;
       document.getElementById('currentChannelIcon').setAttribute('data-lucide', 'lock');
@@ -847,7 +861,7 @@
         }
 
         if (currentChannel.startsWith('dm_')) {
-          alert("Erreur : Les commandes d'administration sont strictement désactivées dans les discussions privées !");
+          alert("Erreur : Les commandes d'administration sont strictly désactivées dans les discussions privées !");
           input.value = '';
           return;
         }
@@ -1027,7 +1041,7 @@
         if (m.imageUrl) {
           contentHtml = `<img src="${m.imageUrl}" class="max-w-[240px] sm:max-w-xs rounded-xl mt-1 object-cover border border-white/10 shadow-md">`;
         } else if (m.text) {
-          contentHtml = `<p class="break-words">${m.text}</p>`;
+          contentHtml = `<p class="break-words leading-relaxed">${m.text}</p>`;
         }
 
         msgDiv.innerHTML = `
@@ -1035,10 +1049,10 @@
             <span class="font-semibold text-gray-300">${m.sender}</span>
             <span>• ${m.time}</span>
           </div>
-          <div class="max-w-[85%] sm:max-w-md p-3 rounded-2xl text-xs sm:text-sm ${
+          <div class="msg-bubble max-w-[85%] sm:max-w-md p-3 rounded-2xl text-xs sm:text-sm ${
             isMe 
               ? 'bg-brand-600 text-white rounded-tr-none shadow-md shadow-brand-600/10' 
-              : 'bg-gray-800/90 text-gray-100 rounded-tl-none border border-gray-700/60'
+              : 'bg-gray-800 text-gray-100 rounded-tl-none border border-gray-700/60'
           }">
             ${contentHtml}
           </div>
@@ -1055,7 +1069,7 @@
       const overlay = document.getElementById('sidebarOverlay');
       const isHidden = sidebar.classList.contains('-translate-x-full');
 
-      if (forceState === false || !isHidden) {
+      if (forceState === false || (forceState === undefined && !isHidden)) {
         sidebar.classList.add('-translate-x-full');
         overlay.classList.add('hidden');
       } else {
