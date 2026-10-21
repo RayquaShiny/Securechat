@@ -132,7 +132,11 @@
           <div>
             <h2 class="text-sm font-bold leading-tight text-white flex items-center gap-1.5">
               <span>Securechat</span>
-              <span class="text-[10px] bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded font-mono uppercase">System Active</span>
+              <!-- BOUTON CHANGELOG VERSION -->
+              <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
+                <i data-lucide="git-branch" class="w-3 h-3"></i>
+                <span>v1.6.0</span>
+              </button>
             </h2>
           </div>
         </div>
@@ -204,7 +208,7 @@
             <span id="currentChannelTitle" class="text-xs font-bold text-gray-200">Général</span>
           </div>
           <div id="headerCommandHint" class="text-[11px] text-amber-400/80 font-mono hidden sm:block">
-            /clean | /ban [user] | /admin [user] | /help
+            /clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help
           </div>
         </div>
 
@@ -265,6 +269,61 @@
       <div class="pt-3 border-t border-gray-800">
         <p class="text-[11px] font-bold text-gray-400 uppercase mb-2">Comptes enregistrés</p>
         <div id="adminUsersList" class="space-y-2 text-xs max-h-48 overflow-y-auto"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CHANGELOG -->
+  <div id="changelogModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-lg glass-panel p-6 rounded-2xl border border-brand-500/30 space-y-4 max-h-[85vh] overflow-y-auto text-xs sm:text-sm">
+      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="git-commit" class="w-5 h-5 text-brand-400"></i>
+          <span>Changelog & Historique des Versions</span>
+        </h3>
+        <button onclick="closeChangelogModal()" class="text-gray-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-gray-300">
+        <div class="border-l-2 border-brand-500 pl-3 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white text-sm">v1.6.0</span>
+            <span class="text-[10px] bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
+          </div>
+          <p class="text-xs text-gray-400">Ajout de la commande <code class="text-brand-300">/mute [user] [sec]</code>, de la commande globale <code class="text-brand-300">/toall [msg]</code> (diffusion sur tous les salons et DMs), et intégration du bouton de Changelog interactif.</p>
+        </div>
+
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <span class="font-bold text-white text-sm">v1.5.0</span>
+          <p class="text-xs text-gray-400">Mise en place des discussions privées (DMs) par simple clic sur les membres de la liste, avec restriction stricte interdisant l'utilisation des commandes admin en DM.</p>
+        </div>
+
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <span class="font-bold text-white text-sm">v1.4.0</span>
+          <p class="text-xs text-gray-400">Personnalisation des rôles avec code couleur distinct (Owner doré, Admin rouge, Ami vert, Membre bleu) et alertes système de bannissement en rouge vif.</p>
+        </div>
+
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <span class="font-bold text-white text-sm">v1.3.0</span>
+          <p class="text-xs text-gray-400">Création du système de commandes de chat administratives (<code class="text-brand-300">/clean</code>, <code class="text-brand-300">/ban</code>, <code class="text-brand-300">/admin</code>, <code class="text-brand-300">/help</code>).</p>
+        </div>
+
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <span class="font-bold text-white text-sm">v1.2.0</span>
+          <p class="text-xs text-gray-400">Intégration du panneau de gestion des comptes en direct relié à la Realtime Database de Firebase.</p>
+        </div>
+
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <span class="font-bold text-white text-sm">v1.1.0</span>
+          <p class="text-xs text-gray-400">Ajout des salons multiples (Général, Vocal, Projets Privés) et simulation de chiffrement E2EE.</p>
+        </div>
+
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <span class="font-bold text-white text-sm">v1.0.0</span>
+          <p class="text-xs text-gray-400">Initialisation de la plateforme Securechat sur GitHub Pages avec SDK Firebase.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -357,7 +416,7 @@
 
         if (currentUser.role === 'Owner' || currentUser.role === 'Admin') {
           document.getElementById('adminBtn').classList.remove('hidden');
-          document.getElementById('headerCommandHint').textContent = '/clean | /ban [user] | /admin [user] | /help';
+          document.getElementById('headerCommandHint').textContent = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
         } else {
           document.getElementById('adminBtn').classList.add('hidden');
           document.getElementById('headerCommandHint').textContent = '';
@@ -387,6 +446,14 @@
 
     function closeAdminModal() {
       document.getElementById('adminModal').classList.add('hidden');
+    }
+
+    function openChangelogModal() {
+      document.getElementById('changelogModal').classList.remove('hidden');
+    }
+
+    function closeChangelogModal() {
+      document.getElementById('changelogModal').classList.add('hidden');
     }
 
     function handleCreateUser(e) {
@@ -501,9 +568,8 @@
         chan === 'general' ? 'Général' : (chan === 'vocal' ? 'Salon Vocal' : 'Projets Privés');
       document.getElementById('currentChannelIcon').setAttribute('data-lucide', 'hash');
       
-      // Mettre à jour l'aide dans le header pour les admins/owners sur les salons publics
       if (currentUser && (currentUser.role === 'Owner' || currentUser.role === 'Admin')) {
-        document.getElementById('headerCommandHint').textContent = '/clean | /ban [user] | /admin [user] | /help';
+        document.getElementById('headerCommandHint').textContent = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
       }
 
       ['general', 'vocal', 'projets'].forEach(c => {
@@ -520,7 +586,6 @@
       lucide.createIcons();
     }
 
-    // OUVRIR UNE DISCUSSION PRIVÉE (DM)
     function openDm(targetKey) {
       if (!currentUser) return;
       const keyClean = targetKey.toLowerCase();
@@ -539,8 +604,6 @@
 
       document.getElementById('currentChannelTitle').textContent = `DM : ${targetUser.name}`;
       document.getElementById('currentChannelIcon').setAttribute('data-lucide', 'lock');
-      
-      // Indiquer dans le header que les commandes sont désactivées en DM
       document.getElementById('headerCommandHint').textContent = 'Discussion privée • Commandes désactivées';
 
       ['general', 'vocal', 'projets'].forEach(c => {
@@ -552,17 +615,65 @@
       lucide.createIcons();
     }
 
-    // GESTION DES MESSAGES ET INTERDICTION STRICTE DES COMMANDES EN DM
+    // GESTION DES COMMANDES (/clean, /ban, /mute, /toall, /admin, /help)
     function sendMessage(e) {
       e.preventDefault();
       const input = document.getElementById('messageInput');
       const text = input.value.trim();
       if (!text || !currentUser) return;
 
+      // Vérification du Mute
+      const myKey = (currentUser.username || currentUser.name).toLowerCase();
+      if (accounts[myKey] && accounts[myKey].mutedUntil && accounts[myKey].mutedUntil > Date.now()) {
+        const remainingSec = Math.ceil((accounts[myKey].mutedUntil - Date.now()) / 1000);
+        alert(`Tu es muté ! Tu ne peux pas parler pendant encore ${remainingSec} secondes.`);
+        input.value = '';
+        return;
+      }
+
       if (text.startsWith('/')) {
-        // BLOCAGE ABSOLU DANS LES DMS
+        const args = text.slice(1).split(' ');
+        const cmd = args[0].toLowerCase();
+
+        // Commande /toall (Annonce globale accessible hors DM pour les admins/owner)
+        if (cmd === 'toall') {
+          if (currentChannel.startsWith('dm_')) {
+            alert("La commande /toall ne peut pas être exécutée depuis un DM.");
+            input.value = '';
+            return;
+          }
+          if (currentUser.role !== 'Owner' && currentUser.role !== 'Admin') {
+            alert("Tu n'as pas les permissions suffisantes pour faire une annonce globale.");
+            input.value = '';
+            return;
+          }
+          const annText = args.slice(1).join(' ');
+          if (!annText) {
+            alert("Utilisation : /toall [message d'annonce]");
+            input.value = '';
+            return;
+          }
+
+          const now = new Date();
+          const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+          
+          const globalMsg = {
+            id: Date.now(),
+            sender: currentUser.name,
+            role: currentUser.role,
+            text: annText,
+            time: timeStr,
+            isGlobalAnnouncement: true
+          };
+
+          db.ref('messages').push(globalMsg);
+          input.value = '';
+          return;
+        }
+
+        // Blocage des autres commandes en DM
         if (currentChannel.startsWith('dm_')) {
-          alert("Erreur : Les commandes (/clean, /ban, /admin, etc.) sont strictement désactivées dans les discussions privées !");
+          alert("Erreur : Les commandes d'administration sont strictement désactivées dans les discussions privées !");
           input.value = '';
           return;
         }
@@ -573,21 +684,18 @@
           return;
         }
 
-        const args = text.slice(1).split(' ');
-        const cmd = args[0].toLowerCase();
-
         if (cmd === 'clean' || cmd === 'clear') {
           db.ref('messages').once('value', (snapshot) => {
             const msgs = snapshot.val();
             if (msgs) {
               const updates = {};
               Object.keys(msgs).forEach(key => {
-                if ((msgs[key].channel || 'general') === currentChannel) {
+                if ((msgs[key].channel || 'general') === currentChannel && !msgs[key].isGlobalAnnouncement) {
                   updates[key] = null;
                 }
               });
               db.ref('messages').update(updates).then(() => {
-                sendSystemMessage(`${currentUser.name} a nettoyé le salon #${currentChannel}.`, false);
+                sendSystemMessage(`${currentUser.name} a nettoyé ce salon.`, false);
               });
             }
           });
@@ -619,6 +727,31 @@
           return;
         }
 
+        if (cmd === 'mute') {
+          const targetKey = args[1] ? args[1].toLowerCase() : '';
+          const sec = parseInt(args[2], 10);
+          if (!targetKey || isNaN(sec)) {
+            alert("Utilisation : /mute [identifiant] [secondes]");
+            input.value = '';
+            return;
+          }
+          if (targetKey === 'rayqua') {
+            alert("Impossible de mute l'Owner Rayqua !");
+            input.value = '';
+            return;
+          }
+          if (accounts[targetKey]) {
+            const muteUntilTime = Date.now() + (sec * 1000);
+            db.ref('accounts/' + targetKey + '/mutedUntil').set(muteUntilTime).then(() => {
+              sendSystemMessage(`${accounts[targetKey].name} a été rendu muet pour ${sec} secondes par ${currentUser.name}.`, false);
+            });
+          } else {
+            alert(`Compte "${targetKey}" introuvable.`);
+          }
+          input.value = '';
+          return;
+        }
+
         if (cmd === 'admin') {
           if (currentUser.role !== 'Owner') {
             alert("Seul l'Owner (Rayqua) peut donner le rôle Admin à un utilisateur.");
@@ -638,7 +771,7 @@
         }
 
         if (cmd === 'help') {
-          alert("Commandes disponibles (salons publics uniquement) :\n- /clean : Efface le salon actuel\n- /ban [user] : Banni le compte\n- /admin [user] : Nomme un membre Admin\n- /help : Affiche cette aide");
+          alert("Commandes disponibles :\n- /clean : Nettoie le salon\n- /ban [user] : Banni un compte\n- /mute [user] [sec] : Mute un utilisateur\n- /toall [msg] : Annonce globale (salons et DMs)\n- /admin [user] : Nomme un Admin\n- /help : Aide");
           input.value = '';
           return;
         }
@@ -669,9 +802,28 @@
       if (!container) return;
       container.innerHTML = '';
 
-      const filtered = messagesList.filter(m => (m.channel || 'general') === currentChannel);
+      // Filtrer les messages du salon actuel OU les annonces globales (/toall) visibles partout
+      const filtered = messagesList.filter(m => m.isGlobalAnnouncement || (m.channel || 'general') === currentChannel);
 
       filtered.forEach(m => {
+        // Affichage des annonces globales /toall
+        if (m.isGlobalAnnouncement) {
+          const annDiv = document.createElement('div');
+          annDiv.className = "w-full my-3 flex justify-center";
+          annDiv.innerHTML = `
+            <div class="w-full max-w-xl px-5 py-3.5 bg-gradient-to-r from-amber-500/20 via-brand-500/20 to-blue-500/20 border border-brand-500/40 text-gray-100 rounded-2xl shadow-xl space-y-1">
+              <div class="flex items-center justify-between text-[10px] uppercase font-bold tracking-wider text-brand-400">
+                <span class="flex items-center gap-1.5"><i data-lucide="megaphone" class="w-3.5 h-3.5"></i> Annonce Officielle (${m.sender})</span>
+                <span>${m.time}</span>
+              </div>
+              <p class="text-xs sm:text-sm font-medium text-white">${m.text}</p>
+            </div>
+          `;
+          container.appendChild(annDiv);
+          return;
+        }
+
+        // Messages système (Ban / Clean / Mute)
         if (m.isSystem) {
           const sysDiv = document.createElement('div');
           sysDiv.className = "w-full my-2 flex justify-center";
@@ -697,6 +849,7 @@
           return;
         }
 
+        // Messages standards
         const isMe = currentUser && m.sender === currentUser.name;
         const msgDiv = document.createElement('div');
         msgDiv.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} space-y-1`;
