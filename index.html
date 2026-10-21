@@ -8,6 +8,7 @@
   <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -81,7 +82,7 @@
               <span>Securechat</span>
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v1.9.2</span>
+                <span>v2.0.0-dev</span>
               </button>
             </h2>
           </div>
@@ -234,8 +235,9 @@
   </div>
 
   <script>
-    const CURRENT_VERSION = "v1.9.2";
-    const VERSION_CHANGELOG = "Correction du salon Général et des notifications : plus de faux points, messages sécurisés, images compressées, annonce sans doublons.";
+    const CURRENT_VERSION = "v2.0.0";
+    const DEV_MODE = true; // passe à false le jour du lancement de la v2
+    const VERSION_CHANGELOG = "Securechat v2 : connexion sécurisée, comptes protégés, nouvelles règles de sécurité.";
     const CHANNELS = ['annonce-update', 'general', 'vocal', 'projets'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
 
@@ -261,6 +263,12 @@
     const seenKeys = new Set();
     let firstLoadDone = false;
     let hadMuted = false;
+    let meKey = '';
+    let migrating = false;
+    let starting = false;
+    let listeners = [];
+    const EMAIL_DOMAIN = '@securechat.app';
+    const auth = firebase.auth();
 
     // Protège contre l'injection HTML (cause du bug du salon Général)
     function esc(s) {
@@ -271,7 +279,7 @@
       return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
     }
     function myKey() {
-      return currentUser ? (currentUser.username || currentUser.name).toLowerCase() : '';
+      return meKey;
     }
     function setChannelIcon(name) {
       document.getElementById('currentChannelIconWrap').innerHTML = `<i data-lucide="${name}" class="w-4 h-4 text-gray-400"></i>`;
@@ -288,6 +296,7 @@
 
     // Une seule annonce même si plusieurs personnes se connectent en même temps
     function checkAndPublishAutoUpdate() {
+      if (DEV_MODE || !currentUser || currentUser.role !== 'Owner') return;
       db.ref('lastPublishedVersion').transaction(
         cur => cur === CURRENT_VERSION ? undefined : CURRENT_VERSION,
         (err, committed) => {
@@ -301,62 +310,39 @@
       );
     }
 
-    db.ref('accounts').on('value', (snapshot) => {
-      const data = snapshot.val();
-      accounts = data || {};
+    function listen(ref, cb) { ref.on('value', cb, onDbError); listeners.push(ref); }
+    function stopListeners() { listeners.forEach(r => r.off()); listeners = []; }
+    function onDbError() {
+      if (currentUser) { alert("Accès refusé ou compte supprimé."); logout(); }
+    }
 
-      if (accounts['rayqua']) {
-        if (accounts['rayqua'].name !== 'Rayqua') db.ref('accounts/rayqua/name').set('Rayqua');
-        if (accounts['rayqua'].role !== 'Owner') db.ref('accounts/rayqua/role').set('Owner');
-      }
-
-      if (currentUser && data) {
-        const k = myKey();
-        if (!accounts[k]) {
-          alert("Ton compte a été supprimé.");
-          logout();
-          return;
-        }
-        currentUser = accounts[k];
+    function onAccounts(snapshot) {
+      accounts = snapshot.val() || {};
+      if (currentUser) {
+        if (!accounts[meKey]) { alert("Ton compte a été supprimé."); logout(); return; }
+        currentUser = accounts[meKey];
+        currentUser.username = currentUser.username || meKey;
         document.getElementById('userRoleDisplay').textContent = currentUser.role;
       }
-
       renderUsersList();
       updateAdminUsersList();
-    });
+    }
 
-    db.ref('status').on('value', (snapshot) => {
-      userStatuses = snapshot.val() || {};
-      renderUsersList();
-    });
-
-    // Rafraîchit la liste seulement pour le compte à rebours des mutes
-    setInterval(() => {
-      const anyMuted = Object.values(accounts).some(u => u && u.mutedUntil && u.mutedUntil > Date.now());
-      if (anyMuted || hadMuted) renderUsersList();
-      hadMuted = anyMuted;
-    }, 1000);
-
-    db.ref('messages').limitToLast(500).on('value', (snapshot) => {
+    function onMessages(snapshot) {
       const msgs = snapshot.val() || {};
       messagesList = Object.values(msgs);
 
-      // Notifications : uniquement pour les NOUVEAUX messages
       Object.entries(msgs).forEach(([key, m]) => {
         if (seenKeys.has(key)) return;
         seenKeys.add(key);
-
         if (!firstLoadDone || !currentUser) return;
         if (m.isSystem) return;
         if (m.sender === currentUser.name) return;
-
         const chan = m.isGlobalAnnouncement ? 'annonce-update' : (m.channel || 'general');
-
         if (chan.startsWith('dm_')) {
           const me = myKey();
           if (!chan.startsWith('dm_' + me + '_') && !chan.endsWith('_' + me)) return;
         }
-
         if (chan !== currentChannel) unreadChannels[chan] = true;
       });
       firstLoadDone = true;
@@ -364,51 +350,134 @@
       renderMessages();
       renderUsersList();
       renderChannels();
-    });
+    }
+
+    setInterval(() => {
+      const anyMuted = Object.values(accounts).some(u => u && u.mutedUntil && u.mutedUntil > Date.now());
+      if (anyMuted || hadMuted) renderUsersList();
+      hadMuted = anyMuted;
+    }, 1000);
 
     window.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
 
-    function handleLogin(e) {
-      e.preventDefault();
-      const uKey = document.getElementById('loginUsername').value.trim().toLowerCase();
-      const pInput = document.getElementById('loginPassword').value;
-      const errorEl = document.getElementById('loginError');
+    function showLoginError(msg) {
+      const el = document.getElementById('loginError');
+      el.querySelector('span').textContent = msg;
+      el.classList.remove('hidden');
+    }
 
-      if (accounts[uKey] && accounts[uKey].pass === pInput) {
-        currentUser = accounts[uKey];
-        errorEl.classList.add('hidden');
-
-        const userStatusRef = db.ref('status/' + uKey);
-        userStatusRef.onDisconnect().set({ state: 'offline' });
-        userStatusRef.set({ state: 'online' });
-
-        document.getElementById('authScreen').classList.add('hidden');
-        document.getElementById('appContainer').classList.remove('hidden');
-        document.getElementById('userNameDisplay').textContent = currentUser.name;
-        document.getElementById('userRoleDisplay').textContent = currentUser.role;
-        document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
-
-        const isStaff = currentUser.role === 'Owner' || currentUser.role === 'Admin';
-        document.getElementById('adminBtn').classList.toggle('hidden', !isStaff);
-        document.getElementById('headerCommandHint').textContent = isStaff ? CMD_HINT : '';
-
-        unreadChannels = {};
-        checkAndPublishAutoUpdate();
-        selectChannel('general');
-      } else {
-        errorEl.classList.remove('hidden');
+    function authErrorMessage(err) {
+      switch (err && err.code) {
+        case 'auth/weak-password': return "Mot de passe trop court pour la v2 (6 caractères minimum). Demande à l'Owner de recréer ton compte.";
+        case 'auth/too-many-requests': return "Trop de tentatives, réessaie dans quelques minutes.";
+        case 'auth/network-request-failed': return "Problème de connexion réseau.";
+        default: return "Identifiant ou mot de passe incorrect.";
       }
     }
 
-    function logout() {
-      if (currentUser) db.ref('status/' + myKey()).set({ state: 'offline' });
-      currentUser = null;
-      currentChannel = 'general';
+    // Première connexion en v2 : ancien compte -> vrai compte Firebase Authentication
+    async function migrateAccount(key, pass) {
+      let legacy = null, readable = true;
+      try { legacy = (await db.ref('accounts/' + key + '/pass').once('value')).val(); } catch (e) { readable = false; }
+      if (readable && legacy !== pass) throw { code: 'bad-credentials' };
+
+      migrating = true;
+      let cred = null;
+      try {
+        cred = await auth.createUserWithEmailAndPassword(key + EMAIL_DOMAIN, pass);
+        await db.ref('uidMap/' + cred.user.uid).set({ key: key, proof: pass });
+        await db.ref('uidMap/' + cred.user.uid + '/proof').remove();
+      } catch (err) {
+        if (cred) { try { await cred.user.delete(); } catch (e) {} }
+        migrating = false;
+        throw err;
+      }
+      migrating = false;
+      startApp(key);
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const key = document.getElementById('loginUsername').value.trim().toLowerCase();
+      const pass = document.getElementById('loginPassword').value;
+      const btn = e.target.querySelector('button[type=submit]');
+      btn.disabled = true;
+      document.getElementById('loginError').classList.add('hidden');
+      try {
+        if (!/^[a-z0-9_-]{2,30}$/.test(key)) throw { code: 'bad-key' };
+        try {
+          await auth.signInWithEmailAndPassword(key + EMAIL_DOMAIN, pass);
+        } catch (err) {
+          const retry = ['auth/user-not-found', 'auth/invalid-credential', 'auth/invalid-login-credentials', 'auth/wrong-password'];
+          if (!retry.includes(err.code)) throw err;
+          await migrateAccount(key, pass);
+        }
+      } catch (err) {
+        showLoginError(authErrorMessage(err));
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    auth.onAuthStateChanged(async (user) => {
+      if (migrating || !user || currentUser || starting) return;
+      let key = null;
+      try { key = (await db.ref('uidMap/' + user.uid + '/key').once('value')).val(); } catch (e) {}
+      if (!key) { await auth.signOut(); return; }
+      startApp(key);
+    });
+
+    async function startApp(key) {
+      if (starting || currentUser) return;
+      starting = true;
+      let snap = null;
+      try { snap = await db.ref('accounts/' + key).once('value'); } catch (e) {}
+      if (!snap || !snap.exists()) {
+        starting = false;
+        await auth.signOut();
+        showLoginError("Compte introuvable ou supprimé.");
+        return;
+      }
+      meKey = key;
+      currentUser = snap.val();
+      currentUser.username = currentUser.username || key;
+
+      document.getElementById('loginError').classList.add('hidden');
+      document.getElementById('authScreen').classList.add('hidden');
+      document.getElementById('appContainer').classList.remove('hidden');
+      document.getElementById('userNameDisplay').textContent = currentUser.name;
+      document.getElementById('userRoleDisplay').textContent = currentUser.role;
+      document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+      const isStaff = currentUser.role === 'Owner' || currentUser.role === 'Admin';
+      document.getElementById('adminBtn').classList.toggle('hidden', !isStaff);
+      document.getElementById('headerCommandHint').textContent = isStaff ? CMD_HINT : '';
+
       unreadChannels = {};
+      seenKeys.clear();
+      firstLoadDone = false;
+      const statusRef = db.ref('status/' + key);
+      statusRef.onDisconnect().set({ state: 'offline' });
+      statusRef.set({ state: 'online' });
+
+      listen(db.ref('accounts'), onAccounts);
+      listen(db.ref('status'), (snap2) => { userStatuses = snap2.val() || {}; renderUsersList(); });
+      listen(db.ref('messages').limitToLast(500), onMessages);
+
+      checkAndPublishAutoUpdate();
+      selectChannel('general');
+    }
+
+    async function logout() {
+      if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline' }); } catch (e) {} }
+      stopListeners();
+      currentUser = null; meKey = ''; starting = false;
+      accounts = {}; messagesList = []; unreadChannels = {};
+      currentChannel = 'general';
       document.getElementById('appContainer').classList.add('hidden');
       document.getElementById('authScreen').classList.remove('hidden');
       document.getElementById('loginUsername').value = '';
       document.getElementById('loginPassword').value = '';
+      try { await auth.signOut(); } catch (e) {}
     }
 
     function openAdminModal() {
@@ -460,24 +529,41 @@
       reader.readAsDataURL(file);
     }
 
-    function handleCreateUser(e) {
+    async function handleCreateUser(e) {
       e.preventDefault();
-      const rawUser = document.getElementById('newUsername').value.trim();
-      const keyUser = rawUser.toLowerCase();
+      const raw = document.getElementById('newUsername').value.trim();
+      const key = raw.toLowerCase();
       const name = document.getElementById('newDisplayName').value.trim();
       const pass = document.getElementById('newPassword').value;
       const role = document.getElementById('newRole').value;
-      if (!keyUser || !pass) return;
 
-      const newUser = { username: rawUser, name: name || rawUser, role: role || 'Membre', pass: pass };
-      db.ref('accounts/' + keyUser).set(newUser, (err) => {
-        if (!err) {
-          alert('Le compte "' + rawUser + '" a été créé avec le rôle ' + role + ' !');
-          document.getElementById('newUsername').value = '';
-          document.getElementById('newDisplayName').value = '';
-          document.getElementById('newPassword').value = '';
-        }
-      });
+      if (!/^[a-z0-9_-]{2,30}$/.test(key)) { alert("Identifiant : 2 à 30 caractères, lettres, chiffres, - ou _ uniquement."); return; }
+      if (pass.length < 6) { alert("Mot de passe : 6 caractères minimum."); return; }
+      if (accounts[key]) { alert("Cet identifiant existe déjà."); return; }
+      if (role === 'Admin' && currentUser.role !== 'Owner') { alert("Seul l'Owner peut créer un Admin."); return; }
+
+      const btn = e.target.querySelector('button[type=submit]');
+      btn.disabled = true;
+      try {
+        const token = crypto.randomUUID();
+        await db.ref('accounts/' + key).set({ username: key, name: name || raw, role: role });
+        await db.ref('secrets/' + key + '/claim').set(token);
+        // App secondaire : évite de te déconnecter pendant la création
+        const sec = firebase.apps.find(a => a.name === 'sec') || firebase.initializeApp(firebaseConfig, 'sec');
+        const cred = await sec.auth().createUserWithEmailAndPassword(key + EMAIL_DOMAIN, pass);
+        await sec.database().ref('uidMap/' + cred.user.uid).set({ key: key, proof: token });
+        await sec.database().ref('uidMap/' + cred.user.uid + '/proof').remove();
+        await sec.auth().signOut();
+        alert('Le compte "' + key + '" a été créé avec le rôle ' + role + ' !');
+        document.getElementById('newUsername').value = '';
+        document.getElementById('newDisplayName').value = '';
+        document.getElementById('newPassword').value = '';
+      } catch (err) {
+        try { await db.ref('accounts/' + key).remove(); } catch (e) {}
+        alert("Création impossible : " + (err.code || err.message));
+      } finally {
+        btn.disabled = false;
+      }
     }
 
     function deleteUser(keyUser) {
@@ -511,7 +597,7 @@
         div.innerHTML = `
           <div>
             <p class="font-bold text-gray-200">${esc(acc.name)} <span class="text-[10px] text-gray-500">(${esc(acc.username)})</span></p>
-            <p class="text-[10px] text-gray-400">Pass: ${esc(acc.pass)}</p>
+            
           </div>
           <div class="flex items-center gap-2">
             <span class="text-[10px] px-2 py-0.5 rounded font-medium ${getRoleBadgeClass(acc.role)}">${esc(acc.role)}</span>
@@ -760,6 +846,17 @@
           } else {
             alert(`Identifiant "${targetKey}" introuvable.`);
           }
+          return;
+        }
+
+        if (cmd === 'purgepass') {
+          if (currentUser.role !== 'Owner') { alert("Réservé à l'Owner."); return; }
+          const updates = {};
+          Object.keys(accounts).forEach(k => {
+            const p = accounts[k].pass;
+            if (p) { updates['secrets/' + k + '/claim'] = p; updates['accounts/' + k + '/pass'] = null; }
+          });
+          db.ref().update(updates).then(() => alert("Anciens mots de passe déplacés vers un coffre protégé."));
           return;
         }
 
