@@ -118,19 +118,19 @@
           <nav class="space-y-1">
             <button onclick="selectChannel('annonce-update')" id="chan-annonce-update" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-amber-400 hover:bg-amber-500/10 transition border border-amber-500/20 bg-amber-500/5">
               <span class="flex items-center gap-2 font-semibold"><i data-lucide="megaphone" class="w-4 h-4"></i><span>annonce-update</span></span>
-              <div class="flex items-center gap-2"><span id="dot-annonce-update" class="w-2 h-2 rounded-full bg-amber-400 hidden"></span></div>
+              <div class="flex items-center gap-2"><span id="dot-annonce-update" class="min-w-[16px] h-4 px-1 rounded-full bg-amber-400 text-[10px] font-bold text-white items-center justify-center hidden"></span></div>
             </button>
             <button onclick="selectChannel('general')" id="chan-general" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition">
               <span class="flex items-center gap-2"><i data-lucide="hash" class="w-4 h-4"></i><span>Général</span></span>
-              <div class="flex items-center gap-2"><span id="dot-general" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span></div>
+              <div class="flex items-center gap-2"><span id="dot-general" class="min-w-[16px] h-4 px-1 rounded-full bg-brand-500 text-[10px] font-bold text-white items-center justify-center hidden"></span></div>
             </button>
             <button onclick="selectChannel('vocal')" id="chan-vocal" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition">
               <span class="flex items-center gap-2"><i data-lucide="volume-2" class="w-4 h-4"></i><span>Salon Vocal</span></span>
-              <div class="flex items-center gap-2"><span id="dot-vocal" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span></div>
+              <div class="flex items-center gap-2"><span id="dot-vocal" class="min-w-[16px] h-4 px-1 rounded-full bg-brand-500 text-[10px] font-bold text-white items-center justify-center hidden"></span></div>
             </button>
             <button onclick="selectChannel('projets')" id="chan-projets" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition">
               <span class="flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4"></i><span>Projets Privés</span></span>
-              <div class="flex items-center gap-2"><span id="dot-projets" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span></div>
+              <div class="flex items-center gap-2"><span id="dot-projets" class="min-w-[16px] h-4 px-1 rounded-full bg-brand-500 text-[10px] font-bold text-white items-center justify-center hidden"></span></div>
             </button>
           </nav>
         </div>
@@ -149,18 +149,26 @@
             <span id="currentChannelIconWrap" class="flex items-center"><i data-lucide="hash" class="w-4 h-4 text-gray-400"></i></span>
             <span id="currentChannelTitle" class="text-xs font-bold text-gray-200">Général</span>
           </div>
-          <div id="headerCommandHint" class="text-[11px] text-amber-400/80 font-mono hidden sm:block"></div>
+          <div class="flex items-center gap-2">
+            <div id="headerCommandHint" class="text-[11px] text-amber-400/80 font-mono hidden lg:block"></div>
+            <input id="searchInput" type="search" placeholder="Rechercher…" oninput="renderMessages()" class="w-28 sm:w-40 py-1 px-2 bg-gray-900 border border-gray-700/80 rounded-lg text-xs text-white placeholder-gray-500 outline-none focus:border-brand-500">
+          </div>
         </div>
 
         <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
 
+        <div id="typingIndicator" class="px-4 h-5 text-[11px] text-gray-400 italic shrink-0"></div>
+        <div id="replyBar" style="display:none" class="px-4 py-1.5 border-t border-gray-800 bg-darkpanel/60 text-[11px] text-gray-300 items-center justify-between shrink-0">
+          <span id="replyBarText" class="truncate"></span>
+          <button type="button" onclick="cancelReply()" class="ml-2 text-gray-400 hover:text-white">✕</button>
+        </div>
         <div class="p-3 sm:p-4 border-t border-gray-800 bg-darkpanel/80 shrink-0">
           <form onsubmit="sendMessage(event)" class="flex items-center gap-2">
             <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
             <button type="button" id="imgUploadBtn" onclick="triggerImageUpload()" class="p-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition flex items-center justify-center shrink-0" title="Envoyer une photo">
               <i data-lucide="image" class="w-5 h-5"></i>
             </button>
-            <input type="text" id="messageInput" placeholder="Écrire un message..." class="flex-1 py-2.5 px-4 bg-gray-900 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs sm:text-sm text-white placeholder-gray-500 disabled:opacity-50">
+            <input type="text" id="messageInput" oninput="onTypingInput()" placeholder="Écrire un message..." class="flex-1 py-2.5 px-4 bg-gray-900 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs sm:text-sm text-white placeholder-gray-500 disabled:opacity-50">
             <button type="submit" id="sendBtn" class="p-2.5 bg-brand-600 hover:bg-brand-500 active:scale-95 text-white rounded-xl shadow-md transition flex items-center justify-center shrink-0 disabled:opacity-50">
               <i data-lucide="send" class="w-5 h-5"></i>
             </button>
@@ -177,7 +185,7 @@
         <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2"><i data-lucide="user-cog" class="w-4 h-4"></i><span>Gestionnaire des Comptes</span></h3>
         <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
-      <form onsubmit="handleCreateUser(event)" class="space-y-3">
+      <form id="createUserForm" onsubmit="handleCreateUser(event)" class="space-y-3">
         <div><label class="block text-xs text-gray-400 mb-1">Identifiant</label>
           <input type="text" id="newUsername" required placeholder="ex: alex" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500"></div>
         <div><label class="block text-xs text-gray-400 mb-1">Nom d'affichage</label>
@@ -302,7 +310,7 @@
         (err, committed) => {
           if (err || !committed) return;
           db.ref('messages').push({
-            id: Date.now(), sender: "Rayqua", role: "Owner",
+            id: Date.now(), sender: "Rayqua", senderKey: meKey, role: "Owner",
             text: `Nouvelle maj (${CURRENT_VERSION}) : ${VERSION_CHANGELOG}`,
             time: nowTime(), channel: 'annonce-update', isGlobalAnnouncement: true
           });
@@ -330,7 +338,7 @@
 
     function onMessages(snapshot) {
       const msgs = snapshot.val() || {};
-      messagesList = Object.values(msgs);
+      messagesList = Object.entries(msgs).map(([k, v]) => ({ ...v, _key: k }));
 
       Object.entries(msgs).forEach(([key, m]) => {
         if (seenKeys.has(key)) return;
@@ -343,7 +351,7 @@
           const me = myKey();
           if (!chan.startsWith('dm_' + me + '_') && !chan.endsWith('_' + me)) return;
         }
-        if (chan !== currentChannel) unreadChannels[chan] = true;
+        if (chan !== currentChannel) unreadChannels[chan] = (unreadChannels[chan] || 0) + 1;
       });
       firstLoadDone = true;
 
@@ -356,6 +364,7 @@
       const anyMuted = Object.values(accounts).some(u => u && u.mutedUntil && u.mutedUntil > Date.now());
       if (anyMuted || hadMuted) renderUsersList();
       hadMuted = anyMuted;
+      updateTypingLabel();
     }, 1000);
 
     window.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
@@ -464,6 +473,7 @@
       listen(db.ref('accounts'), onAccounts);
       listen(db.ref('status'), (snap2) => { userStatuses = snap2.val() || {}; renderUsersList(); });
       listen(db.ref('messages').limitToLast(500), onMessages);
+      listen(db.ref('typing'), (t) => { typingData = t.val() || {}; updateTypingLabel(); });
 
       checkAndPublishAutoUpdate();
       selectChannel('general');
@@ -485,6 +495,7 @@
     function openAdminModal() {
       if (currentUser && (currentUser.role === 'Owner' || currentUser.role === 'Admin')) {
         document.getElementById('adminModal').classList.remove('hidden');
+        document.getElementById('createUserForm').classList.toggle('hidden', currentUser.role !== 'Owner');
         updateAdminUsersList();
       }
     }
@@ -520,7 +531,7 @@
           c.height = Math.round(img.height * scale);
           c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
           db.ref('messages').push({
-            id: Date.now(), sender: currentUser.name,
+            id: Date.now(), sender: currentUser.name, senderKey: meKey,
             imageUrl: c.toDataURL('image/jpeg', 0.7),
             time: nowTime(), channel: currentChannel
           });
@@ -533,6 +544,7 @@
 
     async function handleCreateUser(e) {
       e.preventDefault();
+      if (currentUser.role !== 'Owner') { alert("Seul l'Owner peut créer des comptes."); return; }
       const raw = document.getElementById('newUsername').value.trim();
       const key = raw.toLowerCase();
       const name = document.getElementById('newDisplayName').value.trim();
@@ -613,10 +625,81 @@
       lucide.createIcons();
     }
 
+    const EMOJIS = ['👍', '❤️', '😂', '😮', '😢', '🔥'];
+    let replyingTo = null, typingTs = 0, typingChan = null, typingData = {}, lastRenderedChannel = null;
+
     function renderChannels() {
+      let total = 0;
+      Object.keys(unreadChannels).forEach(k => { total += Number(unreadChannels[k]) || 0; });
+      document.title = (total ? '(' + total + ') ' : '') + 'Securechat - Espace Chiffré Sécurisé';
       CHANNELS.forEach(c => {
         const dotEl = document.getElementById('dot-' + c);
-        if (dotEl) dotEl.classList.toggle('hidden', !(unreadChannels[c] && c !== currentChannel));
+        if (!dotEl) return;
+        const n = c !== currentChannel ? (Number(unreadChannels[c]) || 0) : 0;
+        dotEl.textContent = n > 99 ? '99+' : n;
+        dotEl.classList.toggle('hidden', !n);
+        dotEl.classList.toggle('flex', !!n);
+      });
+    }
+
+    function clearSearch() { const el = document.getElementById('searchInput'); if (el) el.value = ''; }
+
+    function startReply(m) {
+      replyingTo = { key: m._key, sender: m.sender, text: (m.text ? String(m.text) : '📷 Image').slice(0, 80) };
+      document.getElementById('replyBarText').textContent = 'Réponse à ' + m.sender + ' : ' + replyingTo.text;
+      document.getElementById('replyBar').style.display = 'flex';
+      document.getElementById('messageInput').focus();
+    }
+    function cancelReply() {
+      replyingTo = null;
+      const bar = document.getElementById('replyBar');
+      if (bar) bar.style.display = 'none';
+    }
+
+    function toggleReaction(key, emoji) {
+      const ref = db.ref('messages/' + key + '/reactions/' + emoji + '/' + meKey);
+      ref.once('value', (snap) => { if (snap.exists()) ref.remove(); else ref.set(true); });
+    }
+    function editMessage(m) {
+      const t = prompt('Modifier le message :', m.text);
+      if (t === null) return;
+      const v = t.trim();
+      if (!v || v === m.text) return;
+      db.ref('messages/' + m._key).update({ text: v, edited: true });
+    }
+    function deleteMessage(m) {
+      if (confirm('Supprimer ce message ?')) db.ref('messages/' + m._key).remove();
+    }
+
+    function onTypingInput() {
+      if (!currentUser) return;
+      const now = Date.now();
+      if (typingChan === currentChannel && now - typingTs < 2000) return;
+      typingTs = now; typingChan = currentChannel;
+      const ref = db.ref('typing/' + currentChannel + '/' + meKey);
+      ref.onDisconnect().remove();
+      ref.set(now);
+    }
+    function clearTyping() {
+      if (typingChan && meKey) db.ref('typing/' + typingChan + '/' + meKey).remove();
+      typingChan = null; typingTs = 0;
+    }
+    function updateTypingLabel() {
+      const el = document.getElementById('typingIndicator');
+      if (!el) return;
+      const t = typingData[currentChannel] || {};
+      const names = Object.keys(t).filter(k => k !== meKey && Date.now() - t[k] < 5000)
+        .map(k => accounts[k] ? accounts[k].name : k);
+      el.textContent = names.length === 0 ? ''
+        : names.length === 1 ? names[0] + ' écrit…'
+        : names.slice(0, 2).join(', ') + (names.length > 2 ? ' et d\'autres' : '') + ' écrivent…';
+    }
+
+    function fmtText(t) {
+      return esc(t).replace(/@([a-z0-9_-]{2,30})/gi, (all, k) => {
+        const key = k.toLowerCase();
+        if (!accounts[key]) return all;
+        return '<span class="' + (key === meKey ? 'bg-amber-400/30 text-amber-200' : 'text-amber-300') + ' font-semibold rounded px-0.5">@' + key + '</span>';
       });
     }
 
@@ -643,7 +726,7 @@
           const sorted = [me, k.toLowerCase()].sort();
           const dmChan = 'dm_' + sorted[0] + '_' + sorted[1];
           if (unreadChannels[dmChan] && currentChannel !== dmChan) {
-            unreadDotHtml = `<span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>`;
+            unreadDotHtml = `<span class="min-w-[16px] h-4 px-1 rounded-full bg-brand-500 text-[10px] font-bold text-white flex items-center justify-center">${unreadChannels[dmChan]}</span>`;
           }
         }
 
@@ -686,7 +769,7 @@
 
     function selectChannel(chan) {
       currentChannel = chan;
-      unreadChannels[chan] = false;
+      clearTyping(); cancelReply(); clearSearch(); unreadChannels[chan] = 0;
 
       const titleEl = document.getElementById('currentChannelTitle');
       const inputEl = document.getElementById('messageInput');
@@ -732,7 +815,7 @@
 
       const sorted = [me, keyClean].sort();
       currentChannel = 'dm_' + sorted[0] + '_' + sorted[1];
-      unreadChannels[currentChannel] = false;
+      clearTyping(); cancelReply(); clearSearch(); unreadChannels[currentChannel] = 0;
 
       document.getElementById('currentChannelTitle').textContent = `DM : ${targetUser.name}`;
       setChannelIcon('lock');
@@ -782,7 +865,7 @@
           const annText = args.slice(1).join(' ');
           if (!annText) { alert("Utilisation : /toall [message d'annonce]"); return; }
           db.ref('messages').push({
-            id: Date.now(), sender: currentUser.name, role: currentUser.role,
+            id: Date.now(), sender: currentUser.name, senderKey: meKey, role: currentUser.role,
             text: annText, time: nowTime(), channel: 'annonce-update', isGlobalAnnouncement: true
           });
           return;
@@ -872,21 +955,29 @@
       }
 
       db.ref('messages').push({
-        id: Date.now(), sender: currentUser.name, text: text, time: nowTime(),
+        id: Date.now(), sender: currentUser.name, senderKey: meKey, text: text, time: nowTime(), ...(replyingTo ? { replyTo: replyingTo } : {}),
         channel: currentChannel, isGlobalAnnouncement: currentChannel === 'annonce-update'
       });
+      cancelReply(); clearTyping();
       input.value = '';
     }
 
     function renderMessages() {
       const container = document.getElementById('messagesContainer');
       if (!container) return;
+      const prevTop = container.scrollTop;
+      const nearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 150;
+      const sameChan = lastRenderedChannel === currentChannel;
       container.innerHTML = '';
+      const q = ((document.getElementById('searchInput') || {}).value || '').trim().toLowerCase();
+      const isStaff = !!currentUser && (currentUser.role === 'Owner' || currentUser.role === 'Admin');
 
       const filtered = messagesList.filter(m => {
         const msgChan = m.channel || (m.isGlobalAnnouncement ? 'annonce-update' : 'general');
-        return msgChan === currentChannel;
+        if (msgChan !== currentChannel) return false;
+        return !q || (m.text && String(m.text).toLowerCase().includes(q));
       });
+      if (q && !filtered.length) container.innerHTML = '<p class="text-center text-xs text-gray-500 mt-6">Aucun résultat.</p>';
 
       filtered.forEach(m => {
         if (m.isGlobalAnnouncement) {
@@ -922,32 +1013,63 @@
           return;
         }
 
-        const isMe = currentUser && m.sender === currentUser.name;
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} space-y-1`;
+        const key = m._key;
+        const mine = !!currentUser && (m.senderKey ? m.senderKey === meKey : m.sender === currentUser.name);
+        const own = !!m.senderKey && m.senderKey === meKey;
+        const mentioned = !!(m.text && meKey && String(m.text).toLowerCase().includes('@' + meKey));
+        const wrap = document.createElement('div');
+        wrap.id = 'msg-' + key;
+        wrap.className = `flex flex-col ${mine ? 'items-end' : 'items-start'} space-y-1`;
 
-        let contentHtml = '';
+        let content = '';
+        if (m.replyTo) {
+          content += `<div data-goto="1" class="mb-1.5 pl-2 border-l-2 border-white/40 text-[11px] opacity-80 cursor-pointer"><span class="font-semibold">${esc(m.replyTo.sender)}</span> ${esc(m.replyTo.text)}</div>`;
+        }
         if (m.imageUrl) {
           const safeSrc = String(m.imageUrl).startsWith('data:image/') ? m.imageUrl : '';
-          contentHtml = `<img src="${safeSrc}" class="max-w-[240px] sm:max-w-xs rounded-xl mt-1 object-cover border border-white/10 shadow-md">`;
+          content += `<img src="${safeSrc}" class="max-w-[240px] sm:max-w-xs rounded-xl mt-1 object-cover border border-white/10 shadow-md">`;
         } else if (m.text) {
-          contentHtml = `<p class="break-words leading-relaxed">${esc(m.text)}</p>`;
+          content += `<p class="break-words leading-relaxed">${fmtText(m.text)}</p>`;
         }
 
-        msgDiv.innerHTML = `
+        const reacts = m.reactions || {};
+        const chips = EMOJIS.filter(em => reacts[em] && Object.keys(reacts[em]).length).map(em => {
+          const n = Object.keys(reacts[em]).length;
+          const on = !!reacts[em][meKey];
+          return `<button data-emoji="${em}" class="px-1.5 py-0.5 rounded-full text-[11px] border ${on ? 'bg-brand-500/20 border-brand-500/50 text-brand-300' : 'bg-gray-800 border-gray-700 text-gray-300'}">${em} ${n}</button>`;
+        }).join('');
+        const picker = EMOJIS.map(em => `<button data-emoji="${em}" class="px-1 text-base hover:scale-125 transition">${em}</button>`).join('');
+        const canEdit = own && !!m.text && !m.imageUrl;
+        const canDel = own || isStaff;
+
+        wrap.innerHTML = `
           <div class="flex items-center gap-2 text-[10px] text-gray-400 px-1">
             <span class="font-semibold text-gray-300">${esc(m.sender)}</span>
-            <span>• ${esc(m.time)}</span>
+            <span>• ${esc(m.time)}</span>${m.edited ? '<span class="italic">(modifié)</span>' : ''}
           </div>
-          <div class="msg-bubble max-w-[85%] sm:max-w-md p-3 rounded-2xl text-xs sm:text-sm ${
-            isMe ? 'bg-brand-600 text-white rounded-tr-none shadow-md shadow-brand-600/10'
-                 : 'bg-gray-800 text-gray-100 rounded-tl-none border border-gray-700/60'
-          }">${contentHtml}</div>`;
-        container.appendChild(msgDiv);
+          <div class="msg-bubble max-w-[85%] sm:max-w-md p-3 rounded-2xl text-xs sm:text-sm ${mine ? 'bg-brand-600 text-white rounded-tr-none shadow-md shadow-brand-600/10' : 'bg-gray-800 text-gray-100 rounded-tl-none border border-gray-700/60'} ${mentioned ? 'ring-2 ring-amber-400/70' : ''}">${content}</div>
+          ${chips ? `<div class="flex flex-wrap gap-1 px-1 ${mine ? 'justify-end' : ''}">${chips}</div>` : ''}
+          <div class="flex items-center gap-1 px-1 text-gray-500">
+            <button data-act="reply" title="Répondre" class="p-1 hover:text-white"><i data-lucide="corner-up-left" class="w-3.5 h-3.5"></i></button>
+            <button data-act="react" title="Réagir" class="p-1 hover:text-white"><i data-lucide="smile" class="w-3.5 h-3.5"></i></button>
+            ${canEdit ? '<button data-act="edit" title="Modifier" class="p-1 hover:text-white"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>' : ''}
+            ${canDel ? '<button data-act="del" title="Supprimer" class="p-1 hover:text-red-400"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>' : ''}
+          </div>
+          <div data-picker style="display:none" class="gap-1 px-2 py-1 rounded-xl bg-gray-900 border border-gray-700">${picker}</div>`;
+
+        const on = (sel, fn) => { const el = wrap.querySelector(sel); if (el) el.onclick = fn; };
+        on('[data-act=reply]', () => startReply(m));
+        on('[data-act=react]', () => { const pk = wrap.querySelector('[data-picker]'); pk.style.display = pk.style.display === 'flex' ? 'none' : 'flex'; });
+        on('[data-act=edit]', () => editMessage(m));
+        on('[data-act=del]', () => deleteMessage(m));
+        on('[data-goto]', () => { const t = document.getElementById('msg-' + m.replyTo.key); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+        wrap.querySelectorAll('[data-emoji]').forEach(b => { b.onclick = () => toggleReaction(key, b.dataset.emoji); });
+        container.appendChild(wrap);
       });
 
       lucide.createIcons();
-      container.scrollTop = container.scrollHeight;
+      container.scrollTop = (sameChan && !nearBottom && !q) ? prevTop : container.scrollHeight;
+      lastRenderedChannel = currentChannel;
     }
 
     function toggleSidebar(forceState) {
