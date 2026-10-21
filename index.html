@@ -290,7 +290,7 @@
     let currentChannel = 'general';
     let messagesList = [];
 
-    // Helper pour obtenir la classe de couleur selon le rôle
+    // Gestion des couleurs des rôles
     function getRoleBadgeClass(role) {
       switch (role) {
         case 'Owner':
@@ -418,19 +418,20 @@
       if (confirm(`Veux-tu vraiment supprimer le compte "${keyUser}" ?`)) {
         const bannedPersonName = accounts[keyUser] ? accounts[keyUser].name : keyUser;
         db.ref('accounts/' + keyUser).remove().then(() => {
-          sendSystemBanMessage(bannedPersonName);
+          sendSystemMessage(`${currentUser.name} qui est ${currentUser.role} a banni ${bannedPersonName}`, true);
         });
       }
     }
 
-    function sendSystemBanMessage(targetName) {
+    function sendSystemMessage(text, isBan = false) {
       const now = new Date();
       const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
       
       const sysMsg = {
         id: Date.now(),
-        isSystemBan: true,
-        text: `${currentUser.name} qui est ${currentUser.role} a banni ${targetName}`,
+        isSystem: true,
+        isBan: isBan,
+        text: text,
         time: timeStr,
         channel: currentChannel
       };
@@ -527,14 +528,19 @@
         const args = text.slice(1).split(' ');
         const cmd = args[0].toLowerCase();
 
+        // COMMANDE /clean (Nettoie pour tout le monde instantanément)
         if (cmd === 'clean' || cmd === 'clear') {
           db.ref('messages').once('value', (snapshot) => {
             const msgs = snapshot.val();
             if (msgs) {
+              const updates = {};
               Object.keys(msgs).forEach(key => {
                 if ((msgs[key].channel || 'general') === currentChannel) {
-                  db.ref('messages/' + key).remove();
+                  updates[key] = null; // Supprime les messages du salon pour tout le monde
                 }
+              });
+              db.ref('messages').update(updates).then(() => {
+                sendSystemMessage(`${currentUser.name} a nettoyé le salon #${currentChannel}.`, false);
               });
             }
           });
@@ -557,7 +563,7 @@
           if (accounts[targetKey]) {
             const bannedPersonName = accounts[targetKey].name;
             db.ref('accounts/' + targetKey).remove().then(() => {
-              sendSystemBanMessage(bannedPersonName);
+              sendSystemMessage(`${currentUser.name} qui est ${currentUser.role} a banni ${bannedPersonName}`, true);
             });
           } else {
             alert(`Aucun compte trouvé pour l'identifiant "${targetKey}".`);
@@ -585,7 +591,7 @@
         }
 
         if (cmd === 'help') {
-          alert("Commandes disponibles :\n- /clean : Efface ce salon\n- /ban [user] : Banni le compte avec notification rouge\n- /admin [user] : Nomme un membre Admin\n- /help : Affiche cette aide");
+          alert("Commandes disponibles :\n- /clean : Efface ce salon pour tout le monde\n- /ban [user] : Banni le compte avec notification rouge\n- /admin [user] : Nomme un membre Admin\n- /help : Affiche cette aide");
           input.value = '';
           return;
         }
@@ -619,17 +625,28 @@
       const filtered = messagesList.filter(m => (m.channel || 'general') === currentChannel);
 
       filtered.forEach(m => {
-        // Message système de bannissement en rouge
-        if (m.isSystemBan) {
+        // Messages système (Ban ou Clean)
+        if (m.isSystem) {
           const sysDiv = document.createElement('div');
           sysDiv.className = "w-full my-2 flex justify-center";
-          sysDiv.innerHTML = `
-            <div class="px-4 py-2.5 bg-red-950/80 border border-red-600/50 text-red-300 text-xs sm:text-sm rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-red-900/30">
-              <i data-lucide="ban" class="w-4 h-4 text-red-500 shrink-0"></i>
-              <span>${m.text}</span>
-              <span class="text-[10px] text-red-400 font-normal ml-2">${m.time}</span>
-            </div>
-          `;
+          
+          if (m.isBan) {
+            sysDiv.innerHTML = `
+              <div class="px-4 py-2.5 bg-red-950/80 border border-red-600/50 text-red-300 text-xs sm:text-sm rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-red-900/30">
+                <i data-lucide="ban" class="w-4 h-4 text-red-500 shrink-0"></i>
+                <span>${m.text}</span>
+                <span class="text-[10px] text-red-400 font-normal ml-2">${m.time}</span>
+              </div>
+            `;
+          } else {
+            sysDiv.innerHTML = `
+              <div class="px-4 py-2 bg-gray-900/90 border border-gray-700 text-gray-300 text-xs rounded-xl font-medium flex items-center gap-2">
+                <i data-lucide="info" class="w-4 h-4 text-brand-400 shrink-0"></i>
+                <span>${m.text}</span>
+                <span class="text-[10px] text-gray-500 ml-2">${m.time}</span>
+              </div>
+            `;
+          }
           container.appendChild(sysDiv);
           return;
         }
