@@ -118,7 +118,16 @@
         </button>
       </form>
 
-      <div class="pt-4 border-t border-gray-800 text-center">
+      <!-- Section Import Code Ami -->
+      <div class="pt-4 border-t border-gray-800 space-y-2">
+        <p class="text-[11px] text-gray-400 text-center">Tu as reçu un code de synchronisation de Rayqua ?</p>
+        <button onclick="openImportModal()" class="w-full py-2.5 px-3 bg-gray-800 hover:bg-gray-700 text-xs font-medium rounded-xl text-gray-300 border border-gray-700 flex items-center justify-center gap-2 transition">
+          <i data-lucide="download" class="w-4 h-4 text-brand-400"></i>
+          <span>Importer mes accès (Code ami)</span>
+        </button>
+      </div>
+
+      <div class="pt-2 text-center">
         <p class="text-xs text-gray-500 flex items-center justify-center gap-1.5">
           <i data-lucide="lock" class="w-3.5 h-3.5 text-brand-500"></i>
           Chiffrement de bout en bout AES-GCM-256
@@ -154,6 +163,12 @@
       </div>
 
       <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Bouton Admin (Visible uniquement pour Rayqua) -->
+        <button id="adminBtn" onclick="openAdminModal()" class="hidden px-3 py-1.5 text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 transition flex items-center gap-1.5 font-medium">
+          <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+          <span>Gérer les comptes</span>
+        </button>
+
         <button onclick="openHelpModal()" class="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition" title="Guide GitHub Pages">
           <i data-lucide="help-circle" class="w-5 h-5"></i>
         </button>
@@ -299,41 +314,102 @@
     </div>
   </div>
 
+  <!-- PANNEAU ADMIN RAYQUA -->
+  <div id="adminModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md glass-panel p-6 rounded-2xl border border-amber-500/20 space-y-4 max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+        <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2">
+          <i data-lucide="user-plus" class="w-4 h-4"></i>
+          <span>Créer un compte pour un ami</span>
+        </h3>
+        <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleCreateUser(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">Identifiant de connexion</label>
+          <input type="text" id="newUsername" required placeholder="ex: alex" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">Nom d'affichage</label>
+          <input type="text" id="newDisplayName" required placeholder="ex: Alex M." class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">Mot de passe</label>
+          <input type="password" id="newPassword" required placeholder="••••••••" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
+        </div>
+
+        <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs rounded-xl transition">
+          Créer le compte
+        </button>
+      </form>
+
+      <div class="pt-3 border-t border-gray-800 space-y-2">
+        <p class="text-[11px] font-bold text-amber-400 uppercase">Synchronisation multi-appareils</p>
+        <p class="text-[11px] text-gray-400">Pour que tes amis puissent se connecter depuis leur téléphone, partage-leur ton **Code de synchro** :</p>
+        <button onclick="exportSyncCode()" class="w-full py-2 bg-gray-800 hover:bg-gray-700 text-xs text-amber-300 rounded-xl border border-amber-500/30 flex items-center justify-center gap-2">
+          <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+          <span>Copier le Code de Synchronisation</span>
+        </button>
+      </div>
+
+      <div class="pt-3 border-t border-gray-800">
+        <p class="text-[11px] font-bold text-gray-400 uppercase mb-2">Comptes enregistrés</p>
+        <div id="adminUsersList" class="space-y-1.5 text-xs max-h-32 overflow-y-auto"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL IMPORT SYNC CODE (POUR LES AMIS) -->
+  <div id="importModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md glass-panel p-6 rounded-2xl border border-brand-500/20 space-y-4">
+      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+        <h3 class="text-sm font-bold text-brand-400 flex items-center gap-2">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span>Importer les accès (Code de Rayqua)</span>
+        </h3>
+        <button onclick="closeImportModal()" class="text-gray-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <p class="text-xs text-gray-300">Colle ci-dessous le code de synchronisation que Rayqua t'a envoyé pour autoriser ton téléphone :</p>
+      <textarea id="syncCodeInput" rows="4" placeholder="Colle le code ici..." class="w-full p-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-brand-500 font-mono"></textarea>
+      <button onclick="importSyncCode()" class="w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-xs font-medium rounded-xl transition">
+        Valider et Activer mon accès
+      </button>
+    </div>
+  </div>
+
   <!-- GUIDE HELP -->
   <div id="helpModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="w-full max-w-xl glass-panel p-6 rounded-2xl border border-gray-800 space-y-4 max-h-[85vh] overflow-y-auto text-xs sm:text-sm">
       <div class="flex items-center justify-between border-b border-gray-800 pb-3">
         <h3 class="text-base font-bold text-white flex items-center gap-2">
           <i data-lucide="github" class="w-5 h-5 text-brand-400"></i>
-          <span>Déployer sur GitHub Pages</span>
+          <span>Guide de déploiement</span>
         </h3>
         <button onclick="closeHelpModal()" class="text-gray-400 hover:text-white">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
-
       <ol class="list-decimal list-inside space-y-2.5 text-gray-300">
         <li>Créez un dépôt public sur GitHub nommé <code class="bg-gray-800 px-1.5 py-0.5 rounded text-brand-400">mon-chat-securise</code>.</li>
         <li>Créez un fichier nommé exactement <code class="bg-gray-800 px-1.5 py-0.5 rounded text-brand-400">index.html</code>.</li>
-        <li>Collez l'intégralité du code de cette page dans ce fichier et enregistrez (<code class="bg-gray-800 px-1.5 py-0.5 rounded">Commit</code>).</li>
-        <li>Dans les paramètres du dépôt (<code class="bg-gray-800 px-1.5 py-0.5 rounded">Settings</code> &gt; <code class="bg-gray-800 px-1.5 py-0.5 rounded">Pages</code>), choisissez la branche <code class="bg-gray-800 px-1.5 py-0.5 rounded text-brand-400">main</code> / <code class="bg-gray-800 px-1.5 py-0.5 rounded">root</code> et sauvegardez.</li>
+        <li>Collez ce code dedans et enregistrez.</li>
+        <li>Activez GitHub Pages dans <code class="bg-gray-800 px-1.5 py-0.5 rounded">Settings</code> &gt; <code class="bg-gray-800 px-1.5 py-0.5 rounded">Pages</code>.</li>
       </ol>
     </div>
   </div>
 
   <!-- LOGIQUE JS -->
   <script>
-    /* =========================================================================
-       👉 C'EST ICI QU'IL FAUT METTRE LES COMPTES DE TES AMIS (TOUT EN HAUT) !
-       Tu peux modifier les identifiants et mots de passe ci-dessous :
-       ========================================================================= */
-    const MASTER_ACCOUNTS = {
-      'rayqua': { username: 'rayqua', name: 'Rayqua (Admin)', role: 'Admin', pass: 'popopoPO99+' },
-      'ami1':   { username: 'ami1',   name: 'Ami 1',          role: 'Membre', pass: 'motdepasse1' },
-      'ami2':   { username: 'ami2',   name: 'Ami 2',          role: 'Membre', pass: 'motdepasse2' }
+    const DEFAULT_ACCOUNTS = {
+      'rayqua': { username: 'rayqua', name: 'Rayqua (Admin)', role: 'Admin', pass: 'popopoPO99+' }
     };
 
-    let accounts = MASTER_ACCOUNTS;
+    let accounts = JSON.parse(localStorage.getItem('crypt_accounts')) || DEFAULT_ACCOUNTS;
     let currentUser = null;
     let currentChannel = 'general';
     let callTimerInterval = null;
@@ -344,7 +420,12 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
+      updateAdminUsersList();
     });
+
+    function saveAccounts() {
+      localStorage.setItem('crypt_accounts', JSON.stringify(accounts));
+    }
 
     function saveMessages() {
       localStorage.setItem('crypt_messages', JSON.stringify(messages));
@@ -367,6 +448,12 @@
         document.getElementById('userRoleDisplay').textContent = currentUser.role;
         document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
 
+        if (currentUser.role === 'Admin') {
+          document.getElementById('adminBtn').classList.remove('hidden');
+        } else {
+          document.getElementById('adminBtn').classList.add('hidden');
+        }
+
         renderUsersList();
         renderMessages();
       } else {
@@ -380,6 +467,94 @@
       document.getElementById('authScreen').classList.remove('hidden');
       document.getElementById('loginUsername').value = '';
       document.getElementById('loginPassword').value = '';
+    }
+
+    // ADMIN PANEL & COMPTE CRU
+    function openAdminModal() {
+      if (currentUser && currentUser.role === 'Admin') {
+        document.getElementById('adminModal').classList.remove('hidden');
+        updateAdminUsersList();
+      }
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.add('hidden');
+    }
+
+    function handleCreateUser(e) {
+      e.preventDefault();
+      const rawUser = document.getElementById('newUsername').value.trim();
+      const keyUser = rawUser.toLowerCase();
+      const name = document.getElementById('newDisplayName').value.trim();
+      const pass = document.getElementById('newPassword').value;
+
+      if (!keyUser || !pass) return;
+
+      accounts[keyUser] = { username: rawUser, name: name || rawUser, role: 'Membre', pass: pass };
+      saveAccounts();
+      updateAdminUsersList();
+      renderUsersList();
+
+      document.getElementById('newUsername').value = '';
+      document.getElementById('newDisplayName').value = '';
+      document.getElementById('newPassword').value = '';
+
+      alert('Le compte "' + rawUser + '" a été créé avec succès ! N\'oublie pas de copier ton code de synchronisation pour ton ami.');
+    }
+
+    function updateAdminUsersList() {
+      const container = document.getElementById('adminUsersList');
+      if (!container) return;
+      container.innerHTML = '';
+      Object.keys(accounts).forEach(accKey => {
+        const acc = accounts[accKey];
+        const div = document.createElement('div');
+        div.className = "flex items-center justify-between p-2 bg-gray-900 rounded-lg border border-gray-800";
+        div.innerHTML = `
+          <div>
+            <p class="font-bold text-gray-200">${acc.name} <span class="text-[10px] text-gray-500">(${acc.username})</span></p>
+            <p class="text-[10px] text-gray-400">Pass: ${acc.pass}</p>
+          </div>
+          <span class="text-[10px] bg-gray-800 text-gray-400 px-2 py-0.5 rounded">${acc.role}</span>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // EXPORT ET IMPORT DE CONFIGURATION POUR LES AMIS
+    function exportSyncCode() {
+      const code = btoa(JSON.stringify(accounts));
+      navigator.clipboard.writeText(code).then(() => {
+        alert("Code de synchronisation copié dans le presse-papier ! Envoie-le à ton ami (par ex sur Discord ou WhatsApp).");
+      }).catch(() => {
+        prompt("Voici ton code de synchronisation à copier :", code);
+      });
+    }
+
+    function openImportModal() {
+      document.getElementById('importModal').classList.remove('hidden');
+    }
+
+    function closeImportModal() {
+      document.getElementById('importModal').classList.add('hidden');
+    }
+
+    function importSyncCode() {
+      const code = document.getElementById('syncCodeInput').value.trim();
+      if (!code) return;
+      try {
+        const decoded = JSON.parse(atob(code));
+        if (decoded && typeof decoded === 'object') {
+          accounts = decoded;
+          saveAccounts();
+          alert("Accès importés avec succès ! Tu peux maintenant te connecter avec ton identifiant.");
+          closeImportModal();
+        } else {
+          throw new Error();
+        }
+      } catch (err) {
+        alert("Code invalide. Vérifie que tu as bien copié le code complet de Rayqua.");
+      }
     }
 
     function renderUsersList() {
