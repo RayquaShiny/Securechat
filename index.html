@@ -203,7 +203,7 @@
             <i id="currentChannelIcon" data-lucide="hash" class="w-4 h-4 text-gray-400"></i>
             <span id="currentChannelTitle" class="text-xs font-bold text-gray-200">Général</span>
           </div>
-          <div class="text-[11px] text-amber-400/80 font-mono hidden sm:block">
+          <div id="headerCommandHint" class="text-[11px] text-amber-400/80 font-mono hidden sm:block">
             /clean | /ban [user] | /admin [user] | /help
           </div>
         </div>
@@ -357,8 +357,10 @@
 
         if (currentUser.role === 'Owner' || currentUser.role === 'Admin') {
           document.getElementById('adminBtn').classList.remove('hidden');
+          document.getElementById('headerCommandHint').textContent = '/clean | /ban [user] | /admin [user] | /help';
         } else {
           document.getElementById('adminBtn').classList.add('hidden');
+          document.getElementById('headerCommandHint').textContent = '';
         }
 
         renderUsersList();
@@ -499,6 +501,11 @@
         chan === 'general' ? 'Général' : (chan === 'vocal' ? 'Salon Vocal' : 'Projets Privés');
       document.getElementById('currentChannelIcon').setAttribute('data-lucide', 'hash');
       
+      // Mettre à jour l'aide dans le header pour les admins/owners sur les salons publics
+      if (currentUser && (currentUser.role === 'Owner' || currentUser.role === 'Admin')) {
+        document.getElementById('headerCommandHint').textContent = '/clean | /ban [user] | /admin [user] | /help';
+      }
+
       ['general', 'vocal', 'projets'].forEach(c => {
         const el = document.getElementById('chan-' + c);
         if (c === chan) {
@@ -513,7 +520,7 @@
       lucide.createIcons();
     }
 
-    // FONCTION DM FIXÉE & OPTIMISÉE
+    // OUVRIR UNE DISCUSSION PRIVÉE (DM)
     function openDm(targetKey) {
       if (!currentUser) return;
       const keyClean = targetKey.toLowerCase();
@@ -527,14 +534,15 @@
         return;
       }
 
-      // Génération de l'identifiant du canal privé
       const sortedKeys = [myKey, keyClean].sort();
       currentChannel = 'dm_' + sortedKeys[0] + '_' + sortedKeys[1];
 
       document.getElementById('currentChannelTitle').textContent = `DM : ${targetUser.name}`;
       document.getElementById('currentChannelIcon').setAttribute('data-lucide', 'lock');
+      
+      // Indiquer dans le header que les commandes sont désactivées en DM
+      document.getElementById('headerCommandHint').textContent = 'Discussion privée • Commandes désactivées';
 
-      // Réinitialiser le style des salons publics
       ['general', 'vocal', 'projets'].forEach(c => {
         document.getElementById('chan-' + c).className = "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition";
       });
@@ -544,18 +552,17 @@
       lucide.createIcons();
     }
 
-    // GESTION DES MESSAGES ET INTERDICTION DES COMMANDES EN DM
+    // GESTION DES MESSAGES ET INTERDICTION STRICTE DES COMMANDES EN DM
     function sendMessage(e) {
       e.preventDefault();
       const input = document.getElementById('messageInput');
       const text = input.value.trim();
       if (!text || !currentUser) return;
 
-      // SI MESSAGE COMMENCE PAR / (COMMANDE ADMIN)
       if (text.startsWith('/')) {
-        // Bloquer les commandes admin si on est dans un DM
+        // BLOCAGE ABSOLU DANS LES DMS
         if (currentChannel.startsWith('dm_')) {
-          alert("Les commandes d'administration (/clean, /ban, etc.) ne peuvent pas être utilisées dans les discussions privées !");
+          alert("Erreur : Les commandes (/clean, /ban, /admin, etc.) sont strictement désactivées dans les discussions privées !");
           input.value = '';
           return;
         }
@@ -631,7 +638,7 @@
         }
 
         if (cmd === 'help') {
-          alert("Commandes disponibles (salons publics uniquement) :\n- /clean : Efface le salon public actuel\n- /ban [user] : Banni le compte\n- /admin [user] : Nomme un membre Admin\n- /help : Affiche cette aide");
+          alert("Commandes disponibles (salons publics uniquement) :\n- /clean : Efface le salon actuel\n- /ban [user] : Banni le compte\n- /admin [user] : Nomme un membre Admin\n- /help : Affiche cette aide");
           input.value = '';
           return;
         }
