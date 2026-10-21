@@ -141,7 +141,7 @@
               <!-- BOUTON CHANGELOG VERSION -->
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v1.8.2</span>
+                <span>v1.9.0</span>
               </button>
             </h2>
           </div>
@@ -182,7 +182,18 @@
 
         <div class="p-4 border-b border-gray-800 shrink-0">
           <nav class="space-y-1">
-            <button onclick="selectChannel('general')" id="chan-general" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between bg-brand-500/10 text-brand-400 border border-brand-500/20">
+            <!-- SALON DE DÉDIÉ AUX ANNONCES -->
+            <button onclick="selectChannel('annonce-update')" id="chan-annonce-update" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-amber-400 hover:bg-amber-500/10 transition border border-amber-500/20 bg-amber-500/5">
+              <span class="flex items-center gap-2 font-semibold">
+                <i data-lucide="megaphone" class="w-4 h-4"></i>
+                <span>annonce-update</span>
+              </span>
+              <div class="flex items-center gap-2">
+                <span id="dot-annonce-update" class="w-2 h-2 rounded-full bg-amber-400 hidden"></span>
+              </div>
+            </button>
+
+            <button onclick="selectChannel('general')" id="chan-general" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition">
               <span class="flex items-center gap-2">
                 <i data-lucide="hash" class="w-4 h-4"></i>
                 <span>Général</span>
@@ -239,13 +250,13 @@
         <div class="p-3 sm:p-4 border-t border-gray-800 bg-darkpanel/80 shrink-0">
           <form onsubmit="sendMessage(event)" class="flex items-center gap-2">
             <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
-            <button type="button" onclick="triggerImageUpload()" class="p-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition flex items-center justify-center shrink-0" title="Envoyer une photo">
+            <button type="button" id="imgUploadBtn" onclick="triggerImageUpload()" class="p-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition flex items-center justify-center shrink-0" title="Envoyer une photo">
               <i data-lucide="image" class="w-5 h-5"></i>
             </button>
 
             <input type="text" id="messageInput" placeholder="Écrire un message..." 
-              class="flex-1 py-2.5 px-4 bg-gray-900 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs sm:text-sm text-white placeholder-gray-500">
-            <button type="submit" class="p-2.5 bg-brand-600 hover:bg-brand-500 active:scale-95 text-white rounded-xl shadow-md transition flex items-center justify-center shrink-0">
+              class="flex-1 py-2.5 px-4 bg-gray-900 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs sm:text-sm text-white placeholder-gray-500 disabled:opacity-50">
+            <button type="submit" id="sendBtn" class="p-2.5 bg-brand-600 hover:bg-brand-500 active:scale-95 text-white rounded-xl shadow-md transition flex items-center justify-center shrink-0 disabled:opacity-50">
               <i data-lucide="send" class="w-5 h-5"></i>
             </button>
           </form>
@@ -316,75 +327,35 @@
       <div class="space-y-4 text-gray-300">
         <div class="border-l-2 border-brand-500 pl-3 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v1.8.2</span>
+            <span class="font-bold text-white text-sm">v1.9.0</span>
             <span class="text-[10px] bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
           </div>
-          <p class="text-xs text-gray-400">Optimisation des notifications : le point vert ne s'affiche plus sur le salon ou le DM que vous êtes déjà en train de consulter.</p>
+          <p class="text-xs text-gray-400">Création du salon exclusif <code class="text-amber-300">📢 • annonce-update</code> réservé à l'Owner Rayqua, centralisant les annonces et publiant automatiquement chaque mise à jour.</p>
+        </div>
+
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <span class="font-bold text-white text-sm">v1.8.2</span>
+          <p class="text-xs text-gray-400">Optimisation des notifications : le point vert ne s'affiche plus sur le salon actif.</p>
         </div>
 
         <div class="border-l-2 border-gray-700 pl-3 space-y-1">
           <span class="font-bold text-white text-sm">v1.8.1</span>
-          <p class="text-xs text-gray-400">Correction d'affichage sur iPhone : menu latéral réparé pour l'accès aux salons/DMs, et suppression du carré blanc lors de l'envoi d'émojis sur Safari/iOS.</p>
+          <p class="text-xs text-gray-400">Correction d'affichage sur iPhone (menu latéral et émojis).</p>
         </div>
 
         <div class="border-l-2 border-gray-700 pl-3 space-y-1">
           <span class="font-bold text-white text-sm">v1.8.0</span>
-          <p class="text-xs text-gray-400">Ajout d'indicateurs de nouveaux messages (<code class="text-brand-300">points verts</code>) sur les salons et DMs non lus.</p>
+          <p class="text-xs text-gray-400">Ajout d'indicateurs de nouveaux messages (<code class="text-brand-300">points verts</code>).</p>
         </div>
 
         <div class="border-l-2 border-gray-700 pl-3 space-y-1">
           <span class="font-bold text-white text-sm">v1.7.1</span>
-          <p class="text-xs text-gray-400">Isolation des zones de scroll sur PC : le panneau latéral de gauche possède son propre défilement indépendant.</p>
+          <p class="text-xs text-gray-400">Isolation des zones de scroll sur PC.</p>
         </div>
 
         <div class="border-l-2 border-gray-700 pl-3 space-y-1">
           <span class="font-bold text-white text-sm">v1.7.0</span>
-          <p class="text-xs text-gray-400">Ajout du partage de <code class="text-brand-300">photos/images</code> en direct dans les salons et messages privés (DMs).</p>
-        </div>
-
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <span class="font-bold text-white text-sm">v1.6.2</span>
-          <p class="text-xs text-gray-400">Mise en place de la détection de présence en direct (Vert = connecté, Rouge = déconnecté) avec priorité absolue au statut Muet (Bleu).</p>
-        </div>
-
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <span class="font-bold text-white text-sm">v1.6.1</span>
-          <p class="text-xs text-gray-400">Mise à jour dynamique du rôle des utilisateurs muets affichant le statut <code class="text-brand-300">[Rôle] • Muet (Xs)</code> avec un décompte en direct.</p>
-        </div>
-
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <span class="font-bold text-white text-sm">v1.6.0</span>
-          <p class="text-xs text-gray-400">Ajout de la commande <code class="text-brand-300">/mute [user] [sec]</code>, de la commande globale <code class="text-brand-300">/toall [msg]</code>, et intégration du bouton de Changelog.</p>
-        </div>
-
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <span class="font-bold text-white text-sm">v1.5.0</span>
-          <p class="text-xs text-gray-400">Mise en place des discussions privées (DMs) par clic sur les membres, avec restriction des commandes admin.</p>
-        </div>
-
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <span class="font-bold text-white text-sm">v1.4.0</span>
-          <p class="text-xs text-gray-400">Personnalisation des rôles avec code couleur distinct et alertes système de bannissement en rouge vif.</p>
-        </div>
-
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <span class="font-bold text-white text-sm">v1.3.0</span>
-          <p class="text-xs text-gray-400">Création du système de commandes de chat administratives (<code class="text-brand-300">/clean</code>, <code class="text-brand-300">/ban</code>, <code class="text-brand-300">/admin</code>, <code class="text-brand-300">/help</code>).</p>
-        </div>
-
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <span class="font-bold text-white text-sm">v1.2.0</span>
-          <p class="text-xs text-gray-400">Intégration du panneau de gestion des comptes en direct relié à la Realtime Database de Firebase.</p>
-        </div>
-
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <span class="font-bold text-white text-sm">v1.1.0</span>
-          <p class="text-xs text-gray-400">Ajout des salons multiples (Général, Vocal, Projets Privés) et simulation de chiffrement E2EE.</p>
-        </div>
-
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <span class="font-bold text-white text-sm">v1.0.0</span>
-          <p class="text-xs text-gray-400">Initialisation de la plateforme Securechat sur GitHub Pages avec SDK Firebase.</p>
+          <p class="text-xs text-gray-400">Ajout du partage de <code class="text-brand-300">photos/images</code> en direct.</p>
         </div>
       </div>
     </div>
@@ -392,6 +363,9 @@
 
   <!-- LOGIQUE JS -->
   <script>
+    const CURRENT_VERSION = "v1.9.0";
+    const VERSION_CHANGELOG = "Création du salon réservé 'annonce-update' pour l'Owner, publication automatique des annonces de MAJ et centralisation exclusive des communications officielles.";
+
     const firebaseConfig = {
       apiKey: "AIzaSyA1-DPVxv934DWaqMMlQsE4AGvPElb_Rl8",
       authDomain: "chat-1e417.firebaseapp.com",
@@ -425,6 +399,31 @@
         default:
           return 'text-blue-400 font-medium bg-blue-500/10 border border-blue-500/20';
       }
+    }
+
+    // Publication automatique de l'annonce lors d'une nouvelle version
+    function checkAndPublishAutoUpdate() {
+      db.ref('lastPublishedVersion').once('value', (snapshot) => {
+        const lastVer = snapshot.val();
+        if (lastVer !== CURRENT_VERSION) {
+          const now = new Date();
+          const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+          
+          const autoAnn = {
+            id: Date.now(),
+            sender: "Rayqua",
+            role: "Owner",
+            text: `Nouvelle maj (${CURRENT_VERSION}) : ${VERSION_CHANGELOG}`,
+            time: timeStr,
+            channel: 'annonce-update',
+            isGlobalAnnouncement: true
+          };
+
+          db.ref('messages').push(autoAnn).then(() => {
+            db.ref('lastPublishedVersion').set(CURRENT_VERSION);
+          });
+        }
+      });
     }
 
     db.ref('accounts').on('value', (snapshot) => {
@@ -468,8 +467,7 @@
 
       if (currentUser) {
         messagesList.forEach(m => {
-          const chan = m.isGlobalAnnouncement ? 'general' : (m.channel || 'general');
-          // Le point vert s'active SEULEMENT si le message ne vient pas de nous ET qu'on est sur un autre salon
+          const chan = m.channel || (m.isGlobalAnnouncement ? 'annonce-update' : 'general');
           if (m.sender !== currentUser.name && chan !== currentChannel) {
             unreadChannels[chan] = true;
           }
@@ -514,9 +512,8 @@
           document.getElementById('headerCommandHint').textContent = '';
         }
 
-        renderUsersList();
-        renderChannels();
-        renderMessages();
+        checkAndPublishAutoUpdate();
+        selectChannel('general');
       } else {
         errorEl.classList.remove('hidden');
       }
@@ -554,6 +551,7 @@
     }
 
     function triggerImageUpload() {
+      if (currentChannel === 'annonce-update' && currentUser.role !== 'Owner') return;
       document.getElementById('imageInput').click();
     }
 
@@ -668,10 +666,9 @@
     }
 
     function renderChannels() {
-      ['general', 'vocal', 'projets'].forEach(c => {
+      ['annonce-update', 'general', 'vocal', 'projets'].forEach(c => {
         const dotEl = document.getElementById('dot-' + c);
         if (dotEl) {
-          // Affichage du point vert UNIQUEMENT si non lu ET qu'on n'est PAS sur ce salon actuellement
           if (unreadChannels[c] && c !== currentChannel) {
             dotEl.classList.remove('hidden');
           } else {
@@ -710,7 +707,6 @@
         if (currentUser && k !== myKey) {
           const sortedKeys = [myKey, k.toLowerCase()].sort();
           const dmChan = 'dm_' + sortedKeys[0] + '_' + sortedKeys[1];
-          // Le point vert s'affiche sur le membre UNIQUEMENT s'il y a un DM non lu ET qu'on n'est pas déjà dans ce DM
           if (unreadChannels[dmChan] && currentChannel !== dmChan) {
             unreadDotHtml = `<span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>`;
           }
@@ -744,22 +740,55 @@
 
     function selectChannel(chan) {
       currentChannel = chan;
-      unreadChannels[chan] = false; // Efface immédiatement le point vert du salon actif
+      unreadChannels[chan] = false;
 
-      document.getElementById('currentChannelTitle').textContent = 
-        chan === 'general' ? 'Général' : (chan === 'vocal' ? 'Salon Vocal' : 'Projets Privés');
-      document.getElementById('currentChannelIcon').setAttribute('data-lucide', 'hash');
-      
+      const titleEl = document.getElementById('currentChannelTitle');
+      const iconEl = document.getElementById('currentChannelIcon');
+      const inputEl = document.getElementById('messageInput');
+      const sendBtnEl = document.getElementById('sendBtn');
+      const imgBtnEl = document.getElementById('imgUploadBtn');
+
+      if (chan === 'annonce-update') {
+        titleEl.textContent = '📢 • annonce-update';
+        iconEl.setAttribute('data-lucide', 'megaphone');
+
+        // Restriction d'écriture réservée à l'Owner Rayqua
+        if (currentUser && currentUser.role === 'Owner') {
+          inputEl.disabled = false;
+          sendBtnEl.disabled = false;
+          imgBtnEl.disabled = false;
+          inputEl.placeholder = "Publier une annonce officielle...";
+        } else {
+          inputEl.disabled = true;
+          sendBtnEl.disabled = true;
+          imgBtnEl.disabled = true;
+          inputEl.placeholder = "Seul l'Owner peut publier dans ce salon";
+        }
+      } else {
+        inputEl.disabled = false;
+        sendBtnEl.disabled = false;
+        imgBtnEl.disabled = false;
+        inputEl.placeholder = "Écrire un message...";
+
+        titleEl.textContent = chan === 'general' ? 'Général' : (chan === 'vocal' ? 'Salon Vocal' : 'Projets Privés');
+        iconEl.setAttribute('data-lucide', 'hash');
+      }
+
       if (currentUser && (currentUser.role === 'Owner' || currentUser.role === 'Admin')) {
         document.getElementById('headerCommandHint').textContent = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
       }
 
-      ['general', 'vocal', 'projets'].forEach(c => {
+      ['annonce-update', 'general', 'vocal', 'projets'].forEach(c => {
         const el = document.getElementById('chan-' + c);
+        if (!el) return;
         if (c === chan) {
-          el.className = "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between bg-brand-500/10 text-brand-400 border border-brand-500/20";
+          el.className = c === 'annonce-update' 
+            ? "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between bg-amber-500/20 text-amber-300 border border-amber-500/30"
+            : "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between bg-brand-500/10 text-brand-400 border border-brand-500/20";
         } else {
-          el.className = "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition";
+          el.className = c === 'annonce-update'
+            ? "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-amber-400 hover:bg-amber-500/10 transition border border-amber-500/20 bg-amber-500/5"
+            : "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition";
         }
       });
 
@@ -785,14 +814,23 @@
 
       const sortedKeys = [myKey, keyClean].sort();
       currentChannel = 'dm_' + sortedKeys[0] + '_' + sortedKeys[1];
-      unreadChannels[currentChannel] = false; // Efface immédiatement le point vert du DM actif
+      unreadChannels[currentChannel] = false;
 
       document.getElementById('currentChannelTitle').textContent = `DM : ${targetUser.name}`;
       document.getElementById('currentChannelIcon').setAttribute('data-lucide', 'lock');
       document.getElementById('headerCommandHint').textContent = 'Discussion privée • Commandes désactivées';
 
-      ['general', 'vocal', 'projets'].forEach(c => {
-        document.getElementById('chan-' + c).className = "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition";
+      document.getElementById('messageInput').disabled = false;
+      document.getElementById('sendBtn').disabled = false;
+      document.getElementById('imgUploadBtn').disabled = false;
+      document.getElementById('messageInput').placeholder = "Écrire un message privé...";
+
+      ['annonce-update', 'general', 'vocal', 'projets'].forEach(c => {
+        const el = document.getElementById('chan-' + c);
+        if (!el) return;
+        el.className = c === 'annonce-update'
+          ? "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-amber-400 hover:bg-amber-500/10 transition border border-amber-500/20 bg-amber-500/5"
+          : "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition";
       });
 
       renderChannels();
@@ -807,6 +845,13 @@
       const input = document.getElementById('messageInput');
       const text = input.value.trim();
       if (!text || !currentUser) return;
+
+      // Seul l'Owner Rayqua peut écrire dans "annonce-update"
+      if (currentChannel === 'annonce-update' && currentUser.role !== 'Owner') {
+        alert("Seul l'Owner (Rayqua) peut écrire dans ce salon.");
+        input.value = '';
+        return;
+      }
 
       const myKey = (currentUser.username || currentUser.name).toLowerCase();
       if (accounts[myKey] && accounts[myKey].mutedUntil && accounts[myKey].mutedUntil > Date.now()) {
@@ -841,12 +886,14 @@
           const now = new Date();
           const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
           
+          // Redirection exclusive dans le canal "annonce-update"
           const globalMsg = {
             id: Date.now(),
             sender: currentUser.name,
             role: currentUser.role,
             text: annText,
             time: timeStr,
+            channel: 'annonce-update',
             isGlobalAnnouncement: true
           };
 
@@ -873,7 +920,7 @@
             if (msgs) {
               const updates = {};
               Object.keys(msgs).forEach(key => {
-                if ((msgs[key].channel || 'general') === currentChannel && !msgs[key].isGlobalAnnouncement) {
+                if ((msgs[key].channel || 'general') === currentChannel) {
                   updates[key] = null;
                 }
               });
@@ -972,7 +1019,8 @@
         sender: currentUser.name,
         text: text,
         time: timeStr,
-        channel: currentChannel
+        channel: currentChannel,
+        isGlobalAnnouncement: currentChannel === 'annonce-update'
       };
 
       db.ref('messages').push(msg);
@@ -984,15 +1032,19 @@
       if (!container) return;
       container.innerHTML = '';
 
-      const filtered = messagesList.filter(m => m.isGlobalAnnouncement || (m.channel || 'general') === currentChannel);
+      // Filtrage strict : Les annonces restent UNIQUEMENT dans 'annonce-update'
+      const filtered = messagesList.filter(m => {
+        const msgChan = m.channel || (m.isGlobalAnnouncement ? 'annonce-update' : 'general');
+        return msgChan === currentChannel;
+      });
 
       filtered.forEach(m => {
         if (m.isGlobalAnnouncement) {
           const annDiv = document.createElement('div');
           annDiv.className = "w-full my-3 flex justify-center";
           annDiv.innerHTML = `
-            <div class="w-full max-w-xl px-5 py-3.5 bg-gradient-to-r from-amber-500/20 via-brand-500/20 to-blue-500/20 border border-brand-500/40 text-gray-100 rounded-2xl shadow-xl space-y-1">
-              <div class="flex items-center justify-between text-[10px] uppercase font-bold tracking-wider text-brand-400">
+            <div class="w-full max-w-xl px-5 py-3.5 bg-gradient-to-r from-amber-500/20 via-brand-500/20 to-blue-500/20 border border-amber-500/40 text-gray-100 rounded-2xl shadow-xl space-y-1">
+              <div class="flex items-center justify-between text-[10px] uppercase font-bold tracking-wider text-amber-400">
                 <span class="flex items-center gap-1.5"><i data-lucide="megaphone" class="w-3.5 h-3.5"></i> Annonce Officielle (${m.sender})</span>
                 <span>${m.time}</span>
               </div>
