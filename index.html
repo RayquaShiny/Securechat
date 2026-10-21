@@ -252,8 +252,9 @@
         <div>
           <label class="block text-xs text-gray-400 mb-1">Rôle</label>
           <select id="newRole" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
-            <option value="Membre">Membre</option>
-            <option value="Admin">Admin</option>
+            <option value="Membre">Membre (Bleu)</option>
+            <option value="Ami">Ami (Vert)</option>
+            <option value="Admin">Admin (Rouge)</option>
           </select>
         </div>
         <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs rounded-xl transition">
@@ -289,13 +290,27 @@
     let currentChannel = 'general';
     let messagesList = [];
 
+    // Helper pour obtenir la classe de couleur selon le rôle
+    function getRoleBadgeClass(role) {
+      switch (role) {
+        case 'Owner':
+          return 'text-amber-400 font-bold bg-amber-500/10 border border-amber-500/20';
+        case 'Admin':
+          return 'text-red-400 font-bold bg-red-500/10 border border-red-500/20';
+        case 'Ami':
+          return 'text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20';
+        case 'Membre':
+        default:
+          return 'text-blue-400 font-medium bg-blue-500/10 border border-blue-500/20';
+      }
+    }
+
     db.ref('accounts').on('value', (snapshot) => {
       const data = snapshot.val();
       accounts = data || {
         'rayqua': { username: 'rayqua', name: 'Rayqua', role: 'Owner', pass: 'popopoPO99+' }
       };
 
-      // Garantir que Rayqua n'a pas (Admin) dans son nom et reste Owner
       if (!accounts['rayqua']) {
         accounts['rayqua'] = { username: 'rayqua', name: 'Rayqua', role: 'Owner', pass: 'popopoPO99+' };
         db.ref('accounts/rayqua').set(accounts['rayqua']);
@@ -437,7 +452,7 @@
             <p class="text-[10px] text-gray-400">Pass: ${acc.pass}</p>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-[10px] bg-gray-800 text-gray-400 px-2 py-0.5 rounded font-medium">${acc.role}</span>
+            <span class="text-[10px] px-2 py-0.5 rounded font-medium ${getRoleBadgeClass(acc.role)}">${acc.role}</span>
             ${accKey !== 'rayqua' ? `
               <button onclick="deleteUser('${accKey}')" class="p-1 text-red-400 hover:bg-red-500/20 rounded transition" title="Supprimer">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -468,9 +483,9 @@
             </div>
             <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-brand-500 border border-gray-900"></span>
           </div>
-          <div class="overflow-hidden">
+          <div class="overflow-hidden flex-1 flex items-center justify-between gap-1">
             <p class="text-xs font-medium text-gray-200 truncate">${u.name}</p>
-            <p class="text-[10px] ${u.role === 'Owner' ? 'text-amber-400 font-bold' : (u.role === 'Admin' ? 'text-brand-400 font-medium' : 'text-gray-500')} truncate">${u.role}</p>
+            <span class="text-[9px] px-1.5 py-0.5 rounded ${getRoleBadgeClass(u.role)} truncate">${u.role}</span>
           </div>
         `;
         container.appendChild(item);
@@ -570,7 +585,7 @@
         }
 
         if (cmd === 'help') {
-          alert("Commandes disponibles :\n- /clean : Efface ce salon\n- /ban [user] : Banni le compte avec notification rouge\n- /admin [user] : (Owner) Nomme un membre Admin\n- /help : Affiche cette aide");
+          alert("Commandes disponibles :\n- /clean : Efface ce salon\n- /ban [user] : Banni le compte avec notification rouge\n- /admin [user] : Nomme un membre Admin\n- /help : Affiche cette aide");
           input.value = '';
           return;
         }
