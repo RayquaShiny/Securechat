@@ -65,14 +65,6 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
-
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 15px rgba(34, 197, 94, 0.3); }
-      50% { box-shadow: 0 0 25px rgba(34, 197, 94, 0.6); }
-    }
-    .active-encrypted {
-      animation: pulse-glow 3s infinite ease-in-out;
-    }
   </style>
 </head>
 <body class="min-h-screen min-h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-x-hidden">
@@ -140,12 +132,8 @@
           <div>
             <h2 class="text-sm font-bold leading-tight text-white flex items-center gap-1.5">
               <span>Securechat</span>
-              <span class="text-[10px] bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded font-mono uppercase">x3 E2EE</span>
+              <span class="text-[10px] bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded font-mono uppercase">System Active</span>
             </h2>
-            <p class="text-[11px] text-gray-400 flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-brand-500 inline-block"></span>
-              Commandes Admin Actives
-            </p>
           </div>
         </div>
       </div>
@@ -216,7 +204,7 @@
             <span id="currentChannelTitle" class="text-xs font-bold text-gray-200">Général</span>
           </div>
           <div class="text-[11px] text-amber-400/80 font-mono hidden sm:block">
-            Commandes : /clean, /ban [user], /help
+            /clean | /ban [user] | /admin [user] | /help
           </div>
         </div>
 
@@ -224,7 +212,7 @@
 
         <div class="p-3 sm:p-4 border-t border-gray-800 bg-darkpanel/80 shrink-0">
           <form onsubmit="sendMessage(event)" class="flex items-center gap-2">
-            <input type="text" id="messageInput" placeholder="Écrire un message ou taper /help..." 
+            <input type="text" id="messageInput" placeholder="Écrire un message..." 
               class="flex-1 py-2.5 px-4 bg-gray-900 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs sm:text-sm text-white placeholder-gray-500">
             <button type="submit" class="p-2.5 bg-brand-600 hover:bg-brand-500 active:scale-95 text-white rounded-xl shadow-md transition flex items-center justify-center">
               <i data-lucide="send" class="w-5 h-5"></i>
@@ -260,6 +248,13 @@
         <div>
           <label class="block text-xs text-gray-400 mb-1">Mot de passe</label>
           <input type="password" id="newPassword" required placeholder="••••••••" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">Rôle</label>
+          <select id="newRole" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
+            <option value="Membre">Membre</option>
+            <option value="Admin">Admin</option>
+          </select>
         </div>
         <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs rounded-xl transition">
           Créer le Compte
@@ -297,12 +292,16 @@
     db.ref('accounts').on('value', (snapshot) => {
       const data = snapshot.val();
       accounts = data || {
-        'rayqua': { username: 'rayqua', name: 'Rayqua (Admin)', role: 'Admin', pass: 'popopoPO99+' }
+        'rayqua': { username: 'rayqua', name: 'Rayqua', role: 'Owner', pass: 'popopoPO99+' }
       };
 
+      // S'assurer que Rayqua possède toujours le rôle Owner
       if (!accounts['rayqua']) {
-        accounts['rayqua'] = { username: 'rayqua', name: 'Rayqua (Admin)', role: 'Admin', pass: 'popopoPO99+' };
+        accounts['rayqua'] = { username: 'rayqua', name: 'Rayqua', role: 'Owner', pass: 'popopoPO99+' };
         db.ref('accounts/rayqua').set(accounts['rayqua']);
+      } else if (accounts['rayqua'].role !== 'Owner') {
+        accounts['rayqua'].role = 'Owner';
+        db.ref('accounts/rayqua/role').set('Owner');
       }
 
       renderUsersList();
@@ -336,7 +335,7 @@
         document.getElementById('userRoleDisplay').textContent = currentUser.role;
         document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
 
-        if (currentUser.role === 'Admin') {
+        if (currentUser.role === 'Owner' || currentUser.role === 'Admin') {
           document.getElementById('adminBtn').classList.remove('hidden');
         } else {
           document.getElementById('adminBtn').classList.add('hidden');
@@ -358,7 +357,7 @@
     }
 
     function openAdminModal() {
-      if (currentUser && currentUser.role === 'Admin') {
+      if (currentUser && (currentUser.role === 'Owner' || currentUser.role === 'Admin')) {
         document.getElementById('adminModal').classList.remove('hidden');
         updateAdminUsersList();
       }
@@ -374,14 +373,15 @@
       const keyUser = rawUser.toLowerCase();
       const name = document.getElementById('newDisplayName').value.trim();
       const pass = document.getElementById('newPassword').value;
+      const role = document.getElementById('newRole').value;
 
       if (!keyUser || !pass) return;
 
-      const newUser = { username: rawUser, name: name || rawUser, role: 'Membre', pass: pass };
+      const newUser = { username: rawUser, name: name || rawUser, role: role || 'Membre', pass: pass };
 
       db.ref('accounts/' + keyUser).set(newUser, (err) => {
         if (!err) {
-          alert('Le compte "' + rawUser + '" a été créé avec succès !');
+          alert('Le compte "' + rawUser + '" a été créé avec le rôle ' + role + ' !');
           document.getElementById('newUsername').value = '';
           document.getElementById('newDisplayName').value = '';
           document.getElementById('newPassword').value = '';
@@ -391,12 +391,30 @@
 
     function deleteUser(keyUser) {
       if (keyUser === 'rayqua') {
-        alert("Tu ne peux pas supprimer le compte administrateur Rayqua !");
+        alert("Tu ne peux pas supprimer le compte du Founder/Owner Rayqua !");
         return;
       }
       if (confirm(`Veux-tu vraiment supprimer le compte "${keyUser}" ?`)) {
-        db.ref('accounts/' + keyUser).remove();
+        const bannedPersonName = accounts[keyUser] ? accounts[keyUser].name : keyUser;
+        db.ref('accounts/' + keyUser).remove().then(() => {
+          sendSystemBanMessage(bannedPersonName);
+        });
       }
+    }
+
+    function sendSystemBanMessage(targetName) {
+      const now = new Date();
+      const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+      
+      const sysMsg = {
+        id: Date.now(),
+        isSystemBan: true,
+        text: `${currentUser.name} qui est ${currentUser.role} a banni ${targetName}`,
+        time: timeStr,
+        channel: currentChannel
+      };
+
+      db.ref('messages').push(sysMsg);
     }
 
     function updateAdminUsersList() {
@@ -413,7 +431,7 @@
             <p class="text-[10px] text-gray-400">Pass: ${acc.pass}</p>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-[10px] bg-gray-800 text-gray-400 px-2 py-0.5 rounded">${acc.role}</span>
+            <span class="text-[10px] bg-gray-800 text-gray-400 px-2 py-0.5 rounded font-medium">${acc.role}</span>
             ${accKey !== 'rayqua' ? `
               <button onclick="deleteUser('${accKey}')" class="p-1 text-red-400 hover:bg-red-500/20 rounded transition" title="Supprimer">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -446,7 +464,7 @@
           </div>
           <div class="overflow-hidden">
             <p class="text-xs font-medium text-gray-200 truncate">${u.name}</p>
-            <p class="text-[10px] text-gray-500 truncate">${u.role}</p>
+            <p class="text-[10px] ${u.role === 'Owner' ? 'text-amber-400 font-bold' : (u.role === 'Admin' ? 'text-brand-400 font-medium' : 'text-gray-500')} truncate">${u.role}</p>
           </div>
         `;
         container.appendChild(item);
@@ -471,17 +489,16 @@
       toggleSidebar(false);
     }
 
-    // GESTION DES COMMANDES ADMIN DANS LE CHAT
+    // GESTION DES COMMANDES (/clean, /ban, /admin, /help)
     function sendMessage(e) {
       e.preventDefault();
       const input = document.getElementById('messageInput');
       const text = input.value.trim();
       if (!text || !currentUser) return;
 
-      // Détection des commandes commençant par /
       if (text.startsWith('/')) {
-        if (currentUser.role !== 'Admin') {
-          alert("Tu n'as pas les permissions nécessaires pour exécuter des commandes.");
+        if (currentUser.role !== 'Owner' && currentUser.role !== 'Admin') {
+          alert("Tu n'as pas les permissions suffisantes pour exécuter des commandes.");
           input.value = '';
           return;
         }
@@ -505,35 +522,54 @@
         }
 
         if (cmd === 'ban') {
-          const target = args[1] ? args[1].toLowerCase() : '';
-          if (!target) {
+          const targetKey = args[1] ? args[1].toLowerCase() : '';
+          if (!targetKey) {
             alert("Utilisation : /ban [identifiant]");
             input.value = '';
             return;
           }
-          if (target === 'rayqua') {
-            alert("Impossible de te bannir toi-même !");
+          if (targetKey === 'rayqua') {
+            alert("Impossible de bannir l'Owner Rayqua !");
             input.value = '';
             return;
           }
-          if (accounts[target]) {
-            db.ref('accounts/' + target).remove().then(() => {
-              alert(`Le compte "${target}" a été banni avec succès.`);
+          if (accounts[targetKey]) {
+            const bannedPersonName = accounts[targetKey].name;
+            db.ref('accounts/' + targetKey).remove().then(() => {
+              sendSystemBanMessage(bannedPersonName);
             });
           } else {
-            alert(`Aucun compte trouvé avec l'identifiant "${target}".`);
+            alert(`Aucun compte trouvé pour l'identifiant "${targetKey}".`);
+          }
+          input.value = '';
+          return;
+        }
+
+        if (cmd === 'admin') {
+          if (currentUser.role !== 'Owner') {
+            alert("Seul l'Owner (Rayqua) peut donner le rôle Admin à un utilisateur.");
+            input.value = '';
+            return;
+          }
+          const targetKey = args[1] ? args[1].toLowerCase() : '';
+          if (accounts[targetKey]) {
+            db.ref('accounts/' + targetKey + '/role').set('Admin').then(() => {
+              alert(`${accounts[targetKey].name} est maintenant Admin !`);
+            });
+          } else {
+            alert(`Identifiant "${targetKey}" introuvable.`);
           }
           input.value = '';
           return;
         }
 
         if (cmd === 'help') {
-          alert("Commandes Admin disponibles :\n- /clean : Efface tous les messages de ce salon\n- /ban [identifiant] : Supprime définitivement un compte\n- /help : Affiche cette aide");
+          alert("Commandes disponibles :\n- /clean : Efface ce salon\n- /ban [user] : Banni le compte avec notification rouge\n- /admin [user] : (Owner) Nomme un membre Admin\n- /help : Affiche cette aide");
           input.value = '';
           return;
         }
 
-        alert("Commande inconnue. Tape /help pour voir la liste.");
+        alert("Commande inconnue. Tape /help");
         input.value = '';
         return;
       }
@@ -562,6 +598,22 @@
       const filtered = messagesList.filter(m => (m.channel || 'general') === currentChannel);
 
       filtered.forEach(m => {
+        // Rendu spécial pour les messages système de bannissement
+        if (m.isSystemBan) {
+          const sysDiv = document.createElement('div');
+          sysDiv.className = "w-full my-2 flex justify-center";
+          sysDiv.innerHTML = `
+            <div class="px-4 py-2.5 bg-red-950/80 border border-red-600/50 text-red-300 text-xs sm:text-sm rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-red-900/30">
+              <i data-lucide="ban" class="w-4 h-4 text-red-500 shrink-0"></i>
+              <span>${m.text}</span>
+              <span class="text-[10px] text-red-400 font-normal ml-2">${m.time}</span>
+            </div>
+          `;
+          container.appendChild(sysDiv);
+          return;
+        }
+
+        // Messages standards
         const isMe = currentUser && m.sender === currentUser.name;
         const msgDiv = document.createElement('div');
         msgDiv.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} space-y-1`;
