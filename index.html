@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Securechat V2 - Espace Chiffré Sécurisé</title>
+  <title>Securechat - Espace Chiffré Sécurisé</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -21,10 +21,14 @@
         extend: {
           colors: {
             brand: {
-              50: 'var(--brand-50, #f0fdf4)',
-              500: 'var(--brand-500, #22c55e)',
-              600: 'var(--brand-600, #16a34a)',
-              700: 'var(--brand-700, #15803d)',
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+              950: '#052e16',
             },
             darkbg: '#0b0f17',
             darkpanel: '#111827',
@@ -36,13 +40,6 @@
   </script>
 
   <style>
-    :root {
-      --brand-50: #f0fdf4;
-      --brand-500: #22c55e;
-      --brand-600: #16a34a;
-      --brand-700: #15803d;
-    }
-
     body {
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
@@ -82,11 +79,11 @@
   <div id="authScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-darkbg/95 backdrop-blur-xl overflow-y-auto">
     <div class="w-full max-w-md my-auto glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl border border-white/10 space-y-6">
       <div class="text-center space-y-2">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 mb-2">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-500/10 text-brand-500 border border-brand-500/20 mb-2">
           <i data-lucide="shield-check" class="w-9 h-9"></i>
         </div>
-        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Securechat V2</h1>
-        <p class="text-xs sm:text-sm text-gray-400">Réseau Chiffré • Ultimate Edition</p>
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Securechat</h1>
+        <p class="text-xs sm:text-sm text-gray-400">Authentification requise pour accéder au réseau chiffré</p>
       </div>
 
       <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
@@ -97,7 +94,7 @@
               <i data-lucide="user" class="w-5 h-5"></i>
             </span>
             <input type="text" id="loginUsername" required autocomplete="username" placeholder="Entrez votre identifiant" 
-              class="w-full pl-11 pr-4 py-3 bg-gray-900/80 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition text-sm text-white placeholder-gray-500">
+              class="w-full pl-11 pr-4 py-3 bg-gray-900/80 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition text-sm text-white placeholder-gray-500">
           </div>
         </div>
 
@@ -108,7 +105,7 @@
               <i data-lucide="lock" class="w-5 h-5"></i>
             </span>
             <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••••••" 
-              class="w-full pl-11 pr-4 py-3 bg-gray-900/80 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition text-sm text-white placeholder-gray-500">
+              class="w-full pl-11 pr-4 py-3 bg-gray-900/80 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition text-sm text-white placeholder-gray-500">
           </div>
         </div>
 
@@ -117,7 +114,7 @@
           <span>Identifiant ou mot de passe incorrect.</span>
         </div>
 
-        <button type="submit" class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white font-semibold rounded-xl shadow-lg shadow-emerald-600/20 transition-all duration-200 flex items-center justify-center gap-2 text-sm">
+        <button type="submit" class="w-full py-3.5 px-4 bg-brand-600 hover:bg-brand-500 active:scale-[0.98] text-white font-semibold rounded-xl shadow-lg shadow-brand-600/20 transition-all duration-200 flex items-center justify-center gap-2 text-sm">
           <span>Se connecter</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
@@ -135,15 +132,16 @@
         </button>
         
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-500 flex items-center justify-center border border-emerald-500/30">
+          <div class="w-8 h-8 rounded-lg bg-brand-500/20 text-brand-500 flex items-center justify-center border border-brand-500/30">
             <i data-lucide="shield" class="w-5 h-5"></i>
           </div>
           <div>
             <h2 class="text-sm font-bold leading-tight text-white flex items-center gap-1.5">
               <span>Securechat</span>
-              <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded hover:bg-emerald-500/20 transition flex items-center gap-1">
+              <!-- BOUTON CHANGELOG VERSION -->
+              <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v2.0.0</span>
+                <span>v1.9.1</span>
               </button>
             </h2>
           </div>
@@ -151,31 +149,18 @@
       </div>
 
       <div class="flex items-center gap-2 sm:gap-3">
-        <!-- SELECTEUR DE THEME -->
-        <div class="hidden md:flex items-center gap-1.5 bg-gray-900 p-1 rounded-xl border border-gray-800">
-          <button onclick="setTheme('emerald')" class="w-4 h-4 rounded-full bg-emerald-500 border border-white/20" title="Thème Émeraude"></button>
-          <button onclick="setTheme('purple')" class="w-4 h-4 rounded-full bg-purple-500 border border-white/20" title="Thème Néon Violet"></button>
-          <button onclick="setTheme('cyan')" class="w-4 h-4 rounded-full bg-cyan-500 border border-white/20" title="Thème Cyber Cyan"></button>
-          <button onclick="setTheme('rose')" class="w-4 h-4 rounded-full bg-rose-500 border border-white/20" title="Thème Rouge Ruby"></button>
-        </div>
-
         <button id="adminBtn" onclick="openAdminModal()" class="hidden px-3 py-1.5 text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 transition flex items-center gap-1.5 font-medium">
           <i data-lucide="user-cog" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Gérer les comptes</span>
         </button>
 
         <div class="flex items-center gap-2 pl-2 border-l border-gray-800">
-          <div id="userAvatar" class="w-8 h-8 rounded-full bg-emerald-700 text-white font-bold flex items-center justify-center text-xs">
+          <div id="userAvatar" class="w-8 h-8 rounded-full bg-brand-700 text-white font-bold flex items-center justify-center text-xs">
             U
           </div>
           <div class="hidden md:block">
-            <div class="flex items-center gap-1">
-              <p id="userNameDisplay" class="text-xs font-semibold text-gray-200">User</p>
-              <span id="userBadgeDisplay"></span>
-            </div>
-            <button onclick="setCustomStatus()" class="text-[10px] text-gray-400 hover:text-emerald-400 block text-left truncate max-w-[100px]" id="userStatusDisplay">
-              + Définir un statut
-            </button>
+            <p id="userNameDisplay" class="text-xs font-semibold text-gray-200">User</p>
+            <p id="userRoleDisplay" class="text-[10px] text-gray-400">Membre</p>
           </div>
           <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition ml-1" title="Déconnexion">
             <i data-lucide="log-out" class="w-4 h-4"></i>
@@ -197,6 +182,7 @@
 
         <div class="p-4 border-b border-gray-800 shrink-0">
           <nav class="space-y-1">
+            <!-- SALON ANNONCE UPDATE -->
             <button onclick="selectChannel('annonce-update')" id="chan-annonce-update" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-amber-400 hover:bg-amber-500/10 transition border border-amber-500/20 bg-amber-500/5">
               <span class="flex items-center gap-2 font-semibold">
                 <i data-lucide="megaphone" class="w-4 h-4"></i>
@@ -213,7 +199,7 @@
                 <span>Général</span>
               </span>
               <div class="flex items-center gap-2">
-                <span id="dot-general" class="w-2 h-2 rounded-full bg-emerald-500 hidden"></span>
+                <span id="dot-general" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span>
               </div>
             </button>
             <button onclick="selectChannel('vocal')" id="chan-vocal" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition">
@@ -222,7 +208,7 @@
                 <span>Salon Vocal</span>
               </span>
               <div class="flex items-center gap-2">
-                <span id="dot-vocal" class="w-2 h-2 rounded-full bg-emerald-500 hidden"></span>
+                <span id="dot-vocal" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span>
               </div>
             </button>
             <button onclick="selectChannel('projets')" id="chan-projets" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition">
@@ -231,7 +217,7 @@
                 <span>Projets Privés</span>
               </span>
               <div class="flex items-center gap-2">
-                <span id="dot-projets" class="w-2 h-2 rounded-full bg-emerald-500 hidden"></span>
+                <span id="dot-projets" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span>
               </div>
             </button>
           </nav>
@@ -254,40 +240,23 @@
             <span id="currentChannelTitle" class="text-xs font-bold text-gray-200">Général</span>
           </div>
           <div id="headerCommandHint" class="text-[11px] text-amber-400/80 font-mono hidden sm:block">
-            /poll [Q] | [O1] | [O2] | /clean | /ban | /mute | /unmute | /warn | /toall
+            /clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help
           </div>
         </div>
 
         <!-- ZONE DE MESSAGES -->
         <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
 
-        <!-- REPONSE EN COURS -->
-        <div id="replyPreviewBar" class="hidden px-4 py-2 bg-gray-900 border-t border-gray-800 flex items-center justify-between text-xs text-gray-300 shrink-0">
-          <div class="flex items-center gap-2 truncate">
-            <i data-lucide="corner-down-right" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-            <span>Réponse à <strong id="replyTargetSender">User</strong> : <em id="replyTargetText" class="text-gray-400">Message...</em></span>
-          </div>
-          <button onclick="cancelReply()" class="text-gray-400 hover:text-white p-1">
-            <i data-lucide="x" class="w-4 h-4"></i>
-          </button>
-        </div>
-
         <div class="p-3 sm:p-4 border-t border-gray-800 bg-darkpanel/80 shrink-0">
           <form onsubmit="sendMessage(event)" class="flex items-center gap-2">
             <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
-            
             <button type="button" id="imgUploadBtn" onclick="triggerImageUpload()" class="p-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition flex items-center justify-center shrink-0" title="Envoyer une photo">
               <i data-lucide="image" class="w-5 h-5"></i>
             </button>
 
-            <!-- BOUTON AUDIO NOTE VOCALE -->
-            <button type="button" id="audioRecordBtn" onclick="toggleAudioRecord()" class="p-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition flex items-center justify-center shrink-0" title="Enregistrer une note vocale">
-              <i data-lucide="mic" id="micIcon" class="w-5 h-5"></i>
-            </button>
-
             <input type="text" id="messageInput" placeholder="Écrire un message..." 
-              class="flex-1 py-2.5 px-4 bg-gray-900 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-xs sm:text-sm text-white placeholder-gray-500 disabled:opacity-50">
-            <button type="submit" id="sendBtn" class="p-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white rounded-xl shadow-md transition flex items-center justify-center shrink-0 disabled:opacity-50">
+              class="flex-1 py-2.5 px-4 bg-gray-900 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs sm:text-sm text-white placeholder-gray-500 disabled:opacity-50">
+            <button type="submit" id="sendBtn" class="p-2.5 bg-brand-600 hover:bg-brand-500 active:scale-95 text-white rounded-xl shadow-md transition flex items-center justify-center shrink-0 disabled:opacity-50">
               <i data-lucide="send" class="w-5 h-5"></i>
             </button>
           </form>
@@ -344,11 +313,11 @@
 
   <!-- MODAL CHANGELOG -->
   <div id="changelogModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="w-full max-w-lg glass-panel p-6 rounded-2xl border border-emerald-500/30 space-y-4 max-h-[85vh] overflow-y-auto text-xs sm:text-sm">
+    <div class="w-full max-w-lg glass-panel p-6 rounded-2xl border border-brand-500/30 space-y-4 max-h-[85vh] overflow-y-auto text-xs sm:text-sm">
       <div class="flex items-center justify-between border-b border-gray-800 pb-3">
         <h3 class="text-base font-bold text-white flex items-center gap-2">
-          <i data-lucide="git-commit" class="w-5 h-5 text-emerald-400"></i>
-          <span>Changelog V2.0.0</span>
+          <i data-lucide="git-commit" class="w-5 h-5 text-brand-400"></i>
+          <span>Changelog & Historique des Versions</span>
         </h3>
         <button onclick="closeChangelogModal()" class="text-gray-400 hover:text-white">
           <i data-lucide="x" class="w-5 h-5"></i>
@@ -356,18 +325,27 @@
       </div>
 
       <div class="space-y-4 text-gray-300">
-        <div class="border-l-2 border-emerald-500 pl-3 space-y-1">
+        <div class="border-l-2 border-brand-500 pl-3 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v2.0.0 (Majeure)</span>
-            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
+            <span class="font-bold text-white text-sm">v1.9.1</span>
+            <span class="text-[10px] bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
           </div>
-          <p class="text-xs text-gray-400">
-            • Enregistrement de 🎤 notes vocales en direct.<br>
-            • Réactions interactives (👍 ❤️ 🔥 💀) et réponses aux messages.<br>
-            • Commande de sondages <code class="text-emerald-300">/poll</code>.<br>
-            • Badges exclusifs (👑 FOUNDER pour Rayqua) et statuts perso.<br>
-            • Sélecteur de thèmes de couleurs dynamiques.
-          </p>
+          <p class="text-xs text-gray-400">Correction des notifications : suppression des faux points verts apparaissant dans Général et les DMs lors de la publication d'une annonce.</p>
+        </div>
+
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <span class="font-bold text-white text-sm">v1.9.0</span>
+          <p class="text-xs text-gray-400">Création du salon exclusif <code class="text-amber-300">📢 • annonce-update</code> réservé à l'Owner Rayqua.</p>
+        </div>
+
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <span class="font-bold text-white text-sm">v1.8.2</span>
+          <p class="text-xs text-gray-400">Optimisation des notifications : le point vert ne s'affiche plus sur le salon actif.</p>
+        </div>
+
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <span class="font-bold text-white text-sm">v1.8.1</span>
+          <p class="text-xs text-gray-400">Correction d'affichage sur iPhone (menu latéral et émojis).</p>
         </div>
       </div>
     </div>
@@ -375,8 +353,8 @@
 
   <!-- LOGIQUE JS -->
   <script>
-    const CURRENT_VERSION = "v2.0.0";
-    const VERSION_CHANGELOG = "Lancement officiel de la V2.0.0 : Notes vocales, réactions aux messages, réponses ciblées, sondages /poll, thèmes de couleur et badge Owner Founder exclusif !";
+    const CURRENT_VERSION = "v1.9.1";
+    const VERSION_CHANGELOG = "Correction des notifications : suppression des faux points verts apparaissant dans Général et les DMs lors de la publication d'une annonce.";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA1-DPVxv934DWaqMMlQsE4AGvPElb_Rl8",
@@ -398,12 +376,6 @@
     let currentUser = null;
     let currentChannel = 'general';
     let messagesList = [];
-    let replyingToMsg = null;
-
-    // AUDIO RECORDING VARS
-    let mediaRecorder = null;
-    let audioChunks = [];
-    let isRecording = false;
 
     function getRoleBadgeClass(role) {
       switch (role) {
@@ -416,23 +388,6 @@
         case 'Membre':
         default:
           return 'text-blue-400 font-medium bg-blue-500/10 border border-blue-500/20';
-      }
-    }
-
-    function setTheme(theme) {
-      const root = document.documentElement;
-      if (theme === 'purple') {
-        root.style.setProperty('--brand-500', '#a855f7');
-        root.style.setProperty('--brand-600', '#9333ea');
-      } else if (theme === 'cyan') {
-        root.style.setProperty('--brand-500', '#06b6d4');
-        root.style.setProperty('--brand-600', '#0891b2');
-      } else if (theme === 'rose') {
-        root.style.setProperty('--brand-500', '#f43f5e');
-        root.style.setProperty('--brand-600', '#e11d48');
-      } else {
-        root.style.setProperty('--brand-500', '#22c55e');
-        root.style.setProperty('--brand-600', '#16a34a');
       }
     }
 
@@ -469,6 +424,15 @@
       if (!accounts['rayqua']) {
         accounts['rayqua'] = { username: 'rayqua', name: 'Rayqua', role: 'Owner', pass: 'popopoPO99+' };
         db.ref('accounts/rayqua').set(accounts['rayqua']);
+      } else {
+        if (accounts['rayqua'].name !== 'Rayqua') {
+          accounts['rayqua'].name = 'Rayqua';
+          db.ref('accounts/rayqua/name').set('Rayqua');
+        }
+        if (accounts['rayqua'].role !== 'Owner') {
+          accounts['rayqua'].role = 'Owner';
+          db.ref('accounts/rayqua/role').set('Owner');
+        }
       }
 
       renderUsersList();
@@ -488,10 +452,11 @@
 
     db.ref('messages').on('value', (snapshot) => {
       const msgs = snapshot.val() || {};
-      messagesList = Object.entries(msgs).map(([key, val]) => ({ ...val, _firebaseKey: key }));
+      messagesList = Object.values(msgs);
 
       if (currentUser) {
         messagesList.forEach(m => {
+          // CORRECTION DE LA LOGIQUE DE DELECTION DES NOTIFICATIONS
           let targetChan = m.channel;
           if (m.isGlobalAnnouncement) {
             targetChan = 'annonce-update';
@@ -532,14 +497,15 @@
         document.getElementById('authScreen').classList.add('hidden');
         document.getElementById('appContainer').classList.remove('hidden');
         document.getElementById('userNameDisplay').textContent = currentUser.name;
+        document.getElementById('userRoleDisplay').textContent = currentUser.role;
         document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
-
-        if (currentUser.username.toLowerCase() === 'rayqua') {
-          document.getElementById('userBadgeDisplay').innerHTML = `<span class="px-1.5 py-0.2 text-[9px] bg-amber-500/20 text-amber-400 font-bold border border-amber-500/30 rounded">👑 FOUNDER</span>`;
-        }
 
         if (currentUser.role === 'Owner' || currentUser.role === 'Admin') {
           document.getElementById('adminBtn').classList.remove('hidden');
+          document.getElementById('headerCommandHint').textContent = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
+        } else {
+          document.getElementById('adminBtn').classList.add('hidden');
+          document.getElementById('headerCommandHint').textContent = '';
         }
 
         checkAndPublishAutoUpdate();
@@ -557,65 +523,27 @@
       currentUser = null;
       document.getElementById('appContainer').classList.add('hidden');
       document.getElementById('authScreen').classList.remove('hidden');
+      document.getElementById('loginUsername').value = '';
+      document.getElementById('loginPassword').value = '';
     }
 
-    function setCustomStatus() {
-      const st = prompt("Entrez votre statut personnalisé :");
-      if (st !== null) {
-        document.getElementById('userStatusDisplay').textContent = st || "+ Définir un statut";
-        const myKey = currentUser.username.toLowerCase();
-        db.ref('accounts/' + myKey + '/customStatus').set(st);
+    function openAdminModal() {
+      if (currentUser && (currentUser.role === 'Owner' || currentUser.role === 'Admin')) {
+        document.getElementById('adminModal').classList.remove('hidden');
+        updateAdminUsersList();
       }
     }
 
-    // GESTION VOCALE (AUDIO)
-    async function toggleAudioRecord() {
-      const btn = document.getElementById('audioRecordBtn');
-      const micIcon = document.getElementById('micIcon');
-
-      if (!isRecording) {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          mediaRecorder = new MediaRecorder(stream);
-          audioChunks = [];
-
-          mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-          mediaRecorder.onstop = () => {
-            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-            const reader = new FileReader();
-            reader.readAsDataURL(audioBlob);
-            reader.onloadend = () => {
-              const base64Audio = reader.result;
-              sendAudioMessage(base64Audio);
-            };
-          };
-
-          mediaRecorder.start();
-          isRecording = true;
-          btn.classList.add('bg-red-600', 'animate-pulse');
-        } catch (err) {
-          alert("Accès au microphone refusé ou non supporté.");
-        }
-      } else {
-        mediaRecorder.stop();
-        isRecording = false;
-        btn.classList.remove('bg-red-600', 'animate-pulse');
-      }
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.add('hidden');
     }
 
-    function sendAudioMessage(audioBase64) {
-      const now = new Date();
-      const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+    function openChangelogModal() {
+      document.getElementById('changelogModal').classList.remove('hidden');
+    }
 
-      const msg = {
-        id: Date.now(),
-        sender: currentUser.name,
-        audioUrl: audioBase64,
-        time: timeStr,
-        channel: currentChannel
-      };
-
-      db.ref('messages').push(msg);
+    function closeChangelogModal() {
+      document.getElementById('changelogModal').classList.add('hidden');
     }
 
     function triggerImageUpload() {
@@ -626,6 +554,14 @@
     function handleImageUpload(e) {
       const file = e.target.files[0];
       if (!file || !currentUser) return;
+
+      const myKey = (currentUser.username || currentUser.name).toLowerCase();
+      if (accounts[myKey] && accounts[myKey].mutedUntil && accounts[myKey].mutedUntil > Date.now()) {
+        const remainingSec = Math.ceil((accounts[myKey].mutedUntil - Date.now()) / 1000);
+        alert(`Tu es muet ! Tu ne peux pas envoyer d'image pendant encore ${remainingSec} secondes.`);
+        e.target.value = '';
+        return;
+      }
 
       const reader = new FileReader();
       reader.onload = function(uploadEvent) {
@@ -647,228 +583,82 @@
       reader.readAsDataURL(file);
     }
 
-    function setReplyTarget(sender, text) {
-      replyingToMsg = { sender, text };
-      document.getElementById('replyTargetSender').textContent = sender;
-      document.getElementById('replyTargetText').textContent = text.slice(0, 30) + '...';
-      document.getElementById('replyPreviewBar').classList.remove('hidden');
-    }
-
-    function cancelReply() {
-      replyingToMsg = null;
-      document.getElementById('replyPreviewBar').classList.add('hidden');
-    }
-
-    function addReaction(msgKey, emoji) {
-      if (!currentUser) return;
-      const myKey = currentUser.username.toLowerCase();
-      db.ref(`messages/${msgKey}/reactions/${emoji}/${myKey}`).set(true);
-    }
-
-    function votePoll(msgKey, optionIdx) {
-      if (!currentUser) return;
-      const myKey = currentUser.username.toLowerCase();
-      db.ref(`messages/${msgKey}/poll/votes/${myKey}`).set(optionIdx);
-    }
-
-    function sendMessage(e) {
+    function handleCreateUser(e) {
       e.preventDefault();
-      const input = document.getElementById('messageInput');
-      const text = input.value.trim();
-      if (!text || !currentUser) return;
+      const rawUser = document.getElementById('newUsername').value.trim();
+      const keyUser = rawUser.toLowerCase();
+      const name = document.getElementById('newDisplayName').value.trim();
+      const pass = document.getElementById('newPassword').value;
+      const role = document.getElementById('newRole').value;
 
-      if (text.startsWith('/')) {
-        const args = text.slice(1).split(' ');
-        const cmd = args[0].toLowerCase();
+      if (!keyUser || !pass) return;
 
-        if (cmd === 'poll') {
-          const parts = text.slice(6).split('|').map(s => s.trim());
-          if (parts.length < 3) {
-            alert("Format : /poll Question | Option 1 | Option 2");
-            input.value = '';
-            return;
-          }
-          const question = parts[0];
-          const options = parts.slice(1);
+      const newUser = { username: rawUser, name: name || rawUser, role: role || 'Membre', pass: pass };
 
-          const now = new Date();
-          const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-
-          const pollMsg = {
-            id: Date.now(),
-            sender: currentUser.name,
-            time: timeStr,
-            channel: currentChannel,
-            poll: { question, options }
-          };
-
-          db.ref('messages').push(pollMsg);
-          input.value = '';
-          return;
+      db.ref('accounts/' + keyUser).set(newUser, (err) => {
+        if (!err) {
+          alert('Le compte "' + rawUser + '" a été créé avec le rôle ' + role + ' !');
+          document.getElementById('newUsername').value = '';
+          document.getElementById('newDisplayName').value = '';
+          document.getElementById('newPassword').value = '';
         }
+      });
+    }
 
-        if (cmd === 'unmute') {
-          const targetKey = args[1] ? args[1].toLowerCase() : '';
-          if (accounts[targetKey]) {
-            db.ref('accounts/' + targetKey + '/mutedUntil').remove().then(() => {
-              sendSystemMessage(`${accounts[targetKey].name} n'est plus muet.`);
-            });
-          }
-          input.value = '';
-          return;
-        }
-
-        if (cmd === 'warn') {
-          const targetKey = args[1] ? args[1].toLowerCase() : '';
-          const reason = args.slice(2).join(' ') || "Aucune raison";
-          if (accounts[targetKey]) {
-            sendSystemMessage(`⚠️ AVERTISSEMENT à ${accounts[targetKey].name} : ${reason}`, true);
-          }
-          input.value = '';
-          return;
-        }
-
-        if (cmd === 'toall') {
-          const annText = args.slice(1).join(' ');
-          const now = new Date();
-          const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-          db.ref('messages').push({
-            id: Date.now(),
-            sender: currentUser.name,
-            text: annText,
-            time: timeStr,
-            channel: 'annonce-update',
-            isGlobalAnnouncement: true
-          });
-          input.value = '';
-          return;
-        }
+    function deleteUser(keyUser) {
+      if (keyUser === 'rayqua') {
+        alert("Tu ne peux pas supprimer le compte du Founder/Owner Rayqua !");
+        return;
       }
+      if (confirm(`Veux-tu vraiment supprimer le compte "${keyUser}" ?`)) {
+        const bannedPersonName = accounts[keyUser] ? accounts[keyUser].name : keyUser;
+        db.ref('accounts/' + keyUser).remove().then(() => {
+          sendSystemMessage(`${currentUser.name} qui est ${currentUser.role} a banni ${bannedPersonName}`, true);
+        });
+      }
+    }
 
+    function sendSystemMessage(text, isBan = false) {
       const now = new Date();
       const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-
-      const msg = {
+      
+      const sysMsg = {
         id: Date.now(),
-        sender: currentUser.name,
+        isSystem: true,
+        isBan: isBan,
         text: text,
         time: timeStr,
-        channel: currentChannel,
-        replyTo: replyingToMsg ? replyingToMsg : null
+        channel: currentChannel
       };
 
-      db.ref('messages').push(msg);
-      input.value = '';
-      cancelReply();
+      db.ref('messages').push(sysMsg);
     }
 
-    function renderMessages() {
-      const container = document.getElementById('messagesContainer');
+    function updateAdminUsersList() {
+      const container = document.getElementById('adminUsersList');
       if (!container) return;
       container.innerHTML = '';
-
-      const filtered = messagesList.filter(m => {
-        const msgChan = m.channel || (m.isGlobalAnnouncement ? 'annonce-update' : 'general');
-        return msgChan === currentChannel;
-      });
-
-      filtered.forEach(m => {
-        const isMe = currentUser && m.sender === currentUser.name;
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} space-y-1 group relative`;
-
-        // AFFICHAGE SONDAGE
-        if (m.poll) {
-          const pollDiv = document.createElement('div');
-          pollDiv.className = "w-full max-w-sm p-4 bg-gray-900 border border-gray-700 rounded-2xl space-y-2";
-          
-          let optionsHtml = '';
-          const votes = m.poll.votes || {};
-          const totalVotes = Object.keys(votes).length;
-
-          m.poll.options.forEach((opt, idx) => {
-            const count = Object.values(votes).filter(v => v === idx).length;
-            const pct = totalVotes > 0 ? Math.round((count / totalVotes) * 100) : 0;
-
-            optionsHtml += `
-              <button onclick="votePoll('${m._firebaseKey}', ${idx})" class="w-full text-left p-2 bg-gray-800 hover:bg-gray-700 rounded-xl relative overflow-hidden text-xs text-white flex justify-between items-center z-10 border border-gray-700">
-                <span class="z-10 font-medium">${opt}</span>
-                <span class="z-10 text-[10px] text-gray-400 font-bold">${pct}% (${count})</span>
-                <div class="absolute left-0 top-0 bottom-0 bg-emerald-600/30 transition-all duration-300" style="width: ${pct}%"></div>
+      Object.keys(accounts).forEach(accKey => {
+        const acc = accounts[accKey];
+        const div = document.createElement('div');
+        div.className = "flex items-center justify-between p-2.5 bg-gray-900 rounded-xl border border-gray-800";
+        div.innerHTML = `
+          <div>
+            <p class="font-bold text-gray-200">${acc.name} <span class="text-[10px] text-gray-500">(${acc.username})</span></p>
+            <p class="text-[10px] text-gray-400">Pass: ${acc.pass}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] px-2 py-0.5 rounded font-medium ${getRoleBadgeClass(acc.role)}">${acc.role}</span>
+            ${accKey !== 'rayqua' ? `
+              <button onclick="deleteUser('${accKey}')" class="p-1 text-red-400 hover:bg-red-500/20 rounded transition" title="Supprimer">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
-            `;
-          });
-
-          pollDiv.innerHTML = `
-            <div class="flex items-center gap-2 text-xs text-amber-400 font-bold">
-              <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
-              <span>Sondage : ${m.poll.question}</span>
-            </div>
-            <div class="space-y-1.5">${optionsHtml}</div>
-            <p class="text-[10px] text-gray-500 text-right">Par ${m.sender} • ${m.time}</p>
-          `;
-          container.appendChild(pollDiv);
-          return;
-        }
-
-        let contentHtml = '';
-        if (m.replyTo) {
-          contentHtml += `
-            <div class="text-[10px] opacity-75 border-l-2 border-white/40 pl-2 mb-1">
-              <strong>${m.replyTo.sender}</strong>: ${m.replyTo.text}
-            </div>
-          `;
-        }
-
-        if (m.audioUrl) {
-          contentHtml += `<audio controls src="${m.audioUrl}" class="max-w-[200px] h-8 mt-1"></audio>`;
-        } else if (m.imageUrl) {
-          contentHtml += `<img src="${m.imageUrl}" class="max-w-[240px] sm:max-w-xs rounded-xl mt-1 object-cover border border-white/10 shadow-md">`;
-        } else if (m.text) {
-          contentHtml += `<p class="break-words leading-relaxed">${m.text}</p>`;
-        }
-
-        // REACTIONS DISPLAY
-        let reactionsHtml = '';
-        if (m.reactions) {
-          reactionsHtml = '<div class="flex flex-wrap gap-1 mt-1">';
-          Object.entries(m.reactions).forEach(([emoji, users]) => {
-            const count = Object.keys(users).length;
-            reactionsHtml += `<span class="px-1.5 py-0.5 bg-gray-900 border border-gray-700 rounded-full text-[10px] text-gray-300">${emoji} ${count}</span>`;
-          });
-          reactionsHtml += '</div>';
-        }
-
-        msgDiv.innerHTML = `
-          <div class="flex items-center gap-2 text-[10px] text-gray-400 px-1">
-            <span class="font-semibold text-gray-300">${m.sender}</span>
-            <span>• ${m.time}</span>
-          </div>
-          <div class="msg-bubble max-w-[85%] sm:max-w-md p-3 rounded-2xl text-xs sm:text-sm ${
-            isMe 
-              ? 'bg-emerald-600 text-white rounded-tr-none shadow-md' 
-              : 'bg-gray-800 text-gray-100 rounded-tl-none border border-gray-700/60'
-          }">
-            ${contentHtml}
-            ${reactionsHtml}
-          </div>
-
-          <!-- BARRE D'ACTIONS AU SURVOL -->
-          <div class="hidden group-hover:flex items-center gap-1 bg-gray-900/90 border border-gray-700 rounded-lg p-1 absolute ${isMe ? 'right-0 -top-4' : 'left-0 -top-4'} shadow-lg z-20">
-            <button onclick="addReaction('${m._firebaseKey}', '👍')" class="hover:scale-125 transition text-xs">👍</button>
-            <button onclick="addReaction('${m._firebaseKey}', '❤️')" class="hover:scale-125 transition text-xs">❤️</button>
-            <button onclick="addReaction('${m._firebaseKey}', '🔥')" class="hover:scale-125 transition text-xs">🔥</button>
-            <button onclick="addReaction('${m._firebaseKey}', '💀')" class="hover:scale-125 transition text-xs">💀</button>
-            <button onclick="setReplyTarget('${m.sender}', '${(m.text || 'Image/Audio').replace(/'/g, "\\'")}')" class="text-gray-400 hover:text-white pl-1 border-l border-gray-700">
-              <i data-lucide="reply" class="w-3 h-3"></i>
-            </button>
+            ` : ''}
           </div>
         `;
-        container.appendChild(msgDiv);
+        container.appendChild(div);
       });
-
       lucide.createIcons();
-      container.scrollTop = container.scrollHeight;
     }
 
     function renderChannels() {
@@ -891,6 +681,8 @@
       const keys = Object.keys(accounts);
       document.getElementById('usersCount').textContent = keys.length;
 
+      const myKey = currentUser ? (currentUser.username || currentUser.name).toLowerCase() : '';
+
       keys.forEach(k => {
         const u = accounts[k];
         const item = document.createElement('div');
@@ -900,23 +692,42 @@
         const isMuted = u.mutedUntil && u.mutedUntil > Date.now();
         const isOnline = userStatuses[k] && userStatuses[k].state === 'online';
 
-        let dotColorClass = isMuted ? 'bg-blue-500' : (isOnline ? 'bg-emerald-500' : 'bg-red-500');
+        let dotColorClass = 'bg-red-500';
+        if (isMuted) {
+          dotColorClass = 'bg-blue-500';
+        } else if (isOnline) {
+          dotColorClass = 'bg-brand-500';
+        }
 
-        let statusText = u.customStatus ? `<p class="text-[9px] text-gray-400 truncate">${u.customStatus}</p>` : '';
+        let unreadDotHtml = '';
+        if (currentUser && k !== myKey) {
+          const sortedKeys = [myKey, k.toLowerCase()].sort();
+          const dmChan = 'dm_' + sortedKeys[0] + '_' + sortedKeys[1];
+          if (unreadChannels[dmChan] && currentChannel !== dmChan) {
+            unreadDotHtml = `<span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>`;
+          }
+        }
+
+        let roleBadgeHtml = `<span class="text-[9px] px-1.5 py-0.5 rounded ${getRoleBadgeClass(u.role)} truncate">${u.role}</span>`;
+
+        if (isMuted) {
+          const remainingSec = Math.ceil((u.mutedUntil - Date.now()) / 1000);
+          roleBadgeHtml = `<span class="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 font-semibold border border-blue-500/30 truncate">${u.role} • Muet (${remainingSec}s)</span>`;
+        }
 
         item.innerHTML = `
           <div class="relative">
-            <div class="w-7 h-7 rounded-full bg-emerald-600/30 text-emerald-400 font-bold flex items-center justify-center text-xs">
+            <div class="w-7 h-7 rounded-full bg-brand-600/30 text-brand-400 font-bold flex items-center justify-center text-xs">
               ${u.name.charAt(0).toUpperCase()}
             </div>
             <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full ${dotColorClass} border border-gray-900"></span>
           </div>
-          <div class="overflow-hidden flex-1 flex flex-col">
-            <div class="flex items-center justify-between">
-              <p class="text-xs font-medium text-gray-200 truncate">${u.name}</p>
-              <span class="text-[9px] px-1.5 py-0.5 rounded ${getRoleBadgeClass(u.role)} truncate">${u.role}</span>
+          <div class="overflow-hidden flex-1 flex items-center justify-between gap-1">
+            <p class="text-xs font-medium text-gray-200 truncate">${u.name}</p>
+            <div class="flex items-center gap-1.5">
+              ${unreadDotHtml}
+              ${roleBadgeHtml}
             </div>
-            ${statusText}
           </div>
         `;
         container.appendChild(item);
@@ -926,37 +737,372 @@
     function selectChannel(chan) {
       currentChannel = chan;
       unreadChannels[chan] = false;
+
+      const titleEl = document.getElementById('currentChannelTitle');
+      const iconEl = document.getElementById('currentChannelIcon');
+      const inputEl = document.getElementById('messageInput');
+      const sendBtnEl = document.getElementById('sendBtn');
+      const imgBtnEl = document.getElementById('imgUploadBtn');
+
+      if (chan === 'annonce-update') {
+        titleEl.textContent = '📢 • annonce-update';
+        iconEl.setAttribute('data-lucide', 'megaphone');
+
+        if (currentUser && currentUser.role === 'Owner') {
+          inputEl.disabled = false;
+          sendBtnEl.disabled = false;
+          imgBtnEl.disabled = false;
+          inputEl.placeholder = "Publier une annonce officielle...";
+        } else {
+          inputEl.disabled = true;
+          sendBtnEl.disabled = true;
+          imgBtnEl.disabled = true;
+          inputEl.placeholder = "Seul l'Owner peut publier dans ce salon";
+        }
+      } else {
+        inputEl.disabled = false;
+        sendBtnEl.disabled = false;
+        imgBtnEl.disabled = false;
+        inputEl.placeholder = "Écrire un message...";
+
+        titleEl.textContent = chan === 'general' ? 'Général' : (chan === 'vocal' ? 'Salon Vocal' : 'Projets Privés');
+        iconEl.setAttribute('data-lucide', 'hash');
+      }
+
+      if (currentUser && (currentUser.role === 'Owner' || currentUser.role === 'Admin')) {
+        document.getElementById('headerCommandHint').textContent = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
+      }
+
+      ['annonce-update', 'general', 'vocal', 'projets'].forEach(c => {
+        const el = document.getElementById('chan-' + c);
+        if (!el) return;
+        if (c === chan) {
+          el.className = c === 'annonce-update' 
+            ? "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between bg-amber-500/20 text-amber-300 border border-amber-500/30"
+            : "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between bg-brand-500/10 text-brand-400 border border-brand-500/20";
+        } else {
+          el.className = c === 'annonce-update'
+            ? "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-amber-400 hover:bg-amber-500/10 transition border border-amber-500/20 bg-amber-500/5"
+            : "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition";
+        }
+      });
+
       renderChannels();
+      renderUsersList();
       renderMessages();
       toggleSidebar(false);
+      lucide.createIcons();
     }
 
     function openDm(targetKey) {
       if (!currentUser) return;
       const keyClean = targetKey.toLowerCase();
-      const myKey = currentUser.username.toLowerCase();
-      if (keyClean === myKey) return;
+      const targetUser = accounts[keyClean];
+      if (!targetUser) return;
+
+      const myKey = (currentUser.username || currentUser.name).toLowerCase();
+
+      if (keyClean === myKey) {
+        alert("Tu ne peux pas ouvrir une discussion privée avec toi-même !");
+        return;
+      }
 
       const sortedKeys = [myKey, keyClean].sort();
       currentChannel = 'dm_' + sortedKeys[0] + '_' + sortedKeys[1];
       unreadChannels[currentChannel] = false;
 
-      document.getElementById('currentChannelTitle').textContent = `DM : ${accounts[keyClean].name}`;
+      document.getElementById('currentChannelTitle').textContent = `DM : ${targetUser.name}`;
+      document.getElementById('currentChannelIcon').setAttribute('data-lucide', 'lock');
+      document.getElementById('headerCommandHint').textContent = 'Discussion privée • Commandes désactivées';
+
+      document.getElementById('messageInput').disabled = false;
+      document.getElementById('sendBtn').disabled = false;
+      document.getElementById('imgUploadBtn').disabled = false;
+      document.getElementById('messageInput').placeholder = "Écrire un message privé...";
+
+      ['annonce-update', 'general', 'vocal', 'projets'].forEach(c => {
+        const el = document.getElementById('chan-' + c);
+        if (!el) return;
+        el.className = c === 'annonce-update'
+          ? "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-amber-400 hover:bg-amber-500/10 transition border border-amber-500/20 bg-amber-500/5"
+          : "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition";
+      });
+
       renderChannels();
+      renderUsersList();
       renderMessages();
       toggleSidebar(false);
+      lucide.createIcons();
     }
 
-    function sendSystemMessage(text, isBan = false) {
+    function sendMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('messageInput');
+      const text = input.value.trim();
+      if (!text || !currentUser) return;
+
+      if (currentChannel === 'annonce-update' && currentUser.role !== 'Owner') {
+        alert("Seul l'Owner (Rayqua) peut écrire dans ce salon.");
+        input.value = '';
+        return;
+      }
+
+      const myKey = (currentUser.username || currentUser.name).toLowerCase();
+      if (accounts[myKey] && accounts[myKey].mutedUntil && accounts[myKey].mutedUntil > Date.now()) {
+        const remainingSec = Math.ceil((accounts[myKey].mutedUntil - Date.now()) / 1000);
+        alert(`Tu es muet ! Tu ne peux pas parler pendant encore ${remainingSec} secondes.`);
+        input.value = '';
+        return;
+      }
+
+      if (text.startsWith('/')) {
+        const args = text.slice(1).split(' ');
+        const cmd = args[0].toLowerCase();
+
+        if (cmd === 'toall') {
+          if (currentChannel.startsWith('dm_')) {
+            alert("La commande /toall ne peut pas être exécutée depuis un DM.");
+            input.value = '';
+            return;
+          }
+          if (currentUser.role !== 'Owner' && currentUser.role !== 'Admin') {
+            alert("Tu n'as pas les permissions suffisantes pour faire une annonce globale.");
+            input.value = '';
+            return;
+          }
+          const annText = args.slice(1).join(' ');
+          if (!annText) {
+            alert("Utilisation : /toall [message d'annonce]");
+            input.value = '';
+            return;
+          }
+
+          const now = new Date();
+          const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+          
+          const globalMsg = {
+            id: Date.now(),
+            sender: currentUser.name,
+            role: currentUser.role,
+            text: annText,
+            time: timeStr,
+            channel: 'annonce-update',
+            isGlobalAnnouncement: true
+          };
+
+          db.ref('messages').push(globalMsg);
+          input.value = '';
+          return;
+        }
+
+        if (currentChannel.startsWith('dm_')) {
+          alert("Erreur : Les commandes d'administration sont strictement désactivées dans les discussions privées !");
+          input.value = '';
+          return;
+        }
+
+        if (currentUser.role !== 'Owner' && currentUser.role !== 'Admin') {
+          alert("Tu n'as pas les permissions suffisantes pour exécuter des commandes.");
+          input.value = '';
+          return;
+        }
+
+        if (cmd === 'clean' || cmd === 'clear') {
+          db.ref('messages').once('value', (snapshot) => {
+            const msgs = snapshot.val();
+            if (msgs) {
+              const updates = {};
+              Object.keys(msgs).forEach(key => {
+                const msgChan = msgs[key].channel || (msgs[key].isGlobalAnnouncement ? 'annonce-update' : 'general');
+                if (msgChan === currentChannel) {
+                  updates[key] = null;
+                }
+              });
+              db.ref('messages').update(updates).then(() => {
+                sendSystemMessage(`${currentUser.name} a nettoyé ce salon.`, false);
+              });
+            }
+          });
+          input.value = '';
+          return;
+        }
+
+        if (cmd === 'ban') {
+          const targetKey = args[1] ? args[1].toLowerCase() : '';
+          if (!targetKey) {
+            alert("Utilisation : /ban [identifiant]");
+            input.value = '';
+            return;
+          }
+          if (targetKey === 'rayqua') {
+            alert("Impossible de bannir l'Owner Rayqua !");
+            input.value = '';
+            return;
+          }
+          if (accounts[targetKey]) {
+            const bannedPersonName = accounts[targetKey].name;
+            db.ref('accounts/' + targetKey).remove().then(() => {
+              sendSystemMessage(`${currentUser.name} qui est ${currentUser.role} a banni ${bannedPersonName}`, true);
+            });
+          } else {
+            alert(`Aucun compte trouvé pour l'identifiant "${targetKey}".`);
+          }
+          input.value = '';
+          return;
+        }
+
+        if (cmd === 'mute') {
+          const targetKey = args[1] ? args[1].toLowerCase() : '';
+          const sec = parseInt(args[2], 10);
+          if (!targetKey || isNaN(sec)) {
+            alert("Utilisation : /mute [identifiant] [secondes]");
+            input.value = '';
+            return;
+          }
+          if (targetKey === 'rayqua') {
+            alert("Impossible de mute l'Owner Rayqua !");
+            input.value = '';
+            return;
+          }
+          if (accounts[targetKey]) {
+            const muteUntilTime = Date.now() + (sec * 1000);
+            db.ref('accounts/' + targetKey + '/mutedUntil').set(muteUntilTime).then(() => {
+              sendSystemMessage(`${accounts[targetKey].name} a été rendu muet pour ${sec} secondes par ${currentUser.name}.`, false);
+            });
+          } else {
+            alert(`Compte "${targetKey}" introuvable.`);
+          }
+          input.value = '';
+          return;
+        }
+
+        if (cmd === 'admin') {
+          if (currentUser.role !== 'Owner') {
+            alert("Seul l'Owner (Rayqua) peut donner le rôle Admin à un utilisateur.");
+            input.value = '';
+            return;
+          }
+          const targetKey = args[1] ? args[1].toLowerCase() : '';
+          if (accounts[targetKey]) {
+            db.ref('accounts/' + targetKey + '/role').set('Admin').then(() => {
+              alert(`${accounts[targetKey].name} est maintenant Admin !`);
+            });
+          } else {
+            alert(`Identifiant "${targetKey}" introuvable.`);
+          }
+          input.value = '';
+          return;
+        }
+
+        if (cmd === 'help') {
+          alert("Commandes disponibles :\n- /clean : Nettoie le salon\n- /ban [user] : Banni un compte\n- /mute [user] [sec] : Mute un utilisateur\n- /toall [msg] : Annonce globale\n- /admin [user] : Nomme un Admin\n- /help : Aide");
+          input.value = '';
+          return;
+        }
+
+        alert("Commande inconnue. Tape /help");
+        input.value = '';
+        return;
+      }
+
       const now = new Date();
       const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-      db.ref('messages').push({ id: Date.now(), isSystem: true, isBan, text, time: timeStr, channel: currentChannel });
+
+      const msg = {
+        id: Date.now(),
+        sender: currentUser.name,
+        text: text,
+        time: timeStr,
+        channel: currentChannel,
+        isGlobalAnnouncement: currentChannel === 'annonce-update'
+      };
+
+      db.ref('messages').push(msg);
+      input.value = '';
     }
 
-    function openAdminModal() { document.getElementById('adminModal').classList.remove('hidden'); }
-    function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
-    function openChangelogModal() { document.getElementById('changelogModal').classList.remove('hidden'); }
-    function closeChangelogModal() { document.getElementById('changelogModal').classList.add('hidden'); }
+    function renderMessages() {
+      const container = document.getElementById('messagesContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const filtered = messagesList.filter(m => {
+        const msgChan = m.channel || (m.isGlobalAnnouncement ? 'annonce-update' : 'general');
+        return msgChan === currentChannel;
+      });
+
+      filtered.forEach(m => {
+        if (m.isGlobalAnnouncement) {
+          const annDiv = document.createElement('div');
+          annDiv.className = "w-full my-3 flex justify-center";
+          annDiv.innerHTML = `
+            <div class="w-full max-w-xl px-5 py-3.5 bg-gradient-to-r from-amber-500/20 via-brand-500/20 to-blue-500/20 border border-amber-500/40 text-gray-100 rounded-2xl shadow-xl space-y-1">
+              <div class="flex items-center justify-between text-[10px] uppercase font-bold tracking-wider text-amber-400">
+                <span class="flex items-center gap-1.5"><i data-lucide="megaphone" class="w-3.5 h-3.5"></i> Annonce Officielle (${m.sender})</span>
+                <span>${m.time}</span>
+              </div>
+              <p class="text-xs sm:text-sm font-medium text-white">${m.text}</p>
+            </div>
+          `;
+          container.appendChild(annDiv);
+          return;
+        }
+
+        if (m.isSystem) {
+          const sysDiv = document.createElement('div');
+          sysDiv.className = "w-full my-2 flex justify-center";
+          
+          if (m.isBan) {
+            sysDiv.innerHTML = `
+              <div class="px-4 py-2.5 bg-red-950/80 border border-red-600/50 text-red-300 text-xs sm:text-sm rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-red-900/30">
+                <i data-lucide="ban" class="w-4 h-4 text-red-500 shrink-0"></i>
+                <span>${m.text}</span>
+                <span class="text-[10px] text-red-400 font-normal ml-2">${m.time}</span>
+              </div>
+            `;
+          } else {
+            sysDiv.innerHTML = `
+              <div class="px-4 py-2 bg-gray-900/90 border border-gray-700 text-gray-300 text-xs rounded-xl font-medium flex items-center gap-2">
+                <i data-lucide="info" class="w-4 h-4 text-brand-400 shrink-0"></i>
+                <span>${m.text}</span>
+                <span class="text-[10px] text-gray-500 ml-2">${m.time}</span>
+              </div>
+            `;
+          }
+          container.appendChild(sysDiv);
+          return;
+        }
+
+        const isMe = currentUser && m.sender === currentUser.name;
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} space-y-1`;
+
+        let contentHtml = '';
+        if (m.imageUrl) {
+          contentHtml = `<img src="${m.imageUrl}" class="max-w-[240px] sm:max-w-xs rounded-xl mt-1 object-cover border border-white/10 shadow-md">`;
+        } else if (m.text) {
+          contentHtml = `<p class="break-words leading-relaxed">${m.text}</p>`;
+        }
+
+        msgDiv.innerHTML = `
+          <div class="flex items-center gap-2 text-[10px] text-gray-400 px-1">
+            <span class="font-semibold text-gray-300">${m.sender}</span>
+            <span>• ${m.time}</span>
+          </div>
+          <div class="msg-bubble max-w-[85%] sm:max-w-md p-3 rounded-2xl text-xs sm:text-sm ${
+            isMe 
+              ? 'bg-brand-600 text-white rounded-tr-none shadow-md shadow-brand-600/10' 
+              : 'bg-gray-800 text-gray-100 rounded-tl-none border border-gray-700/60'
+          }">
+            ${contentHtml}
+          </div>
+        `;
+        container.appendChild(msgDiv);
+      });
+
+      lucide.createIcons();
+      container.scrollTop = container.scrollHeight;
+    }
 
     function toggleSidebar(forceState) {
       const sidebar = document.getElementById('sidebar');
