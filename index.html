@@ -371,7 +371,9 @@
         case 'auth/weak-password': return "Mot de passe trop court pour la v2 (6 caractères minimum). Demande à l'Owner de recréer ton compte.";
         case 'auth/too-many-requests': return "Trop de tentatives, réessaie dans quelques minutes.";
         case 'auth/network-request-failed': return "Problème de connexion réseau.";
-        default: return "Identifiant ou mot de passe incorrect.";
+        case 'bad-credentials': case 'bad-key': case 'auth/email-already-in-use': return "Identifiant ou mot de passe incorrect.";
+        case 'PERMISSION_DENIED': return "Migration refusée par les règles Firebase (PERMISSION_DENIED).";
+        default: return "Erreur : " + ((err && (err.code || err.message)) || 'inconnue');
       }
     }
 
