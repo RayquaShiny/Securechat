@@ -77,7 +77,7 @@
 </head>
 <body class="min-h-screen min-h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-x-hidden">
 
-  <!-- 1. ECRAN DE CONNEXION -->
+  <!-- ECRAN DE CONNEXION -->
   <div id="authScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-darkbg/95 backdrop-blur-xl overflow-y-auto">
     <div class="w-full max-w-md my-auto glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl border border-white/10 space-y-6">
       <div class="text-center space-y-2">
@@ -121,17 +121,10 @@
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
       </form>
-
-      <div class="pt-4 border-t border-gray-800 text-center">
-        <p class="text-xs text-gray-500 flex items-center justify-center gap-1.5">
-          <i data-lucide="lock" class="w-3.5 h-3.5 text-brand-500"></i>
-          Chiffrement de bout en bout AES-GCM-256
-        </p>
-      </div>
     </div>
   </div>
 
-  <!-- 2. APPLICATION PRINCIPALE -->
+  <!-- APPLICATION PRINCIPALE -->
   <div id="appContainer" class="hidden min-h-screen min-h-[100dvh] flex flex-col bg-darkbg">
     
     <header class="h-16 border-b border-gray-800 bg-darkpanel/80 backdrop-blur-md px-4 flex items-center justify-between shrink-0 sticky top-0 z-30">
@@ -151,21 +144,16 @@
             </h2>
             <p class="text-[11px] text-gray-400 flex items-center gap-1">
               <span class="w-1.5 h-1.5 rounded-full bg-brand-500 inline-block"></span>
-              Synchronisé en direct
+              Commandes Admin Actives
             </p>
           </div>
         </div>
       </div>
 
       <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Bouton Admin -->
         <button id="adminBtn" onclick="openAdminModal()" class="hidden px-3 py-1.5 text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 transition flex items-center gap-1.5 font-medium">
           <i data-lucide="user-cog" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Gérer les comptes</span>
-        </button>
-
-        <button onclick="openHelpModal()" class="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition" title="Guide">
-          <i data-lucide="help-circle" class="w-5 h-5"></i>
         </button>
 
         <div class="flex items-center gap-2 pl-2 border-l border-gray-800">
@@ -212,29 +200,12 @@
           </nav>
         </div>
 
-        <div class="p-4 border-b border-gray-800 space-y-2">
-          <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Appels Chiffrés</p>
-          <button onclick="startCall('audio')" class="w-full py-2.5 px-3 bg-gray-800 hover:bg-gray-700 text-xs font-medium rounded-xl text-gray-200 border border-gray-700/80 flex items-center justify-center gap-2 transition active:scale-[0.98]">
-            <i data-lucide="phone" class="w-4 h-4 text-brand-400"></i>
-            <span>Démarrer Appel Vocal</span>
-          </button>
-          <button onclick="startCall('video')" class="w-full py-2.5 px-3 bg-brand-600/20 hover:bg-brand-600/30 text-xs font-medium rounded-xl text-brand-300 border border-brand-500/30 flex items-center justify-center gap-2 transition active:scale-[0.98]">
-            <i data-lucide="video" class="w-4 h-4 text-brand-400"></i>
-            <span>Démarrer Visio Chiffrée</span>
-          </button>
-        </div>
-
         <div class="flex-1 overflow-y-auto p-4 space-y-3">
           <div class="flex items-center justify-between">
             <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Membres Autorisés</p>
             <span id="usersCount" class="text-[10px] bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded">0</span>
           </div>
           <div id="usersListContainer" class="space-y-1.5"></div>
-        </div>
-
-        <div class="p-3 border-t border-gray-800 bg-gray-950/50 text-[11px] text-gray-400 flex items-center gap-2">
-          <i data-lucide="key" class="w-4 h-4 text-brand-400 shrink-0"></i>
-          <span>Clé dynamique unique / message</span>
         </div>
       </aside>
 
@@ -243,14 +214,9 @@
           <div class="flex items-center gap-2">
             <i data-lucide="hash" class="w-4 h-4 text-gray-400"></i>
             <span id="currentChannelTitle" class="text-xs font-bold text-gray-200">Général</span>
-            <span class="text-[10px] bg-brand-500/10 text-brand-400 px-2 py-0.5 rounded border border-brand-500/20 flex items-center gap-1">
-              <i data-lucide="lock" class="w-3 h-3"></i> AES-GCM-256
-            </span>
           </div>
-          
-          <div class="text-[11px] text-gray-400 hidden sm:flex items-center gap-1.5">
-            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-brand-500"></i>
-            <span>Chiffrement actif</span>
+          <div class="text-[11px] text-amber-400/80 font-mono hidden sm:block">
+            Commandes : /clean, /ban [user], /help
           </div>
         </div>
 
@@ -258,10 +224,7 @@
 
         <div class="p-3 sm:p-4 border-t border-gray-800 bg-darkpanel/80 shrink-0">
           <form onsubmit="sendMessage(event)" class="flex items-center gap-2">
-            <button type="button" onclick="triggerEmojiPicker()" class="p-2.5 text-gray-400 hover:text-white rounded-xl hover:bg-gray-800 transition">
-              <i data-lucide="smile" class="w-5 h-5"></i>
-            </button>
-            <input type="text" id="messageInput" placeholder="Écrire un message chiffré..." 
+            <input type="text" id="messageInput" placeholder="Écrire un message ou taper /help..." 
               class="flex-1 py-2.5 px-4 bg-gray-900 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs sm:text-sm text-white placeholder-gray-500">
             <button type="submit" class="p-2.5 bg-brand-600 hover:bg-brand-500 active:scale-95 text-white rounded-xl shadow-md transition flex items-center justify-center">
               <i data-lucide="send" class="w-5 h-5"></i>
@@ -272,50 +235,13 @@
     </div>
   </div>
 
-  <!-- 3. APPEL WEBRTC OVERLAY -->
-  <div id="callOverlay" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col p-4 sm:p-6 overflow-y-auto">
-    <div class="flex items-center justify-between text-white border-b border-gray-800 pb-4 mb-4">
-      <div class="flex items-center gap-2">
-        <div class="w-3 h-3 rounded-full bg-brand-500 animate-ping"></div>
-        <span class="text-sm font-bold" id="callTypeTitle">Appel Vocal Chiffré</span>
-        <span class="text-xs bg-brand-500/20 text-brand-400 px-2 py-0.5 rounded border border-brand-500/30">DTLS-SRTP</span>
-      </div>
-      <span id="callTimer" class="text-xs font-mono text-gray-400">00:00</span>
-    </div>
-
-    <div class="flex-1 flex flex-col items-center justify-center my-auto space-y-6">
-      <div id="videoContainer" class="hidden w-full max-w-2xl aspect-video bg-gray-900 rounded-2xl overflow-hidden relative border border-gray-800 shadow-2xl">
-        <video id="localVideo" autoplay muted playsinline class="w-full h-full object-cover"></video>
-        <div class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-[10px] text-white px-2 py-1 rounded border border-white/10 flex items-center gap-1">
-          <i data-lucide="shield" class="w-3 h-3 text-brand-400"></i> Flux Vidéo Chiffré
-        </div>
-      </div>
-
-      <div id="audioVisualizerContainer" class="flex flex-col items-center gap-4">
-        <div class="w-24 h-24 rounded-full bg-brand-500/10 border-2 border-brand-500/30 flex items-center justify-center text-brand-400 active-encrypted">
-          <i data-lucide="mic" class="w-10 h-10"></i>
-        </div>
-        <p class="text-sm font-medium text-gray-300">Communication directe P2P active</p>
-      </div>
-    </div>
-
-    <div class="flex items-center justify-center gap-4 pt-4 border-t border-gray-800">
-      <button onclick="toggleMute()" id="muteBtn" class="p-3.5 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-full transition">
-        <i data-lucide="mic" class="w-5 h-5"></i>
-      </button>
-      <button onclick="endCall()" class="p-3.5 bg-red-600 hover:bg-red-500 text-white rounded-full transition shadow-lg shadow-red-600/30">
-        <i data-lucide="phone-off" class="w-5 h-5"></i>
-      </button>
-    </div>
-  </div>
-
-  <!-- 4. PANNEAU ADMIN RAYQUA (Création + Suppression en direct) -->
+  <!-- PANNEAU ADMIN -->
   <div id="adminModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="w-full max-w-md glass-panel p-6 rounded-2xl border border-amber-500/20 space-y-4 max-h-[85vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-gray-800 pb-3">
         <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2">
           <i data-lucide="user-cog" class="w-4 h-4"></i>
-          <span>Gestionnaire des Comptes (Rayqua)</span>
+          <span>Gestionnaire des Comptes</span>
         </h3>
         <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white">
           <i data-lucide="x" class="w-5 h-5"></i>
@@ -324,7 +250,7 @@
 
       <form onsubmit="handleCreateUser(event)" class="space-y-3">
         <div>
-          <label class="block text-xs text-gray-400 mb-1">Identifiant de connexion</label>
+          <label class="block text-xs text-gray-400 mb-1">Identifiant</label>
           <input type="text" id="newUsername" required placeholder="ex: alex" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
         </div>
         <div>
@@ -335,40 +261,19 @@
           <label class="block text-xs text-gray-400 mb-1">Mot de passe</label>
           <input type="password" id="newPassword" required placeholder="••••••••" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
         </div>
-
         <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs rounded-xl transition">
-          Créer et Activer le Compte
+          Créer le Compte
         </button>
       </form>
 
       <div class="pt-3 border-t border-gray-800">
-        <p class="text-[11px] font-bold text-gray-400 uppercase mb-2">Comptes enregistrés (Suppression instantanée)</p>
+        <p class="text-[11px] font-bold text-gray-400 uppercase mb-2">Comptes enregistrés</p>
         <div id="adminUsersList" class="space-y-2 text-xs max-h-48 overflow-y-auto"></div>
       </div>
     </div>
   </div>
 
-  <!-- 5. GUIDE HELP -->
-  <div id="helpModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="w-full max-w-xl glass-panel p-6 rounded-2xl border border-gray-800 space-y-4 max-h-[85vh] overflow-y-auto text-xs sm:text-sm">
-      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-        <h3 class="text-base font-bold text-white flex items-center gap-2">
-          <i data-lucide="github" class="w-5 h-5 text-brand-400"></i>
-          <span>Guide GitHub Pages & Firebase</span>
-        </h3>
-        <button onclick="closeHelpModal()" class="text-gray-400 hover:text-white">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-      <ol class="list-decimal list-inside space-y-2.5 text-gray-300">
-        <li>Modifie ton fichier <code class="bg-gray-800 px-1.5 py-0.5 rounded text-brand-400">index.html</code> sur GitHub avec ce code complet.</li>
-        <li>Dans ta console Firebase Realtime Database, assure-toi que tes règles de sécurité sont réglées sur <code class="bg-gray-800 px-1.5 py-0.5 rounded text-brand-400">".read": true, ".write": true</code>.</li>
-        <li>Connecte-toi avec <code class="bg-gray-800 px-1.5 py-0.5 rounded">rayqua</code> / <code class="bg-gray-800 px-1.5 py-0.5 rounded">popopoPO99+</code> pour gérer les accès de tes amis en direct !</li>
-      </ol>
-    </div>
-  </div>
-
-  <!-- LOGIQUE JS COMPLETE -->
+  <!-- LOGIQUE JS -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyA1-DPVxv934DWaqMMlQsE4AGvPElb_Rl8",
@@ -387,10 +292,8 @@
     let accounts = {};
     let currentUser = null;
     let currentChannel = 'general';
-    let callTimerInterval = null;
     let messagesList = [];
 
-    // SYNCHRONISATION EN TEMPS RÉEL DES COMPTES
     db.ref('accounts').on('value', (snapshot) => {
       const data = snapshot.val();
       accounts = data || {
@@ -406,7 +309,6 @@
       updateAdminUsersList();
     });
 
-    // SYNCHRONISATION EN TEMPS RÉEL DES MESSAGES
     db.ref('messages').on('value', (snapshot) => {
       const msgs = snapshot.val() || {};
       messagesList = Object.values(msgs);
@@ -455,7 +357,6 @@
       document.getElementById('loginPassword').value = '';
     }
 
-    // GESTION ADMIN (CRÉATION ET SUPPRESSION EN DIRECT)
     function openAdminModal() {
       if (currentUser && currentUser.role === 'Admin') {
         document.getElementById('adminModal').classList.remove('hidden');
@@ -480,7 +381,7 @@
 
       db.ref('accounts/' + keyUser).set(newUser, (err) => {
         if (!err) {
-          alert('Le compte "' + rawUser + '" a été créé et est immédiatement disponible pour ton ami !');
+          alert('Le compte "' + rawUser + '" a été créé avec succès !');
           document.getElementById('newUsername').value = '';
           document.getElementById('newDisplayName').value = '';
           document.getElementById('newPassword').value = '';
@@ -570,17 +471,74 @@
       toggleSidebar(false);
     }
 
-    function generateNonce() {
-      return Array.from(crypto.getRandomValues(new Uint8Array(6)))
-        .map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
+    // GESTION DES COMMANDES ADMIN DANS LE CHAT
     function sendMessage(e) {
       e.preventDefault();
       const input = document.getElementById('messageInput');
       const text = input.value.trim();
       if (!text || !currentUser) return;
 
+      // Détection des commandes commençant par /
+      if (text.startsWith('/')) {
+        if (currentUser.role !== 'Admin') {
+          alert("Tu n'as pas les permissions nécessaires pour exécuter des commandes.");
+          input.value = '';
+          return;
+        }
+
+        const args = text.slice(1).split(' ');
+        const cmd = args[0].toLowerCase();
+
+        if (cmd === 'clean' || cmd === 'clear') {
+          db.ref('messages').once('value', (snapshot) => {
+            const msgs = snapshot.val();
+            if (msgs) {
+              Object.keys(msgs).forEach(key => {
+                if ((msgs[key].channel || 'general') === currentChannel) {
+                  db.ref('messages/' + key).remove();
+                }
+              });
+            }
+          });
+          input.value = '';
+          return;
+        }
+
+        if (cmd === 'ban') {
+          const target = args[1] ? args[1].toLowerCase() : '';
+          if (!target) {
+            alert("Utilisation : /ban [identifiant]");
+            input.value = '';
+            return;
+          }
+          if (target === 'rayqua') {
+            alert("Impossible de te bannir toi-même !");
+            input.value = '';
+            return;
+          }
+          if (accounts[target]) {
+            db.ref('accounts/' + target).remove().then(() => {
+              alert(`Le compte "${target}" a été banni avec succès.`);
+            });
+          } else {
+            alert(`Aucun compte trouvé avec l'identifiant "${target}".`);
+          }
+          input.value = '';
+          return;
+        }
+
+        if (cmd === 'help') {
+          alert("Commandes Admin disponibles :\n- /clean : Efface tous les messages de ce salon\n- /ban [identifiant] : Supprime définitivement un compte\n- /help : Affiche cette aide");
+          input.value = '';
+          return;
+        }
+
+        alert("Commande inconnue. Tape /help pour voir la liste.");
+        input.value = '';
+        return;
+      }
+
+      // Message classique
       const now = new Date();
       const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
 
@@ -589,7 +547,6 @@
         sender: currentUser.name,
         text: text,
         time: timeStr,
-        nonce: generateNonce(),
         channel: currentChannel
       };
 
@@ -620,12 +577,6 @@
               : 'bg-gray-800/90 text-gray-100 rounded-tl-none border border-gray-700/60'
           }">
             <p class="break-words">${m.text}</p>
-            <div class="mt-1.5 pt-1 border-t border-white/10 flex items-center justify-between text-[9px] font-mono opacity-80 gap-2">
-              <span class="flex items-center gap-1">
-                <i data-lucide="shield-check" class="w-3 h-3"></i> AES-GCM
-              </span>
-              <span>Nonce: ${m.nonce || 'a8f9'}</span>
-            </div>
           </div>
         `;
         container.appendChild(msgDiv);
@@ -633,42 +584,6 @@
 
       lucide.createIcons();
       container.scrollTop = container.scrollHeight;
-    }
-
-    function triggerEmojiPicker() {
-      const input = document.getElementById('messageInput');
-      input.value += ' 🔒 ';
-      input.focus();
-    }
-
-    function startCall(type) {
-      document.getElementById('callOverlay').classList.remove('hidden');
-      document.getElementById('callTypeTitle').textContent = type === 'video' ? 'Visio Chiffrée (WebRTC)' : 'Appel Vocal Chiffré';
-      
-      if (type === 'video') {
-        document.getElementById('videoContainer').classList.remove('hidden');
-      } else {
-        document.getElementById('videoContainer').classList.add('hidden');
-      }
-
-      let sec = 0;
-      clearInterval(callTimerInterval);
-      callTimerInterval = setInterval(() => {
-        sec++;
-        const m = Math.floor(sec / 60).toString().padStart(2, '0');
-        const s = (sec % 60).toString().padStart(2, '0');
-        document.getElementById('callTimer').textContent = `${m}:${s}`;
-      }, 1000);
-    }
-
-    function endCall() {
-      clearInterval(callTimerInterval);
-      document.getElementById('callOverlay').classList.add('hidden');
-    }
-
-    function toggleMute() {
-      const btn = document.getElementById('muteBtn');
-      btn.classList.toggle('bg-red-600');
     }
 
     function toggleSidebar(forceState) {
@@ -683,14 +598,6 @@
         sidebar.classList.remove('-translate-x-full');
         overlay.classList.remove('hidden');
       }
-    }
-
-    function openHelpModal() {
-      document.getElementById('helpModal').classList.remove('hidden');
-    }
-
-    function closeHelpModal() {
-      document.getElementById('helpModal').classList.add('hidden');
     }
   </script>
 </body>
