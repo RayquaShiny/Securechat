@@ -4,73 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Securechat - Espace Chiffré Sécurisé</title>
-  
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <!-- Firebase SDKs -->
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  
   <script>
     tailwind.config = {
       darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              500: '#22c55e',
-              600: '#16a34a',
-              700: '#15803d',
-              800: '#166534',
-              900: '#14532d',
-              950: '#052e16',
-            },
-            darkbg: '#0b0f17',
-            darkpanel: '#111827',
-            darkcard: '#1f2937'
-          }
-        }
-      }
+      theme: { extend: { colors: {
+        brand: { 50:'#f0fdf4',100:'#dcfce7',500:'#22c55e',600:'#16a34a',700:'#15803d',800:'#166534',900:'#14532d',950:'#052e16' },
+        darkbg:'#0b0f17', darkpanel:'#111827', darkcard:'#1f2937'
+      } } }
     }
   </script>
-
   <style>
-    body {
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
-      background-color: #0b0f17;
-      color: #f3f4f6;
-      overflow: hidden;
-    }
-    
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgba(17, 24, 39, 0.6);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(55, 65, 81, 0.8);
-      border-radius: 9999px;
-    }
-
-    .glass-panel {
-      background: rgba(17, 24, 39, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .msg-bubble {
-      background-clip: padding-box;
-      -webkit-background-clip: padding-box;
-    }
+    body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; background-color:#0b0f17; color:#f3f4f6; overflow:hidden; }
+    ::-webkit-scrollbar { width:6px; height:6px; }
+    ::-webkit-scrollbar-track { background: rgba(17,24,39,0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(55,65,81,0.8); border-radius:9999px; }
+    .glass-panel { background: rgba(17,24,39,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border:1px solid rgba(255,255,255,0.08); }
+    .msg-bubble { background-clip: padding-box; -webkit-background-clip: padding-box; }
   </style>
 </head>
 <body class="h-screen h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-hidden">
@@ -85,35 +38,25 @@
         <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Securechat</h1>
         <p class="text-xs sm:text-sm text-gray-400">Authentification requise pour accéder au réseau chiffré</p>
       </div>
-
       <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Identifiant</label>
           <div class="relative">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-500">
-              <i data-lucide="user" class="w-5 h-5"></i>
-            </span>
-            <input type="text" id="loginUsername" required autocomplete="username" placeholder="Entrez votre identifiant" 
-              class="w-full pl-11 pr-4 py-3 bg-gray-900/80 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition text-sm text-white placeholder-gray-500">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-500"><i data-lucide="user" class="w-5 h-5"></i></span>
+            <input type="text" id="loginUsername" required autocomplete="username" placeholder="Entrez votre identifiant" class="w-full pl-11 pr-4 py-3 bg-gray-900/80 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition text-sm text-white placeholder-gray-500">
           </div>
         </div>
-
         <div>
           <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Mot de passe</label>
           <div class="relative">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-500">
-              <i data-lucide="lock" class="w-5 h-5"></i>
-            </span>
-            <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••••••" 
-              class="w-full pl-11 pr-4 py-3 bg-gray-900/80 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition text-sm text-white placeholder-gray-500">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-500"><i data-lucide="lock" class="w-5 h-5"></i></span>
+            <input type="password" id="loginPassword" required autocomplete="current-password" placeholder="••••••••••••" class="w-full pl-11 pr-4 py-3 bg-gray-900/80 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition text-sm text-white placeholder-gray-500">
           </div>
         </div>
-
         <div id="loginError" class="hidden p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
           <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
           <span>Identifiant ou mot de passe incorrect.</span>
         </div>
-
         <button type="submit" class="w-full py-3.5 px-4 bg-brand-600 hover:bg-brand-500 active:scale-[0.98] text-white font-semibold rounded-xl shadow-lg shadow-brand-600/20 transition-all duration-200 flex items-center justify-center gap-2 text-sm">
           <span>Se connecter</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -124,13 +67,11 @@
 
   <!-- APPLICATION PRINCIPALE -->
   <div id="appContainer" class="hidden h-screen h-[100dvh] flex flex-col bg-darkbg overflow-hidden">
-    
     <header class="h-16 border-b border-gray-800 bg-darkpanel/80 backdrop-blur-md px-4 flex items-center justify-between shrink-0 z-30">
       <div class="flex items-center gap-3">
         <button onclick="toggleSidebar()" class="lg:hidden p-2 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800" title="Ouvrir le menu">
           <i data-lucide="menu" class="w-6 h-6"></i>
         </button>
-        
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-lg bg-brand-500/20 text-brand-500 flex items-center justify-center border border-brand-500/30">
             <i data-lucide="shield" class="w-5 h-5"></i>
@@ -138,26 +79,21 @@
           <div>
             <h2 class="text-sm font-bold leading-tight text-white flex items-center gap-1.5">
               <span>Securechat</span>
-              <!-- BOUTON CHANGELOG VERSION -->
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v1.9.1</span>
+                <span>v1.9.2</span>
               </button>
             </h2>
           </div>
         </div>
       </div>
-
       <div class="flex items-center gap-2 sm:gap-3">
         <button id="adminBtn" onclick="openAdminModal()" class="hidden px-3 py-1.5 text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 transition flex items-center gap-1.5 font-medium">
           <i data-lucide="user-cog" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Gérer les comptes</span>
         </button>
-
         <div class="flex items-center gap-2 pl-2 border-l border-gray-800">
-          <div id="userAvatar" class="w-8 h-8 rounded-full bg-brand-700 text-white font-bold flex items-center justify-center text-xs">
-            U
-          </div>
+          <div id="userAvatar" class="w-8 h-8 rounded-full bg-brand-700 text-white font-bold flex items-center justify-center text-xs">U</div>
           <div class="hidden md:block">
             <p id="userNameDisplay" class="text-xs font-semibold text-gray-200">User</p>
             <p id="userRoleDisplay" class="text-[10px] text-gray-400">Membre</p>
@@ -175,54 +111,28 @@
       <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-72 bg-darkpanel border-r border-gray-800 flex flex-col h-full overflow-y-auto transition-transform duration-300 -translate-x-full lg:translate-x-0 shrink-0">
         <div class="p-4 border-b border-gray-800 shrink-0 flex items-center justify-between">
           <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Salons Chiffrés</p>
-          <button onclick="toggleSidebar(false)" class="lg:hidden text-gray-400 hover:text-white p-1">
-            <i data-lucide="x" class="w-5 h-5"></i>
-          </button>
+          <button onclick="toggleSidebar(false)" class="lg:hidden text-gray-400 hover:text-white p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
         </div>
-
         <div class="p-4 border-b border-gray-800 shrink-0">
           <nav class="space-y-1">
-            <!-- SALON ANNONCE UPDATE -->
             <button onclick="selectChannel('annonce-update')" id="chan-annonce-update" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-amber-400 hover:bg-amber-500/10 transition border border-amber-500/20 bg-amber-500/5">
-              <span class="flex items-center gap-2 font-semibold">
-                <i data-lucide="megaphone" class="w-4 h-4"></i>
-                <span>annonce-update</span>
-              </span>
-              <div class="flex items-center gap-2">
-                <span id="dot-annonce-update" class="w-2 h-2 rounded-full bg-amber-400 hidden"></span>
-              </div>
+              <span class="flex items-center gap-2 font-semibold"><i data-lucide="megaphone" class="w-4 h-4"></i><span>annonce-update</span></span>
+              <div class="flex items-center gap-2"><span id="dot-annonce-update" class="w-2 h-2 rounded-full bg-amber-400 hidden"></span></div>
             </button>
-
             <button onclick="selectChannel('general')" id="chan-general" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition">
-              <span class="flex items-center gap-2">
-                <i data-lucide="hash" class="w-4 h-4"></i>
-                <span>Général</span>
-              </span>
-              <div class="flex items-center gap-2">
-                <span id="dot-general" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span>
-              </div>
+              <span class="flex items-center gap-2"><i data-lucide="hash" class="w-4 h-4"></i><span>Général</span></span>
+              <div class="flex items-center gap-2"><span id="dot-general" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span></div>
             </button>
             <button onclick="selectChannel('vocal')" id="chan-vocal" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition">
-              <span class="flex items-center gap-2">
-                <i data-lucide="volume-2" class="w-4 h-4"></i>
-                <span>Salon Vocal</span>
-              </span>
-              <div class="flex items-center gap-2">
-                <span id="dot-vocal" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span>
-              </div>
+              <span class="flex items-center gap-2"><i data-lucide="volume-2" class="w-4 h-4"></i><span>Salon Vocal</span></span>
+              <div class="flex items-center gap-2"><span id="dot-vocal" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span></div>
             </button>
             <button onclick="selectChannel('projets')" id="chan-projets" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition">
-              <span class="flex items-center gap-2">
-                <i data-lucide="lock" class="w-4 h-4"></i>
-                <span>Projets Privés</span>
-              </span>
-              <div class="flex items-center gap-2">
-                <span id="dot-projets" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span>
-              </div>
+              <span class="flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4"></i><span>Projets Privés</span></span>
+              <div class="flex items-center gap-2"><span id="dot-projets" class="w-2 h-2 rounded-full bg-brand-500 hidden"></span></div>
             </button>
           </nav>
         </div>
-
         <div class="p-4 space-y-3 flex-1 overflow-y-auto">
           <div class="flex items-center justify-between">
             <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Membres (Clique pour DM)</p>
@@ -232,19 +142,15 @@
         </div>
       </aside>
 
-      <!-- DISCUSSION PRINCIPALE -->
       <main class="flex-1 flex flex-col h-full overflow-hidden bg-darkbg">
         <div class="h-12 border-b border-gray-800/80 px-4 flex items-center justify-between bg-darkpanel/40 shrink-0">
           <div class="flex items-center gap-2">
-            <i id="currentChannelIcon" data-lucide="hash" class="w-4 h-4 text-gray-400"></i>
+            <span id="currentChannelIconWrap" class="flex items-center"><i data-lucide="hash" class="w-4 h-4 text-gray-400"></i></span>
             <span id="currentChannelTitle" class="text-xs font-bold text-gray-200">Général</span>
           </div>
-          <div id="headerCommandHint" class="text-[11px] text-amber-400/80 font-mono hidden sm:block">
-            /clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help
-          </div>
+          <div id="headerCommandHint" class="text-[11px] text-amber-400/80 font-mono hidden sm:block"></div>
         </div>
 
-        <!-- ZONE DE MESSAGES -->
         <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
 
         <div class="p-3 sm:p-4 border-t border-gray-800 bg-darkpanel/80 shrink-0">
@@ -253,9 +159,7 @@
             <button type="button" id="imgUploadBtn" onclick="triggerImageUpload()" class="p-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition flex items-center justify-center shrink-0" title="Envoyer une photo">
               <i data-lucide="image" class="w-5 h-5"></i>
             </button>
-
-            <input type="text" id="messageInput" placeholder="Écrire un message..." 
-              class="flex-1 py-2.5 px-4 bg-gray-900 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs sm:text-sm text-white placeholder-gray-500 disabled:opacity-50">
+            <input type="text" id="messageInput" placeholder="Écrire un message..." class="flex-1 py-2.5 px-4 bg-gray-900 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs sm:text-sm text-white placeholder-gray-500 disabled:opacity-50">
             <button type="submit" id="sendBtn" class="p-2.5 bg-brand-600 hover:bg-brand-500 active:scale-95 text-white rounded-xl shadow-md transition flex items-center justify-center shrink-0 disabled:opacity-50">
               <i data-lucide="send" class="w-5 h-5"></i>
             </button>
@@ -269,41 +173,24 @@
   <div id="adminModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="w-full max-w-md glass-panel p-6 rounded-2xl border border-amber-500/20 space-y-4 max-h-[85vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-        <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2">
-          <i data-lucide="user-cog" class="w-4 h-4"></i>
-          <span>Gestionnaire des Comptes</span>
-        </h3>
-        <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
+        <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2"><i data-lucide="user-cog" class="w-4 h-4"></i><span>Gestionnaire des Comptes</span></h3>
+        <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
-
       <form onsubmit="handleCreateUser(event)" class="space-y-3">
-        <div>
-          <label class="block text-xs text-gray-400 mb-1">Identifiant</label>
-          <input type="text" id="newUsername" required placeholder="ex: alex" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
-        </div>
-        <div>
-          <label class="block text-xs text-gray-400 mb-1">Nom d'affichage</label>
-          <input type="text" id="newDisplayName" required placeholder="ex: Alex M." class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
-        </div>
-        <div>
-          <label class="block text-xs text-gray-400 mb-1">Mot de passe</label>
-          <input type="password" id="newPassword" required placeholder="••••••••" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
-        </div>
-        <div>
-          <label class="block text-xs text-gray-400 mb-1">Rôle</label>
+        <div><label class="block text-xs text-gray-400 mb-1">Identifiant</label>
+          <input type="text" id="newUsername" required placeholder="ex: alex" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500"></div>
+        <div><label class="block text-xs text-gray-400 mb-1">Nom d'affichage</label>
+          <input type="text" id="newDisplayName" required placeholder="ex: Alex M." class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500"></div>
+        <div><label class="block text-xs text-gray-400 mb-1">Mot de passe</label>
+          <input type="password" id="newPassword" required placeholder="••••••••" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500"></div>
+        <div><label class="block text-xs text-gray-400 mb-1">Rôle</label>
           <select id="newRole" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
             <option value="Membre">Membre (Bleu)</option>
             <option value="Ami">Ami (Vert)</option>
             <option value="Admin">Admin (Rouge)</option>
-          </select>
-        </div>
-        <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs rounded-xl transition">
-          Créer le Compte
-        </button>
+          </select></div>
+        <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs rounded-xl transition">Créer le Compte</button>
       </form>
-
       <div class="pt-3 border-t border-gray-800">
         <p class="text-[11px] font-bold text-gray-400 uppercase mb-2">Comptes enregistrés</p>
         <div id="adminUsersList" class="space-y-2 text-xs max-h-48 overflow-y-auto"></div>
@@ -315,34 +202,29 @@
   <div id="changelogModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="w-full max-w-lg glass-panel p-6 rounded-2xl border border-brand-500/30 space-y-4 max-h-[85vh] overflow-y-auto text-xs sm:text-sm">
       <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-        <h3 class="text-base font-bold text-white flex items-center gap-2">
-          <i data-lucide="git-commit" class="w-5 h-5 text-brand-400"></i>
-          <span>Changelog & Historique des Versions</span>
-        </h3>
-        <button onclick="closeChangelogModal()" class="text-gray-400 hover:text-white">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
+        <h3 class="text-base font-bold text-white flex items-center gap-2"><i data-lucide="git-commit" class="w-5 h-5 text-brand-400"></i><span>Changelog & Historique des Versions</span></h3>
+        <button onclick="closeChangelogModal()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
-
       <div class="space-y-4 text-gray-300">
         <div class="border-l-2 border-brand-500 pl-3 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v1.9.1</span>
+            <span class="font-bold text-white text-sm">v1.9.2</span>
             <span class="text-[10px] bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
           </div>
+          <p class="text-xs text-gray-400">Correction du salon Général et des notifications : plus de faux points, messages sécurisés, images compressées, annonce sans doublons.</p>
+        </div>
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <span class="font-bold text-white text-sm">v1.9.1</span>
           <p class="text-xs text-gray-400">Correction des notifications : suppression des faux points verts apparaissant dans Général et les DMs lors de la publication d'une annonce.</p>
         </div>
-
         <div class="border-l-2 border-gray-700 pl-3 space-y-1">
           <span class="font-bold text-white text-sm">v1.9.0</span>
           <p class="text-xs text-gray-400">Création du salon exclusif <code class="text-amber-300">📢 • annonce-update</code> réservé à l'Owner Rayqua.</p>
         </div>
-
         <div class="border-l-2 border-gray-700 pl-3 space-y-1">
           <span class="font-bold text-white text-sm">v1.8.2</span>
           <p class="text-xs text-gray-400">Optimisation des notifications : le point vert ne s'affiche plus sur le salon actif.</p>
         </div>
-
         <div class="border-l-2 border-gray-700 pl-3 space-y-1">
           <span class="font-bold text-white text-sm">v1.8.1</span>
           <p class="text-xs text-gray-400">Correction d'affichage sur iPhone (menu latéral et émojis).</p>
@@ -351,10 +233,11 @@
     </div>
   </div>
 
-  <!-- LOGIQUE JS -->
   <script>
-    const CURRENT_VERSION = "v1.9.1";
-    const VERSION_CHANGELOG = "Correction des notifications : suppression des faux points verts apparaissant dans Général et les DMs lors de la publication d'une annonce.";
+    const CURRENT_VERSION = "v1.9.2";
+    const VERSION_CHANGELOG = "Correction du salon Général et des notifications : plus de faux points, messages sécurisés, images compressées, annonce sans doublons.";
+    const CHANNELS = ['annonce-update', 'general', 'vocal', 'projets'];
+    const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
 
     const firebaseConfig = {
       apiKey: "AIzaSyA1-DPVxv934DWaqMMlQsE4AGvPElb_Rl8",
@@ -366,7 +249,6 @@
       appId: "1:840829582677:web:3317c74b4d225ee79b43dc",
       measurementId: "G-J3X85L2YLV"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
@@ -376,63 +258,67 @@
     let currentUser = null;
     let currentChannel = 'general';
     let messagesList = [];
+    const seenKeys = new Set();
+    let firstLoadDone = false;
+    let hadMuted = false;
+
+    // Protège contre l'injection HTML (cause du bug du salon Général)
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+    }
+    function nowTime() {
+      const d = new Date();
+      return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+    }
+    function myKey() {
+      return currentUser ? (currentUser.username || currentUser.name).toLowerCase() : '';
+    }
+    function setChannelIcon(name) {
+      document.getElementById('currentChannelIconWrap').innerHTML = `<i data-lucide="${name}" class="w-4 h-4 text-gray-400"></i>`;
+    }
 
     function getRoleBadgeClass(role) {
       switch (role) {
-        case 'Owner':
-          return 'text-amber-400 font-bold bg-amber-500/10 border border-amber-500/20';
-        case 'Admin':
-          return 'text-red-400 font-bold bg-red-500/10 border border-red-500/20';
-        case 'Ami':
-          return 'text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20';
-        case 'Membre':
-        default:
-          return 'text-blue-400 font-medium bg-blue-500/10 border border-blue-500/20';
+        case 'Owner': return 'text-amber-400 font-bold bg-amber-500/10 border border-amber-500/20';
+        case 'Admin': return 'text-red-400 font-bold bg-red-500/10 border border-red-500/20';
+        case 'Ami': return 'text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20';
+        default: return 'text-blue-400 font-medium bg-blue-500/10 border border-blue-500/20';
       }
     }
 
+    // Une seule annonce même si plusieurs personnes se connectent en même temps
     function checkAndPublishAutoUpdate() {
-      db.ref('lastPublishedVersion').once('value', (snapshot) => {
-        const lastVer = snapshot.val();
-        if (lastVer !== CURRENT_VERSION) {
-          const now = new Date();
-          const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-          
-          const autoAnn = {
-            id: Date.now(),
-            sender: "Rayqua",
-            role: "Owner",
+      db.ref('lastPublishedVersion').transaction(
+        cur => cur === CURRENT_VERSION ? undefined : CURRENT_VERSION,
+        (err, committed) => {
+          if (err || !committed) return;
+          db.ref('messages').push({
+            id: Date.now(), sender: "Rayqua", role: "Owner",
             text: `Nouvelle maj (${CURRENT_VERSION}) : ${VERSION_CHANGELOG}`,
-            time: timeStr,
-            channel: 'annonce-update',
-            isGlobalAnnouncement: true
-          };
-
-          db.ref('messages').push(autoAnn).then(() => {
-            db.ref('lastPublishedVersion').set(CURRENT_VERSION);
+            time: nowTime(), channel: 'annonce-update', isGlobalAnnouncement: true
           });
         }
-      });
+      );
     }
 
     db.ref('accounts').on('value', (snapshot) => {
       const data = snapshot.val();
-      accounts = data || {
-        'rayqua': { username: 'rayqua', name: 'Rayqua', role: 'Owner', pass: 'popopoPO99+' }
-      };
+      accounts = data || {};
 
-      if (!accounts['rayqua']) {
-        accounts['rayqua'] = { username: 'rayqua', name: 'Rayqua', role: 'Owner', pass: 'popopoPO99+' };
-        db.ref('accounts/rayqua').set(accounts['rayqua']);
-      } else {
-        if (accounts['rayqua'].name !== 'Rayqua') {
-          accounts['rayqua'].name = 'Rayqua';
-          db.ref('accounts/rayqua/name').set('Rayqua');
+      if (accounts['rayqua']) {
+        if (accounts['rayqua'].name !== 'Rayqua') db.ref('accounts/rayqua/name').set('Rayqua');
+        if (accounts['rayqua'].role !== 'Owner') db.ref('accounts/rayqua/role').set('Owner');
+      }
+
+      if (currentUser && data) {
+        const k = myKey();
+        if (!accounts[k]) {
+          alert("Ton compte a été supprimé.");
+          logout();
+          return;
         }
-        if (accounts['rayqua'].role !== 'Owner') {
-          accounts['rayqua'].role = 'Owner';
-          db.ref('accounts/rayqua/role').set('Owner');
-        }
+        currentUser = accounts[k];
+        document.getElementById('userRoleDisplay').textContent = currentUser.role;
       }
 
       renderUsersList();
@@ -444,52 +330,54 @@
       renderUsersList();
     });
 
+    // Rafraîchit la liste seulement pour le compte à rebours des mutes
     setInterval(() => {
-      if (accounts && Object.keys(accounts).length > 0) {
-        renderUsersList();
-      }
+      const anyMuted = Object.values(accounts).some(u => u && u.mutedUntil && u.mutedUntil > Date.now());
+      if (anyMuted || hadMuted) renderUsersList();
+      hadMuted = anyMuted;
     }, 1000);
 
-    db.ref('messages').on('value', (snapshot) => {
+    db.ref('messages').limitToLast(500).on('value', (snapshot) => {
       const msgs = snapshot.val() || {};
       messagesList = Object.values(msgs);
 
-      if (currentUser) {
-        messagesList.forEach(m => {
-          // CORRECTION DE LA LOGIQUE DE DELECTION DES NOTIFICATIONS
-          let targetChan = m.channel;
-          if (m.isGlobalAnnouncement) {
-            targetChan = 'annonce-update';
-          } else if (!targetChan) {
-            targetChan = 'general';
-          }
+      // Notifications : uniquement pour les NOUVEAUX messages
+      Object.entries(msgs).forEach(([key, m]) => {
+        if (seenKeys.has(key)) return;
+        seenKeys.add(key);
 
-          if (m.sender !== currentUser.name && targetChan !== currentChannel) {
-            unreadChannels[targetChan] = true;
-          }
-        });
-      }
+        if (!firstLoadDone || !currentUser) return;
+        if (m.isSystem) return;
+        if (m.sender === currentUser.name) return;
+
+        const chan = m.isGlobalAnnouncement ? 'annonce-update' : (m.channel || 'general');
+
+        if (chan.startsWith('dm_')) {
+          const me = myKey();
+          if (!chan.startsWith('dm_' + me + '_') && !chan.endsWith('_' + me)) return;
+        }
+
+        if (chan !== currentChannel) unreadChannels[chan] = true;
+      });
+      firstLoadDone = true;
 
       renderMessages();
       renderUsersList();
       renderChannels();
     });
 
-    window.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-    });
+    window.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
 
     function handleLogin(e) {
       e.preventDefault();
-      const uInput = document.getElementById('loginUsername').value.trim();
-      const uKey = uInput.toLowerCase();
+      const uKey = document.getElementById('loginUsername').value.trim().toLowerCase();
       const pInput = document.getElementById('loginPassword').value;
       const errorEl = document.getElementById('loginError');
 
       if (accounts[uKey] && accounts[uKey].pass === pInput) {
         currentUser = accounts[uKey];
         errorEl.classList.add('hidden');
-        
+
         const userStatusRef = db.ref('status/' + uKey);
         userStatusRef.onDisconnect().set({ state: 'offline' });
         userStatusRef.set({ state: 'online' });
@@ -500,14 +388,11 @@
         document.getElementById('userRoleDisplay').textContent = currentUser.role;
         document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
 
-        if (currentUser.role === 'Owner' || currentUser.role === 'Admin') {
-          document.getElementById('adminBtn').classList.remove('hidden');
-          document.getElementById('headerCommandHint').textContent = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
-        } else {
-          document.getElementById('adminBtn').classList.add('hidden');
-          document.getElementById('headerCommandHint').textContent = '';
-        }
+        const isStaff = currentUser.role === 'Owner' || currentUser.role === 'Admin';
+        document.getElementById('adminBtn').classList.toggle('hidden', !isStaff);
+        document.getElementById('headerCommandHint').textContent = isStaff ? CMD_HINT : '';
 
+        unreadChannels = {};
         checkAndPublishAutoUpdate();
         selectChannel('general');
       } else {
@@ -516,11 +401,10 @@
     }
 
     function logout() {
-      if (currentUser) {
-        const uKey = currentUser.username.toLowerCase();
-        db.ref('status/' + uKey).set({ state: 'offline' });
-      }
+      if (currentUser) db.ref('status/' + myKey()).set({ state: 'offline' });
       currentUser = null;
+      currentChannel = 'general';
+      unreadChannels = {};
       document.getElementById('appContainer').classList.add('hidden');
       document.getElementById('authScreen').classList.remove('hidden');
       document.getElementById('loginUsername').value = '';
@@ -533,18 +417,9 @@
         updateAdminUsersList();
       }
     }
-
-    function closeAdminModal() {
-      document.getElementById('adminModal').classList.add('hidden');
-    }
-
-    function openChangelogModal() {
-      document.getElementById('changelogModal').classList.remove('hidden');
-    }
-
-    function closeChangelogModal() {
-      document.getElementById('changelogModal').classList.add('hidden');
-    }
+    function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
+    function openChangelogModal() { document.getElementById('changelogModal').classList.remove('hidden'); }
+    function closeChangelogModal() { document.getElementById('changelogModal').classList.add('hidden'); }
 
     function triggerImageUpload() {
       if (currentChannel === 'annonce-update' && currentUser.role !== 'Owner') return;
@@ -555,9 +430,9 @@
       const file = e.target.files[0];
       if (!file || !currentUser) return;
 
-      const myKey = (currentUser.username || currentUser.name).toLowerCase();
-      if (accounts[myKey] && accounts[myKey].mutedUntil && accounts[myKey].mutedUntil > Date.now()) {
-        const remainingSec = Math.ceil((accounts[myKey].mutedUntil - Date.now()) / 1000);
+      const me = accounts[myKey()];
+      if (me && me.mutedUntil && me.mutedUntil > Date.now()) {
+        const remainingSec = Math.ceil((me.mutedUntil - Date.now()) / 1000);
         alert(`Tu es muet ! Tu ne peux pas envoyer d'image pendant encore ${remainingSec} secondes.`);
         e.target.value = '';
         return;
@@ -565,20 +440,22 @@
 
       const reader = new FileReader();
       reader.onload = function(uploadEvent) {
-        const imageUrl = uploadEvent.target.result;
-        const now = new Date();
-        const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-
-        const msg = {
-          id: Date.now(),
-          sender: currentUser.name,
-          imageUrl: imageUrl,
-          time: timeStr,
-          channel: currentChannel
+        const img = new Image();
+        img.onload = () => {
+          // Compression : max 1024px, JPEG qualité 0.7
+          const scale = Math.min(1, 1024 / Math.max(img.width, img.height));
+          const c = document.createElement('canvas');
+          c.width = Math.round(img.width * scale);
+          c.height = Math.round(img.height * scale);
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          db.ref('messages').push({
+            id: Date.now(), sender: currentUser.name,
+            imageUrl: c.toDataURL('image/jpeg', 0.7),
+            time: nowTime(), channel: currentChannel
+          });
+          e.target.value = '';
         };
-
-        db.ref('messages').push(msg);
-        e.target.value = '';
+        img.src = uploadEvent.target.result;
       };
       reader.readAsDataURL(file);
     }
@@ -590,11 +467,9 @@
       const name = document.getElementById('newDisplayName').value.trim();
       const pass = document.getElementById('newPassword').value;
       const role = document.getElementById('newRole').value;
-
       if (!keyUser || !pass) return;
 
       const newUser = { username: rawUser, name: name || rawUser, role: role || 'Membre', pass: pass };
-
       db.ref('accounts/' + keyUser).set(newUser, (err) => {
         if (!err) {
           alert('Le compte "' + rawUser + '" a été créé avec le rôle ' + role + ' !');
@@ -619,19 +494,10 @@
     }
 
     function sendSystemMessage(text, isBan = false) {
-      const now = new Date();
-      const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-      
-      const sysMsg = {
-        id: Date.now(),
-        isSystem: true,
-        isBan: isBan,
-        text: text,
-        time: timeStr,
-        channel: currentChannel
-      };
-
-      db.ref('messages').push(sysMsg);
+      db.ref('messages').push({
+        id: Date.now(), isSystem: true, isBan: isBan,
+        text: text, time: nowTime(), channel: currentChannel
+      });
     }
 
     function updateAdminUsersList() {
@@ -644,33 +510,25 @@
         div.className = "flex items-center justify-between p-2.5 bg-gray-900 rounded-xl border border-gray-800";
         div.innerHTML = `
           <div>
-            <p class="font-bold text-gray-200">${acc.name} <span class="text-[10px] text-gray-500">(${acc.username})</span></p>
-            <p class="text-[10px] text-gray-400">Pass: ${acc.pass}</p>
+            <p class="font-bold text-gray-200">${esc(acc.name)} <span class="text-[10px] text-gray-500">(${esc(acc.username)})</span></p>
+            <p class="text-[10px] text-gray-400">Pass: ${esc(acc.pass)}</p>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-[10px] px-2 py-0.5 rounded font-medium ${getRoleBadgeClass(acc.role)}">${acc.role}</span>
-            ${accKey !== 'rayqua' ? `
-              <button onclick="deleteUser('${accKey}')" class="p-1 text-red-400 hover:bg-red-500/20 rounded transition" title="Supprimer">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
-            ` : ''}
+            <span class="text-[10px] px-2 py-0.5 rounded font-medium ${getRoleBadgeClass(acc.role)}">${esc(acc.role)}</span>
+            ${accKey !== 'rayqua' ? `<button data-del="1" class="p-1 text-red-400 hover:bg-red-500/20 rounded transition" title="Supprimer"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
           </div>
         `;
+        const delBtn = div.querySelector('[data-del]');
+        if (delBtn) delBtn.addEventListener('click', () => deleteUser(accKey));
         container.appendChild(div);
       });
       lucide.createIcons();
     }
 
     function renderChannels() {
-      ['annonce-update', 'general', 'vocal', 'projets'].forEach(c => {
+      CHANNELS.forEach(c => {
         const dotEl = document.getElementById('dot-' + c);
-        if (dotEl) {
-          if (unreadChannels[c] && c !== currentChannel) {
-            dotEl.classList.remove('hidden');
-          } else {
-            dotEl.classList.add('hidden');
-          }
-        }
+        if (dotEl) dotEl.classList.toggle('hidden', !(unreadChannels[c] && c !== currentChannel));
       });
     }
 
@@ -680,57 +538,61 @@
       container.innerHTML = '';
       const keys = Object.keys(accounts);
       document.getElementById('usersCount').textContent = keys.length;
-
-      const myKey = currentUser ? (currentUser.username || currentUser.name).toLowerCase() : '';
+      const me = myKey();
 
       keys.forEach(k => {
         const u = accounts[k];
         const item = document.createElement('div');
         item.className = "flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800/60 hover:bg-gray-800/80 cursor-pointer transition";
-        item.setAttribute('onclick', `openDm('${k}')`);
+        item.addEventListener('click', () => openDm(k));
 
         const isMuted = u.mutedUntil && u.mutedUntil > Date.now();
         const isOnline = userStatuses[k] && userStatuses[k].state === 'online';
-
-        let dotColorClass = 'bg-red-500';
-        if (isMuted) {
-          dotColorClass = 'bg-blue-500';
-        } else if (isOnline) {
-          dotColorClass = 'bg-brand-500';
-        }
+        let dotColorClass = isMuted ? 'bg-blue-500' : (isOnline ? 'bg-brand-500' : 'bg-red-500');
 
         let unreadDotHtml = '';
-        if (currentUser && k !== myKey) {
-          const sortedKeys = [myKey, k.toLowerCase()].sort();
-          const dmChan = 'dm_' + sortedKeys[0] + '_' + sortedKeys[1];
+        if (currentUser && k !== me) {
+          const sorted = [me, k.toLowerCase()].sort();
+          const dmChan = 'dm_' + sorted[0] + '_' + sorted[1];
           if (unreadChannels[dmChan] && currentChannel !== dmChan) {
             unreadDotHtml = `<span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>`;
           }
         }
 
-        let roleBadgeHtml = `<span class="text-[9px] px-1.5 py-0.5 rounded ${getRoleBadgeClass(u.role)} truncate">${u.role}</span>`;
-
+        let roleBadgeHtml = `<span class="text-[9px] px-1.5 py-0.5 rounded ${getRoleBadgeClass(u.role)} truncate">${esc(u.role)}</span>`;
         if (isMuted) {
           const remainingSec = Math.ceil((u.mutedUntil - Date.now()) / 1000);
-          roleBadgeHtml = `<span class="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 font-semibold border border-blue-500/30 truncate">${u.role} • Muet (${remainingSec}s)</span>`;
+          roleBadgeHtml = `<span class="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 font-semibold border border-blue-500/30 truncate">${esc(u.role)} • Muet (${remainingSec}s)</span>`;
         }
 
         item.innerHTML = `
           <div class="relative">
-            <div class="w-7 h-7 rounded-full bg-brand-600/30 text-brand-400 font-bold flex items-center justify-center text-xs">
-              ${u.name.charAt(0).toUpperCase()}
-            </div>
+            <div class="w-7 h-7 rounded-full bg-brand-600/30 text-brand-400 font-bold flex items-center justify-center text-xs">${esc(u.name.charAt(0).toUpperCase())}</div>
             <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full ${dotColorClass} border border-gray-900"></span>
           </div>
           <div class="overflow-hidden flex-1 flex items-center justify-between gap-1">
-            <p class="text-xs font-medium text-gray-200 truncate">${u.name}</p>
-            <div class="flex items-center gap-1.5">
-              ${unreadDotHtml}
-              ${roleBadgeHtml}
-            </div>
+            <p class="text-xs font-medium text-gray-200 truncate">${esc(u.name)}</p>
+            <div class="flex items-center gap-1.5">${unreadDotHtml}${roleBadgeHtml}</div>
           </div>
         `;
         container.appendChild(item);
+      });
+    }
+
+    function styleChannelButtons(activeChan) {
+      CHANNELS.forEach(c => {
+        const el = document.getElementById('chan-' + c);
+        if (!el) return;
+        const active = c === activeChan;
+        if (c === 'annonce-update') {
+          el.className = active
+            ? "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between bg-amber-500/20 text-amber-300 border border-amber-500/30"
+            : "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-amber-400 hover:bg-amber-500/10 transition border border-amber-500/20 bg-amber-500/5";
+        } else {
+          el.className = active
+            ? "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between bg-brand-500/10 text-brand-400 border border-brand-500/20"
+            : "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition";
+        }
       });
     }
 
@@ -739,54 +601,28 @@
       unreadChannels[chan] = false;
 
       const titleEl = document.getElementById('currentChannelTitle');
-      const iconEl = document.getElementById('currentChannelIcon');
       const inputEl = document.getElementById('messageInput');
       const sendBtnEl = document.getElementById('sendBtn');
       const imgBtnEl = document.getElementById('imgUploadBtn');
 
       if (chan === 'annonce-update') {
         titleEl.textContent = '📢 • annonce-update';
-        iconEl.setAttribute('data-lucide', 'megaphone');
-
-        if (currentUser && currentUser.role === 'Owner') {
-          inputEl.disabled = false;
-          sendBtnEl.disabled = false;
-          imgBtnEl.disabled = false;
-          inputEl.placeholder = "Publier une annonce officielle...";
-        } else {
-          inputEl.disabled = true;
-          sendBtnEl.disabled = true;
-          imgBtnEl.disabled = true;
-          inputEl.placeholder = "Seul l'Owner peut publier dans ce salon";
-        }
+        setChannelIcon('megaphone');
+        const isOwner = currentUser && currentUser.role === 'Owner';
+        inputEl.disabled = sendBtnEl.disabled = imgBtnEl.disabled = !isOwner;
+        inputEl.placeholder = isOwner ? "Publier une annonce officielle..." : "Seul l'Owner peut publier dans ce salon";
       } else {
-        inputEl.disabled = false;
-        sendBtnEl.disabled = false;
-        imgBtnEl.disabled = false;
+        inputEl.disabled = sendBtnEl.disabled = imgBtnEl.disabled = false;
         inputEl.placeholder = "Écrire un message...";
-
         titleEl.textContent = chan === 'general' ? 'Général' : (chan === 'vocal' ? 'Salon Vocal' : 'Projets Privés');
-        iconEl.setAttribute('data-lucide', 'hash');
+        setChannelIcon(chan === 'vocal' ? 'volume-2' : (chan === 'projets' ? 'lock' : 'hash'));
       }
 
       if (currentUser && (currentUser.role === 'Owner' || currentUser.role === 'Admin')) {
-        document.getElementById('headerCommandHint').textContent = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
+        document.getElementById('headerCommandHint').textContent = CMD_HINT;
       }
 
-      ['annonce-update', 'general', 'vocal', 'projets'].forEach(c => {
-        const el = document.getElementById('chan-' + c);
-        if (!el) return;
-        if (c === chan) {
-          el.className = c === 'annonce-update' 
-            ? "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between bg-amber-500/20 text-amber-300 border border-amber-500/30"
-            : "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between bg-brand-500/10 text-brand-400 border border-brand-500/20";
-        } else {
-          el.className = c === 'annonce-update'
-            ? "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-amber-400 hover:bg-amber-500/10 transition border border-amber-500/20 bg-amber-500/5"
-            : "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition";
-        }
-      });
-
+      styleChannelButtons(chan);
       renderChannels();
       renderUsersList();
       renderMessages();
@@ -800,19 +636,18 @@
       const targetUser = accounts[keyClean];
       if (!targetUser) return;
 
-      const myKey = (currentUser.username || currentUser.name).toLowerCase();
-
-      if (keyClean === myKey) {
+      const me = myKey();
+      if (keyClean === me) {
         alert("Tu ne peux pas ouvrir une discussion privée avec toi-même !");
         return;
       }
 
-      const sortedKeys = [myKey, keyClean].sort();
-      currentChannel = 'dm_' + sortedKeys[0] + '_' + sortedKeys[1];
+      const sorted = [me, keyClean].sort();
+      currentChannel = 'dm_' + sorted[0] + '_' + sorted[1];
       unreadChannels[currentChannel] = false;
 
       document.getElementById('currentChannelTitle').textContent = `DM : ${targetUser.name}`;
-      document.getElementById('currentChannelIcon').setAttribute('data-lucide', 'lock');
+      setChannelIcon('lock');
       document.getElementById('headerCommandHint').textContent = 'Discussion privée • Commandes désactivées';
 
       document.getElementById('messageInput').disabled = false;
@@ -820,14 +655,7 @@
       document.getElementById('imgUploadBtn').disabled = false;
       document.getElementById('messageInput').placeholder = "Écrire un message privé...";
 
-      ['annonce-update', 'general', 'vocal', 'projets'].forEach(c => {
-        const el = document.getElementById('chan-' + c);
-        if (!el) return;
-        el.className = c === 'annonce-update'
-          ? "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-amber-400 hover:bg-amber-500/10 transition border border-amber-500/20 bg-amber-500/5"
-          : "w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition";
-      });
-
+      styleChannelButtons(null);
       renderChannels();
       renderUsersList();
       renderMessages();
@@ -847,9 +675,9 @@
         return;
       }
 
-      const myKey = (currentUser.username || currentUser.name).toLowerCase();
-      if (accounts[myKey] && accounts[myKey].mutedUntil && accounts[myKey].mutedUntil > Date.now()) {
-        const remainingSec = Math.ceil((accounts[myKey].mutedUntil - Date.now()) / 1000);
+      const me = accounts[myKey()];
+      if (me && me.mutedUntil && me.mutedUntil > Date.now()) {
+        const remainingSec = Math.ceil((me.mutedUntil - Date.now()) / 1000);
         alert(`Tu es muet ! Tu ne peux pas parler pendant encore ${remainingSec} secondes.`);
         input.value = '';
         return;
@@ -858,87 +686,44 @@
       if (text.startsWith('/')) {
         const args = text.slice(1).split(' ');
         const cmd = args[0].toLowerCase();
+        input.value = '';
 
         if (cmd === 'toall') {
-          if (currentChannel.startsWith('dm_')) {
-            alert("La commande /toall ne peut pas être exécutée depuis un DM.");
-            input.value = '';
-            return;
-          }
-          if (currentUser.role !== 'Owner' && currentUser.role !== 'Admin') {
-            alert("Tu n'as pas les permissions suffisantes pour faire une annonce globale.");
-            input.value = '';
-            return;
-          }
+          if (currentChannel.startsWith('dm_')) { alert("La commande /toall ne peut pas être exécutée depuis un DM."); return; }
+          if (currentUser.role !== 'Owner' && currentUser.role !== 'Admin') { alert("Tu n'as pas les permissions suffisantes pour faire une annonce globale."); return; }
           const annText = args.slice(1).join(' ');
-          if (!annText) {
-            alert("Utilisation : /toall [message d'annonce]");
-            input.value = '';
-            return;
-          }
-
-          const now = new Date();
-          const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-          
-          const globalMsg = {
-            id: Date.now(),
-            sender: currentUser.name,
-            role: currentUser.role,
-            text: annText,
-            time: timeStr,
-            channel: 'annonce-update',
-            isGlobalAnnouncement: true
-          };
-
-          db.ref('messages').push(globalMsg);
-          input.value = '';
+          if (!annText) { alert("Utilisation : /toall [message d'annonce]"); return; }
+          db.ref('messages').push({
+            id: Date.now(), sender: currentUser.name, role: currentUser.role,
+            text: annText, time: nowTime(), channel: 'annonce-update', isGlobalAnnouncement: true
+          });
           return;
         }
 
-        if (currentChannel.startsWith('dm_')) {
-          alert("Erreur : Les commandes d'administration sont strictement désactivées dans les discussions privées !");
-          input.value = '';
-          return;
-        }
-
-        if (currentUser.role !== 'Owner' && currentUser.role !== 'Admin') {
-          alert("Tu n'as pas les permissions suffisantes pour exécuter des commandes.");
-          input.value = '';
-          return;
-        }
+        if (currentChannel.startsWith('dm_')) { alert("Erreur : Les commandes d'administration sont strictement désactivées dans les discussions privées !"); return; }
+        if (currentUser.role !== 'Owner' && currentUser.role !== 'Admin') { alert("Tu n'as pas les permissions suffisantes pour exécuter des commandes."); return; }
 
         if (cmd === 'clean' || cmd === 'clear') {
+          const chanToClean = currentChannel;
           db.ref('messages').once('value', (snapshot) => {
             const msgs = snapshot.val();
-            if (msgs) {
-              const updates = {};
-              Object.keys(msgs).forEach(key => {
-                const msgChan = msgs[key].channel || (msgs[key].isGlobalAnnouncement ? 'annonce-update' : 'general');
-                if (msgChan === currentChannel) {
-                  updates[key] = null;
-                }
-              });
-              db.ref('messages').update(updates).then(() => {
-                sendSystemMessage(`${currentUser.name} a nettoyé ce salon.`, false);
-              });
-            }
+            if (!msgs) return;
+            const updates = {};
+            Object.keys(msgs).forEach(key => {
+              const msgChan = msgs[key].channel || (msgs[key].isGlobalAnnouncement ? 'annonce-update' : 'general');
+              if (msgChan === chanToClean) updates[key] = null;
+            });
+            db.ref('messages').update(updates).then(() => {
+              sendSystemMessage(`${currentUser.name} a nettoyé ce salon.`, false);
+            });
           });
-          input.value = '';
           return;
         }
 
         if (cmd === 'ban') {
           const targetKey = args[1] ? args[1].toLowerCase() : '';
-          if (!targetKey) {
-            alert("Utilisation : /ban [identifiant]");
-            input.value = '';
-            return;
-          }
-          if (targetKey === 'rayqua') {
-            alert("Impossible de bannir l'Owner Rayqua !");
-            input.value = '';
-            return;
-          }
+          if (!targetKey) { alert("Utilisation : /ban [identifiant]"); return; }
+          if (targetKey === 'rayqua') { alert("Impossible de bannir l'Owner Rayqua !"); return; }
           if (accounts[targetKey]) {
             const bannedPersonName = accounts[targetKey].name;
             db.ref('accounts/' + targetKey).remove().then(() => {
@@ -947,41 +732,26 @@
           } else {
             alert(`Aucun compte trouvé pour l'identifiant "${targetKey}".`);
           }
-          input.value = '';
           return;
         }
 
         if (cmd === 'mute') {
           const targetKey = args[1] ? args[1].toLowerCase() : '';
           const sec = parseInt(args[2], 10);
-          if (!targetKey || isNaN(sec)) {
-            alert("Utilisation : /mute [identifiant] [secondes]");
-            input.value = '';
-            return;
-          }
-          if (targetKey === 'rayqua') {
-            alert("Impossible de mute l'Owner Rayqua !");
-            input.value = '';
-            return;
-          }
+          if (!targetKey || isNaN(sec)) { alert("Utilisation : /mute [identifiant] [secondes]"); return; }
+          if (targetKey === 'rayqua') { alert("Impossible de mute l'Owner Rayqua !"); return; }
           if (accounts[targetKey]) {
-            const muteUntilTime = Date.now() + (sec * 1000);
-            db.ref('accounts/' + targetKey + '/mutedUntil').set(muteUntilTime).then(() => {
+            db.ref('accounts/' + targetKey + '/mutedUntil').set(Date.now() + sec * 1000).then(() => {
               sendSystemMessage(`${accounts[targetKey].name} a été rendu muet pour ${sec} secondes par ${currentUser.name}.`, false);
             });
           } else {
             alert(`Compte "${targetKey}" introuvable.`);
           }
-          input.value = '';
           return;
         }
 
         if (cmd === 'admin') {
-          if (currentUser.role !== 'Owner') {
-            alert("Seul l'Owner (Rayqua) peut donner le rôle Admin à un utilisateur.");
-            input.value = '';
-            return;
-          }
+          if (currentUser.role !== 'Owner') { alert("Seul l'Owner (Rayqua) peut donner le rôle Admin à un utilisateur."); return; }
           const targetKey = args[1] ? args[1].toLowerCase() : '';
           if (accounts[targetKey]) {
             db.ref('accounts/' + targetKey + '/role').set('Admin').then(() => {
@@ -990,34 +760,22 @@
           } else {
             alert(`Identifiant "${targetKey}" introuvable.`);
           }
-          input.value = '';
           return;
         }
 
         if (cmd === 'help') {
           alert("Commandes disponibles :\n- /clean : Nettoie le salon\n- /ban [user] : Banni un compte\n- /mute [user] [sec] : Mute un utilisateur\n- /toall [msg] : Annonce globale\n- /admin [user] : Nomme un Admin\n- /help : Aide");
-          input.value = '';
           return;
         }
 
         alert("Commande inconnue. Tape /help");
-        input.value = '';
         return;
       }
 
-      const now = new Date();
-      const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-
-      const msg = {
-        id: Date.now(),
-        sender: currentUser.name,
-        text: text,
-        time: timeStr,
-        channel: currentChannel,
-        isGlobalAnnouncement: currentChannel === 'annonce-update'
-      };
-
-      db.ref('messages').push(msg);
+      db.ref('messages').push({
+        id: Date.now(), sender: currentUser.name, text: text, time: nowTime(),
+        channel: currentChannel, isGlobalAnnouncement: currentChannel === 'annonce-update'
+      });
       input.value = '';
     }
 
@@ -1038,12 +796,11 @@
           annDiv.innerHTML = `
             <div class="w-full max-w-xl px-5 py-3.5 bg-gradient-to-r from-amber-500/20 via-brand-500/20 to-blue-500/20 border border-amber-500/40 text-gray-100 rounded-2xl shadow-xl space-y-1">
               <div class="flex items-center justify-between text-[10px] uppercase font-bold tracking-wider text-amber-400">
-                <span class="flex items-center gap-1.5"><i data-lucide="megaphone" class="w-3.5 h-3.5"></i> Annonce Officielle (${m.sender})</span>
-                <span>${m.time}</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="megaphone" class="w-3.5 h-3.5"></i> Annonce Officielle (${esc(m.sender)})</span>
+                <span>${esc(m.time)}</span>
               </div>
-              <p class="text-xs sm:text-sm font-medium text-white">${m.text}</p>
-            </div>
-          `;
+              <p class="text-xs sm:text-sm font-medium text-white">${esc(m.text)}</p>
+            </div>`;
           container.appendChild(annDiv);
           return;
         }
@@ -1051,24 +808,17 @@
         if (m.isSystem) {
           const sysDiv = document.createElement('div');
           sysDiv.className = "w-full my-2 flex justify-center";
-          
-          if (m.isBan) {
-            sysDiv.innerHTML = `
-              <div class="px-4 py-2.5 bg-red-950/80 border border-red-600/50 text-red-300 text-xs sm:text-sm rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-red-900/30">
+          sysDiv.innerHTML = m.isBan
+            ? `<div class="px-4 py-2.5 bg-red-950/80 border border-red-600/50 text-red-300 text-xs sm:text-sm rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-red-900/30">
                 <i data-lucide="ban" class="w-4 h-4 text-red-500 shrink-0"></i>
-                <span>${m.text}</span>
-                <span class="text-[10px] text-red-400 font-normal ml-2">${m.time}</span>
-              </div>
-            `;
-          } else {
-            sysDiv.innerHTML = `
-              <div class="px-4 py-2 bg-gray-900/90 border border-gray-700 text-gray-300 text-xs rounded-xl font-medium flex items-center gap-2">
+                <span>${esc(m.text)}</span>
+                <span class="text-[10px] text-red-400 font-normal ml-2">${esc(m.time)}</span>
+              </div>`
+            : `<div class="px-4 py-2 bg-gray-900/90 border border-gray-700 text-gray-300 text-xs rounded-xl font-medium flex items-center gap-2">
                 <i data-lucide="info" class="w-4 h-4 text-brand-400 shrink-0"></i>
-                <span>${m.text}</span>
-                <span class="text-[10px] text-gray-500 ml-2">${m.time}</span>
-              </div>
-            `;
-          }
+                <span>${esc(m.text)}</span>
+                <span class="text-[10px] text-gray-500 ml-2">${esc(m.time)}</span>
+              </div>`;
           container.appendChild(sysDiv);
           return;
         }
@@ -1079,24 +829,21 @@
 
         let contentHtml = '';
         if (m.imageUrl) {
-          contentHtml = `<img src="${m.imageUrl}" class="max-w-[240px] sm:max-w-xs rounded-xl mt-1 object-cover border border-white/10 shadow-md">`;
+          const safeSrc = String(m.imageUrl).startsWith('data:image/') ? m.imageUrl : '';
+          contentHtml = `<img src="${safeSrc}" class="max-w-[240px] sm:max-w-xs rounded-xl mt-1 object-cover border border-white/10 shadow-md">`;
         } else if (m.text) {
-          contentHtml = `<p class="break-words leading-relaxed">${m.text}</p>`;
+          contentHtml = `<p class="break-words leading-relaxed">${esc(m.text)}</p>`;
         }
 
         msgDiv.innerHTML = `
           <div class="flex items-center gap-2 text-[10px] text-gray-400 px-1">
-            <span class="font-semibold text-gray-300">${m.sender}</span>
-            <span>• ${m.time}</span>
+            <span class="font-semibold text-gray-300">${esc(m.sender)}</span>
+            <span>• ${esc(m.time)}</span>
           </div>
           <div class="msg-bubble max-w-[85%] sm:max-w-md p-3 rounded-2xl text-xs sm:text-sm ${
-            isMe 
-              ? 'bg-brand-600 text-white rounded-tr-none shadow-md shadow-brand-600/10' 
-              : 'bg-gray-800 text-gray-100 rounded-tl-none border border-gray-700/60'
-          }">
-            ${contentHtml}
-          </div>
-        `;
+            isMe ? 'bg-brand-600 text-white rounded-tr-none shadow-md shadow-brand-600/10'
+                 : 'bg-gray-800 text-gray-100 rounded-tl-none border border-gray-700/60'
+          }">${contentHtml}</div>`;
         container.appendChild(msgDiv);
       });
 
@@ -1108,7 +855,6 @@
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('sidebarOverlay');
       const isHidden = sidebar.classList.contains('-translate-x-full');
-
       if (forceState === false || (forceState === undefined && !isHidden)) {
         sidebar.classList.add('-translate-x-full');
         overlay.classList.add('hidden');
