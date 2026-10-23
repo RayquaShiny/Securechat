@@ -89,7 +89,7 @@
               <span>Securechat</span>
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v3.0.0-dev</span>
+                <span>v3.0.0</span>
               </button>
             </h2>
           </div>
@@ -304,7 +304,7 @@
 
   <script>
     const CURRENT_VERSION = "v3.0.0";
-    const DEV_MODE = true; // passe à false pour publier l'annonce de la v3 (et retire "-dev" du badge)
+    const DEV_MODE = false; // true = aucune annonce automatique
     const VERSION_CHANGELOG =
       "🔐 Securechat v3 : place au vrai chiffrement !\n\n" +
       "Voici ce que la v3 apporte :\n" +
