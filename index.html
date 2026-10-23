@@ -89,7 +89,7 @@
               <span>Securechat</span>
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v3.0.0</span>
+                <span>v3.0.0-dev</span>
               </button>
             </h2>
           </div>
@@ -112,6 +112,10 @@
         </div>
       </div>
     </header>
+    <div id="updateBanner" class="hidden px-4 py-2 bg-amber-500/15 border-b border-amber-500/30 text-xs text-amber-300 flex items-center justify-between gap-2 shrink-0">
+      <span>🚀 Une nouvelle version de Securechat est disponible.</span>
+      <button onclick="updateApp()" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-white rounded-lg font-semibold shrink-0">Mettre à jour</button>
+    </div>
 
     <div class="flex-1 flex overflow-hidden relative">
       <div id="sidebarOverlay" onclick="toggleSidebar(false)" class="hidden fixed inset-0 bg-black/70 z-40 lg:hidden backdrop-blur-sm"></div>
@@ -207,6 +211,15 @@
           </select></div>
         <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs rounded-xl transition">Créer le Compte</button>
       </form>
+      <div id="rolesManager" class="hidden pt-3 border-t border-gray-800 space-y-2">
+        <p class="text-[11px] font-bold text-gray-400 uppercase">Rôles personnalisés</p>
+        <form onsubmit="handleCreateRole(event)" class="flex items-center gap-2">
+          <input type="text" id="newRoleName" maxlength="24" required placeholder="ex: VIP" class="flex-1 min-w-0 py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
+          <input type="color" id="newRoleColor" value="#a855f7" class="w-9 h-9 p-0.5 bg-gray-900 border border-gray-700 rounded-lg cursor-pointer">
+          <button type="submit" class="px-3 py-2 bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs rounded-xl transition">Créer</button>
+        </form>
+        <div id="rolesList" class="flex flex-wrap gap-2"></div>
+      </div>
       <div class="pt-3 border-t border-gray-800">
         <p class="text-[11px] font-bold text-gray-400 uppercase mb-2">Comptes enregistrés</p>
         <div id="adminUsersList" class="space-y-2 text-xs max-h-48 overflow-y-auto"></div>
@@ -244,6 +257,8 @@
             <li>Salons protégés par une phrase secrète de groupe</li>
             <li>Messages privés chiffrés de bout en bout (clés par personne)</li>
             <li>Clés effacées de l'appareil à la déconnexion</li>
+            <li>Rôles personnalisés (nom + couleur) attribuables à n'importe qui</li>
+            <li>Bannière de mise à jour automatique</li>
             <li>Application installable (PWA) sur iPhone, PC et Raspberry Pi</li>
           </ul>
         </div>
@@ -289,7 +304,7 @@
 
   <script>
     const CURRENT_VERSION = "v3.0.0";
-    const DEV_MODE = false; // passe à false pour publier l'annonce de la v3 (et retire "-dev" du badge)
+    const DEV_MODE = true; // passe à false pour publier l'annonce de la v3 (et retire "-dev" du badge)
     const VERSION_CHANGELOG =
       "🔐 Securechat v3 : place au vrai chiffrement !\n\n" +
       "Voici ce que la v3 apporte :\n" +
@@ -297,6 +312,8 @@
       "🗝️ Les salons sont protégés par une phrase secrète de groupe, à saisir une seule fois par appareil\n" +
       "💬 Les messages privés sont chiffrés de bout en bout : seuls toi et ton ami pouvez les lire, même l'Owner\n" +
       "🖼️ Les images sont chiffrées aussi\n" +
+      "🏷️ Rôles personnalisés : l'Owner crée des rôles colorés et les donne à qui il veut\n" +
+      "🔄 Une bannière te prévient quand une nouvelle version est disponible\n" +
       "🔓 Les anciens messages restent en clair et sont marqués d'un cadenas ouvert\n" +
       "🧹 À la déconnexion, les clés sont effacées de l'appareil\n" +
       "📲 Application installable sur iPhone, PC et Raspberry Pi\n\n" +
@@ -319,6 +336,7 @@
     const db = firebase.database();
 
     let accounts = {};
+    let rolesData = {};
     let userStatuses = {};
     let unreadChannels = {};
     let currentUser = null;
@@ -543,6 +561,65 @@
       if (!meKey) return false;
       return Object.keys(accounts).some(k => k !== meKey && dmName(meKey, k) === chan);
     }
+    const BADGE_RESERVED = ['owner', 'admin', 'ami', 'membre'];
+    function safeColor(c) { return /^#[0-9a-fA-F]{6}$/.test(c || '') ? c : '#9ca3af'; }
+    function customBadgeHtml(u, size) {
+      const r = u && u.customRole && rolesData[u.customRole];
+      if (!r) return '';
+      const c = safeColor(r.color);
+      return `<span class="${size || 'text-[9px]'} px-1.5 py-0.5 rounded font-semibold truncate" style="color:${c};background:${c}22;border:1px solid ${c}55">${esc(r.name)}</span>`;
+    }
+    function isNewer(a, b) {
+      const pa = String(a).replace(/^v/, '').split('.').map(n => parseInt(n, 10) || 0);
+      const pb = String(b).replace(/^v/, '').split('.').map(n => parseInt(n, 10) || 0);
+      for (let i = 0; i < 3; i++) { if ((pa[i] || 0) !== (pb[i] || 0)) return (pa[i] || 0) > (pb[i] || 0); }
+      return false;
+    }
+    async function updateApp() {
+      try {
+        if ('serviceWorker' in navigator) (await navigator.serviceWorker.getRegistrations()).forEach(r => r.unregister());
+        if (window.caches) (await caches.keys()).forEach(k => caches.delete(k));
+      } catch (e) {}
+      location.replace(location.pathname + '?u=' + Date.now());
+    }
+    function renderRolesList() {
+      const el = document.getElementById('rolesList');
+      if (!el) return;
+      el.innerHTML = '';
+      const ids = Object.keys(rolesData);
+      if (!ids.length) { el.innerHTML = `<p class="text-[11px] text-gray-500">Aucun rôle pour l'instant.</p>`; return; }
+      ids.forEach(id => {
+        const wrap = document.createElement('span');
+        wrap.className = 'inline-flex items-center gap-1';
+        wrap.innerHTML = customBadgeHtml({ customRole: id }, 'text-[10px]') + '<button class="text-red-400 hover:text-red-300 text-xs" title="Supprimer ce rôle">✕</button>';
+        wrap.querySelector('button').onclick = () => deleteRole(id);
+        el.appendChild(wrap);
+      });
+    }
+    async function handleCreateRole(e) {
+      e.preventDefault();
+      if (!currentUser || currentUser.role !== 'Owner') return;
+      const name = document.getElementById('newRoleName').value.trim();
+      const color = document.getElementById('newRoleColor').value;
+      if (!name || name.length > 24) { alert("Nom de rôle : 1 à 24 caractères."); return; }
+      if (BADGE_RESERVED.includes(name.toLowerCase())) { alert("Ce nom est réservé."); return; }
+      if (Object.values(rolesData).some(r => r.name.toLowerCase() === name.toLowerCase())) { alert("Ce rôle existe déjà."); return; }
+      if (!/^#[0-9a-fA-F]{6}$/.test(color)) { alert("Couleur invalide."); return; }
+      try { await db.ref('roles').push({ name, color }); document.getElementById('newRoleName').value = ''; }
+      catch (err) { alert("Création impossible : " + (err.code || err.message)); }
+    }
+    async function deleteRole(id) {
+      const r = rolesData[id];
+      if (!r) return;
+      if (!confirm(`Supprimer le rôle "${r.name}" ? Il sera retiré à tous ceux qui l'ont.`)) return;
+      const upd = { ['roles/' + id]: null };
+      Object.keys(accounts).forEach(k => { if (accounts[k].customRole === id) upd['accounts/' + k + '/customRole'] = null; });
+      try { await db.ref().update(upd); } catch (err) { alert("Suppression impossible : " + (err.code || err.message)); }
+    }
+    async function assignCustomRole(k, id) {
+      try { await db.ref('accounts/' + k + '/customRole').set(id || null); }
+      catch (err) { alert("Attribution impossible : " + (err.code || err.message)); }
+    }
     function setChannelIcon(name) {
       document.getElementById('currentChannelIconWrap').innerHTML = `<i data-lucide="${name}" class="w-4 h-4 text-gray-400"></i>`;
     }
@@ -736,6 +813,9 @@
       try { accounts = (await db.ref('accounts').once('value')).val() || {}; } catch (e) {}
       try { await initCrypto(); } catch (e) { console.error(e); alert("Erreur de chiffrement : " + (e.code || e.message || e) + "\n(Les règles Firebase pour pubkeys, privkeys et crypto sont-elles ajoutées ?)"); }
       listen(db.ref('accounts'), onAccounts);
+      const soft = (ref, cb) => { ref.on('value', cb, () => {}); listeners.push(ref); };
+      soft(db.ref('roles'), (r) => { rolesData = r.val() || {}; renderUsersList(); updateAdminUsersList(); renderRolesList(); renderMessages(); });
+      soft(db.ref('lastPublishedVersion'), (v) => { const pub = v.val(); document.getElementById('updateBanner').classList.toggle('hidden', !(pub && isNewer(pub, CURRENT_VERSION))); });
       listen(db.ref('status'), (snap2) => { userStatuses = snap2.val() || {}; renderUsersList(); });
       listen(db.ref('messages').limitToLast(500), onMessages);
       listen(db.ref('typing'), (t) => { typingData = t.val() || {}; updateTypingLabel(); });
@@ -748,7 +828,7 @@
       if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline' }); } catch (e) {} }
       stopListeners(); wipeKeys();
       currentUser = null; meKey = ''; starting = false;
-      accounts = {}; messagesList = []; unreadChannels = {};
+      accounts = {}; rolesData = {}; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
       document.getElementById('appContainer').classList.add('hidden');
       document.getElementById('authScreen').classList.remove('hidden');
@@ -761,6 +841,8 @@
       if (currentUser && (currentUser.role === 'Owner' || currentUser.role === 'Admin')) {
         document.getElementById('adminModal').classList.remove('hidden');
         document.getElementById('createUserForm').classList.toggle('hidden', currentUser.role !== 'Owner');
+        document.getElementById('rolesManager').classList.toggle('hidden', currentUser.role !== 'Owner');
+        renderRolesList();
         updateAdminUsersList();
       }
     }
@@ -868,6 +950,9 @@
       Object.keys(accounts).forEach(accKey => {
         const acc = accounts[accKey];
         const div = document.createElement('div');
+        const selHtml = (currentUser && currentUser.role === 'Owner')
+          ? `<select data-role-sel="1" class="text-[10px] py-0.5 px-1 bg-gray-800 border border-gray-700 rounded text-gray-200 outline-none max-w-[90px]"><option value="">- rôle -</option>${Object.keys(rolesData).map(id => `<option value="${esc(id)}" ${acc.customRole === id ? 'selected' : ''}>${esc(rolesData[id].name)}</option>`).join('')}</select>`
+          : customBadgeHtml(acc, 'text-[10px]');
         div.className = "flex items-center justify-between p-2.5 bg-gray-900 rounded-xl border border-gray-800";
         div.innerHTML = `
           <div>
@@ -875,9 +960,12 @@
           </div>
           <div class="flex items-center gap-2">
             <span class="text-[10px] px-2 py-0.5 rounded font-medium ${getRoleBadgeClass(acc.role)}">${esc(acc.role)}</span>
+            ${selHtml}
             ${accKey !== 'rayqua' ? `<button data-del="1" class="p-1 text-red-400 hover:bg-red-500/20 rounded transition" title="Supprimer"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
           </div>
         `;
+        const sel = div.querySelector('[data-role-sel]');
+        if (sel) sel.addEventListener('change', () => assignCustomRole(accKey, sel.value));
         const delBtn = div.querySelector('[data-del]');
         if (delBtn) delBtn.addEventListener('click', () => deleteUser(accKey));
         container.appendChild(div);
@@ -998,6 +1086,8 @@
         }
 
         let roleBadgeHtml = `<span class="text-[9px] px-1.5 py-0.5 rounded ${getRoleBadgeClass(u.role)} truncate">${esc(u.role)}</span>`;
+        const customB = customBadgeHtml(u);
+        if (customB) roleBadgeHtml = ((u.role === 'Owner' || u.role === 'Admin') ? roleBadgeHtml : '') + customB;
         if (isMuted) {
           const remainingSec = Math.ceil((u.mutedUntil - Date.now()) / 1000);
           roleBadgeHtml = `<span class="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 font-semibold border border-blue-500/30 truncate">${esc(u.role)} • Muet (${remainingSec}s)</span>`;
@@ -1308,7 +1398,7 @@
 
         wrap.innerHTML = `
           <div class="flex items-center gap-2 text-[10px] text-gray-400 px-1">
-            <span class="font-semibold text-gray-300">${esc(m.sender)}</span>
+            <span class="font-semibold text-gray-300">${esc(m.sender)}</span>${customBadgeHtml(accounts[m.senderKey])}
             <span>• ${esc(m.time)}</span>${m.c ? '' : '<span title="Ancien message non chiffré">🔓</span>'}${m.edited ? '<span class="italic">(modifié)</span>' : ''}
           </div>
           <div class="msg-bubble max-w-[85%] sm:max-w-md p-3 rounded-2xl text-xs sm:text-sm ${mine ? 'bg-brand-600 text-white rounded-tr-none shadow-md shadow-brand-600/10' : 'bg-gray-800 text-gray-100 rounded-tl-none border border-gray-700/60'} ${mentioned ? 'ring-2 ring-amber-400/70' : ''}">${content}</div>
