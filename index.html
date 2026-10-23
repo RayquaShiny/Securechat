@@ -89,7 +89,7 @@
               <span>Securechat</span>
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v2.0.0</span>
+                <span>v3.0.0-dev</span>
               </button>
             </h2>
           </div>
@@ -214,6 +214,18 @@
     </div>
   </div>
 
+  <!-- MODAL CLÉ SECRÈTE -->
+  <div id="secretModal" class="hidden fixed inset-0 z-[60] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <form id="secretForm" class="w-full max-w-sm glass-panel p-6 rounded-2xl border border-brand-500/30 space-y-4">
+      <h3 id="secretTitle" class="text-sm font-bold text-white"></h3>
+      <p id="secretDesc" class="text-xs text-gray-400 leading-relaxed"></p>
+      <input id="secretInput" type="password" autocomplete="off" class="w-full py-2.5 px-3 bg-gray-900 border border-gray-700 rounded-xl text-sm text-white outline-none focus:border-brand-500">
+      <p id="secretErr" class="hidden text-xs text-red-400"></p>
+      <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-medium text-xs rounded-xl transition">Valider</button>
+      <button type="button" onclick="cancelSecret()" class="w-full text-[11px] text-gray-500 hover:text-gray-300">Annuler et me déconnecter</button>
+    </form>
+  </div>
+
   <!-- MODAL CHANGELOG -->
   <div id="changelogModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="w-full max-w-lg glass-panel p-6 rounded-2xl border border-brand-500/30 space-y-4 max-h-[85vh] overflow-y-auto text-xs sm:text-sm">
@@ -222,10 +234,23 @@
         <button onclick="closeChangelogModal()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
       <div class="space-y-4 text-gray-300">
+        <div class="border-l-2 border-amber-500 pl-3 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white text-sm">v3.0.0</span>
+            <span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
+          </div>
+          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
+            <li>Chiffrement AES-256 des messages et des images, directement sur l'appareil</li>
+            <li>Salons protégés par une phrase secrète de groupe</li>
+            <li>Messages privés chiffrés de bout en bout (clés par personne)</li>
+            <li>Clés effacées de l'appareil à la déconnexion</li>
+            <li>Application installable (PWA) sur iPhone, PC et Raspberry Pi</li>
+          </ul>
+        </div>
         <div class="border-l-2 border-brand-500 pl-3 space-y-1">
           <div class="flex items-center justify-between">
             <span class="font-bold text-white text-sm">v2.0.0</span>
-            <span class="text-[10px] bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
+            <span class="text-[10px] bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded font-mono">Précédente</span>
           </div>
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>Connexion sécurisée avec de vrais comptes, mots de passe protégés</li>
@@ -263,22 +288,20 @@
   </div>
 
   <script>
-    const CURRENT_VERSION = "v2.0.0";
-    const DEV_MODE = false; // v2 lancée : l'annonce se publie quand l'Owner se connecte
+    const CURRENT_VERSION = "v3.0.0";
+    const DEV_MODE = true; // passe à false pour publier l'annonce de la v3 (et retire "-dev" du badge)
     const VERSION_CHANGELOG =
-      "🚀 Securechat v2 est officiellement lancée !\n\n" +
-      "Voici ce que la v2 apporte :\n" +
-      "🔐 Connexion sécurisée : de vrais comptes, mots de passe protégés (tes anciens comptes sont migrés automatiquement à ta première connexion)\n" +
-      "↩️ Répondre à un message précis\n" +
-      "😂 Réagir avec des emojis\n" +
-      "✏️ Modifier et supprimer tes propres messages\n" +
-      "@ Mentions : tape @pseudo pour interpeller quelqu'un, son message est mis en évidence\n" +
-      "🔎 Recherche dans chaque salon\n" +
-      "⌨️ Indicateur « écrit… » en direct\n" +
-      "🔴 Compteurs de messages non lus pour les salons et les DM\n" +
-      "🖼️ Images compressées pour un chargement plus rapide\n" +
-      "🛡️ Protection renforcée contre l'injection de code et nouvelles règles de sécurité\n\n" +
-      "Merci à tous pour vos retours. Bon chat !";
+      "🔐 Securechat v3 : place au vrai chiffrement !\n\n" +
+      "Voici ce que la v3 apporte :\n" +
+      "🔒 Tes messages sont chiffrés (AES-256) sur ton appareil avant l'envoi : même la base de données ne peut plus les lire\n" +
+      "🗝️ Les salons sont protégés par une phrase secrète de groupe, à saisir une seule fois par appareil\n" +
+      "💬 Les messages privés sont chiffrés de bout en bout : seuls toi et ton ami pouvez les lire, même l'Owner\n" +
+      "🖼️ Les images sont chiffrées aussi\n" +
+      "🔓 Les anciens messages restent en clair et sont marqués d'un cadenas ouvert\n" +
+      "🧹 À la déconnexion, les clés sont effacées de l'appareil\n" +
+      "📲 Application installable sur iPhone, PC et Raspberry Pi\n\n" +
+      "À faire : connecte-toi une fois pour créer tes clés. Ne perds ni ta phrase secrète ni ton mot de passe : aucun message ne pourra être récupéré.\n\n" +
+      "Bon chat !";
     const CHANNELS = ['annonce-update', 'general', 'vocal', 'projets'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
 
@@ -310,6 +333,195 @@
     let listeners = [];
     const EMAIL_DOMAIN = '@securechat.app';
     const auth = firebase.auth();
+
+    // ================= CHIFFREMENT (Web Crypto, AES-256-GCM / ECDH P-256) =================
+    let groupKey = null, myPriv = null, sessionPass = null;
+    const dmKeys = {}, decCache = new Map();
+    const enc = new TextEncoder(), dec = new TextDecoder();
+    const ECDH = { name: 'ECDH', namedCurve: 'P-256' };
+    const GROUP_SALT = enc.encode('securechat-group-v3');
+
+    const b64 = u8 => { let s = ''; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); };
+    const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+
+    async function pbkdf2Key(secret, salt) {
+      const base = await crypto.subtle.importKey('raw', enc.encode(secret), 'PBKDF2', false, ['deriveKey']);
+      return crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 600000, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+    }
+    async function aesEnc(key, bytes) {
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, bytes));
+      return { iv: b64(iv), c: b64(ct) };
+    }
+    async function aesDec(key, iv, c) {
+      return new Uint8Array(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(iv) }, key, unb64(c)));
+    }
+
+    // Les clés sont gardées dans IndexedDB sous forme non extractable
+    const idb = {
+      _db: null,
+      open() { if (!this._db) this._db = new Promise((res, rej) => { const r = indexedDB.open('securechat', 1); r.onupgradeneeded = () => r.result.createObjectStore('k'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); return this._db; },
+      async get(k) { try { const d = await this.open(); return await new Promise(res => { const q = d.transaction('k').objectStore('k').get(k); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); }); } catch (e) { return null; } },
+      async set(k, v) { try { const d = await this.open(); await new Promise(res => { const t = d.transaction('k', 'readwrite'); t.objectStore('k').put(v, k); t.oncomplete = t.onerror = () => res(); }); } catch (e) {} },
+      async del(k) { try { const d = await this.open(); await new Promise(res => { const t = d.transaction('k', 'readwrite'); t.objectStore('k').delete(k); t.oncomplete = t.onerror = () => res(); }); } catch (e) {} }
+    };
+
+    function askSecret(title, desc, err) {
+      return new Promise(res => {
+        const m = document.getElementById('secretModal'), f = document.getElementById('secretForm');
+        const i = document.getElementById('secretInput'), e = document.getElementById('secretErr');
+        document.getElementById('secretTitle').textContent = title;
+        document.getElementById('secretDesc').textContent = desc;
+        e.textContent = err || ''; e.classList.toggle('hidden', !err);
+        i.value = ''; m.classList.remove('hidden'); setTimeout(() => i.focus(), 50);
+        f.onsubmit = ev => { ev.preventDefault(); const v = i.value; if (!v) return; m.classList.add('hidden'); i.value = ''; res(v); };
+      });
+    }
+    function cancelSecret() { document.getElementById('secretModal').classList.add('hidden'); logout(); }
+
+    async function checkPass(p) {
+      try { await auth.currentUser.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(meKey + EMAIL_DOMAIN, p)); return true; } catch (e) { return false; }
+    }
+
+    // Clés personnelles (messages privés) : clé privée protégée par ton mot de passe, stockée chiffrée
+    async function ensureUserKeys(pass) {
+      const pubDb = (await db.ref('pubkeys/' + meKey).once('value')).val();
+      myPriv = await idb.get('ecdh:' + meKey);
+      if (myPriv && pubDb) return;
+      const wrapped = (await db.ref('privkeys/' + meKey).once('value')).val();
+      if (wrapped && pubDb) {
+        let err = '';
+        for (;;) {
+          const pw = pass || await askSecret('Déverrouille tes clés', "Entre ton mot de passe de connexion pour lire tes messages privés sur cet appareil.", err);
+          pass = null;
+          try {
+            const k = await pbkdf2Key(pw, unb64(wrapped.salt));
+            const pkcs8 = await aesDec(k, wrapped.iv, wrapped.c);
+            myPriv = await crypto.subtle.importKey('pkcs8', pkcs8, ECDH, false, ['deriveKey']);
+            await idb.set('ecdh:' + meKey, myPriv);
+            return;
+          } catch (e) { err = 'Mot de passe incorrect.'; }
+        }
+      }
+      // Première fois : création des clés
+      let trusted = !!pass, err = '';
+      while (!pass || (!trusted && !(await checkPass(pass)))) {
+        pass = await askSecret('Active tes clés de chiffrement', "Entre ton mot de passe de connexion une fois pour créer tes clés privées.", err);
+        trusted = false; err = 'Mot de passe incorrect.';
+      }
+      const pair = await crypto.subtle.generateKey(ECDH, true, ['deriveKey']);
+      const pkcs8 = new Uint8Array(await crypto.subtle.exportKey('pkcs8', pair.privateKey));
+      const pub = await crypto.subtle.exportKey('jwk', pair.publicKey);
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      const w = await aesEnc(await pbkdf2Key(pass, salt), pkcs8);
+      await db.ref('privkeys/' + meKey).set({ salt: b64(salt), iv: w.iv, c: w.c });
+      await db.ref('pubkeys/' + meKey).set({ kty: pub.kty, crv: pub.crv, x: pub.x, y: pub.y });
+      myPriv = await crypto.subtle.importKey('pkcs8', pkcs8, ECDH, false, ['deriveKey']);
+      await idb.set('ecdh:' + meKey, myPriv);
+    }
+
+    // Phrase secrète de groupe (salons)
+    async function ensureGroupKey() {
+      groupKey = await idb.get('group');
+      const check = (await db.ref('crypto/groupCheck').once('value')).val();
+      const MARK = 'securechat-ok';
+      if (!check) {
+        if (currentUser.role !== 'Owner') { groupKey = null; return; }
+        let err = '', p = '';
+        for (;;) {
+          p = await askSecret('Active le chiffrement des salons', "Choisis une phrase secrète LONGUE (5 mots ou plus, 12 caractères minimum). Tes amis la saisiront une fois par appareil. Si elle est perdue, les messages des salons sont perdus.", err);
+          if (p.length >= 12) break;
+          err = 'Trop courte : 12 caractères minimum.';
+        }
+        const k = await pbkdf2Key(p, GROUP_SALT);
+        await db.ref('crypto/groupCheck').set(await aesEnc(k, enc.encode(MARK)));
+        groupKey = k; await idb.set('group', k);
+        return;
+      }
+      const verify = async k => { try { return dec.decode(await aesDec(k, check.iv, check.c)) === MARK; } catch (e) { return false; } };
+      if (groupKey && await verify(groupKey)) return;
+      groupKey = null;
+      let err = '';
+      for (;;) {
+        const p = await askSecret('Phrase secrète du groupe', "Demande-la à l'Owner. Elle n'est demandée qu'une fois par appareil.", err);
+        const k = await pbkdf2Key(p, GROUP_SALT);
+        if (await verify(k)) { groupKey = k; await idb.set('group', k); return; }
+        err = 'Phrase incorrecte.';
+      }
+    }
+
+    async function initCrypto() {
+      const pass = sessionPass; sessionPass = null;
+      await ensureUserKeys(pass);
+      await ensureGroupKey();
+    }
+    function wipeKeys() {
+      const k = meKey;
+      groupKey = null; myPriv = null; sessionPass = null;
+      Object.keys(dmKeys).forEach(x => delete dmKeys[x]); decCache.clear();
+      idb.del('group'); if (k) idb.del('ecdh:' + k);
+    }
+
+    function partnerOf(chan) { return Object.keys(accounts).find(k => k !== meKey && dmName(meKey, k) === chan) || null; }
+    async function getDmKey(partner) {
+      if (dmKeys[partner]) return dmKeys[partner];
+      if (!myPriv) return null;
+      const pub = (await db.ref('pubkeys/' + partner).once('value')).val();
+      if (!pub) return null;
+      const pk = await crypto.subtle.importKey('jwk', pub, ECDH, false, []);
+      const k = await crypto.subtle.deriveKey({ name: 'ECDH', public: pk }, myPriv, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+      return (dmKeys[partner] = k);
+    }
+    async function encryptPayload(chan, payload) {
+      let key;
+      if (chan.startsWith('dm_')) {
+        const partner = partnerOf(chan);
+        if (!partner) throw { userMsg: "Conversation introuvable." };
+        key = await getDmKey(partner);
+        if (!key) throw { userMsg: "Cet ami doit d'abord se connecter une fois à la v3 pour créer ses clés." };
+      } else {
+        key = groupKey;
+        if (!key) throw { userMsg: "Le chiffrement des salons n'est pas encore activé : l'Owner doit d'abord définir la phrase secrète." };
+      }
+      return aesEnc(key, enc.encode(JSON.stringify(payload)));
+    }
+    async function decryptMessage(m) {
+      if (!m.c) return;
+      const ck = m._key + m.iv;
+      let pl = decCache.get(ck);
+      if (!pl) {
+        try {
+          const chan = m.channel || 'general';
+          let key = null;
+          if (chan.startsWith('dm_')) { const pt = partnerOf(chan); key = pt ? await getDmKey(pt) : null; } else key = groupKey;
+          if (key) pl = JSON.parse(dec.decode(await aesDec(key, m.iv, m.c)));
+        } catch (e) {}
+        if (pl) decCache.set(ck, pl);
+      }
+      if (pl) { m.text = pl.t; m.imageUrl = pl.i; m.replyTo = pl.r; }
+      else { m.text = '🔒 Message illisible'; m.locked = true; }
+    }
+    // Envoi : tout est chiffré, sauf le salon d'annonces (public par nature)
+    async function sendEncrypted(pl) {
+      const base = { id: Date.now(), sender: currentUser.name, senderKey: meKey, time: nowTime(), channel: currentChannel };
+      try {
+        if (currentChannel === 'annonce-update') {
+          const o = { ...base, isGlobalAnnouncement: true };
+          if (pl.t) o.text = pl.t;
+          if (pl.i) o.imageUrl = pl.i;
+          if (pl.r) o.replyTo = pl.r;
+          await db.ref('messages').push(o);
+        } else {
+          const e = await encryptPayload(currentChannel, pl);
+          await db.ref('messages').push({ ...base, v: 3, iv: e.iv, c: e.c });
+        }
+        return true;
+      } catch (err) {
+        alert(err && err.userMsg ? err.userMsg : "Envoi impossible : " + ((err && (err.code || err.message)) || 'erreur'));
+        return false;
+      }
+    }
+    // =======================================================================================
 
     // Protège contre l'injection HTML
     function esc(s) {
@@ -378,9 +590,14 @@
       updateAdminUsersList();
     }
 
-    function onMessages(snapshot) {
+    let msgSeq = 0;
+    async function onMessages(snapshot) {
       const msgs = snapshot.val() || {};
-      messagesList = Object.entries(msgs).map(([k, v]) => ({ ...v, _key: k }));
+      const seq = ++msgSeq;
+      const list = Object.entries(msgs).map(([k, v]) => ({ ...v, _key: k }));
+      await Promise.all(list.map(decryptMessage));
+      if (seq !== msgSeq) return;
+      messagesList = list;
 
       Object.entries(msgs).forEach(([key, m]) => {
         if (seenKeys.has(key)) return;
@@ -459,6 +676,7 @@
       btn.disabled = true;
       document.getElementById('loginError').classList.add('hidden');
       try {
+        sessionPass = pass;
         if (!/^[a-z0-9_-]{2,30}$/.test(key)) throw { code: 'bad-key' };
         try {
           await auth.signInWithEmailAndPassword(key + EMAIL_DOMAIN, pass);
@@ -468,6 +686,7 @@
           await migrateAccount(key, pass);
         }
       } catch (err) {
+        sessionPass = null;
         showLoginError(authErrorMessage(err));
       } finally {
         btn.disabled = false;
@@ -514,6 +733,8 @@
       statusRef.onDisconnect().set({ state: 'offline' });
       statusRef.set({ state: 'online' });
 
+      try { accounts = (await db.ref('accounts').once('value')).val() || {}; } catch (e) {}
+      try { await initCrypto(); } catch (e) { console.error(e); alert("Erreur de chiffrement : " + (e.code || e.message || e) + "\n(Les règles Firebase pour pubkeys, privkeys et crypto sont-elles ajoutées ?)"); }
       listen(db.ref('accounts'), onAccounts);
       listen(db.ref('status'), (snap2) => { userStatuses = snap2.val() || {}; renderUsersList(); });
       listen(db.ref('messages').limitToLast(500), onMessages);
@@ -525,7 +746,7 @@
 
     async function logout() {
       if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline' }); } catch (e) {} }
-      stopListeners();
+      stopListeners(); wipeKeys();
       currentUser = null; meKey = ''; starting = false;
       accounts = {}; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
@@ -574,11 +795,7 @@
           c.width = Math.round(img.width * scale);
           c.height = Math.round(img.height * scale);
           c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-          db.ref('messages').push({
-            id: Date.now(), sender: currentUser.name, senderKey: meKey,
-            imageUrl: c.toDataURL('image/jpeg', 0.7),
-            time: nowTime(), channel: currentChannel
-          });
+          sendEncrypted({ i: c.toDataURL('image/jpeg', 0.7) });
           e.target.value = '';
         };
         img.src = uploadEvent.target.result;
@@ -703,12 +920,20 @@
       const ref = db.ref('messages/' + key + '/reactions/' + emoji + '/' + meKey);
       ref.once('value', (snap) => { if (snap.exists()) ref.remove(); else ref.set(true); });
     }
-    function editMessage(m) {
+    async function editMessage(m) {
+      if (m.locked) return;
       const t = prompt('Modifier le message :', m.text);
       if (t === null) return;
       const v = t.trim();
       if (!v || v === m.text) return;
-      db.ref('messages/' + m._key).update({ text: v, edited: true });
+      try {
+        if (m.c) {
+          const e = await encryptPayload(m.channel || 'general', { t: v, ...(m.replyTo ? { r: m.replyTo } : {}) });
+          await db.ref('messages/' + m._key).update({ iv: e.iv, c: e.c, edited: true });
+        } else {
+          await db.ref('messages/' + m._key).update({ text: v, edited: true });
+        }
+      } catch (err) { alert(err && err.userMsg ? err.userMsg : "Modification impossible."); }
     }
     function deleteMessage(m) {
       if (confirm('Supprimer ce message ?')) db.ref('messages/' + m._key).remove();
@@ -826,7 +1051,7 @@
         inputEl.placeholder = isOwner ? "Publier une annonce officielle..." : "Seul l'Owner peut publier dans ce salon";
       } else {
         inputEl.disabled = sendBtnEl.disabled = imgBtnEl.disabled = false;
-        inputEl.placeholder = "Écrire un message...";
+        inputEl.placeholder = "Écrire un message chiffré...";
         titleEl.textContent = chan === 'general' ? 'Général' : (chan === 'vocal' ? 'Salon Vocal' : 'Projets Privés');
         setChannelIcon(chan === 'vocal' ? 'volume-2' : (chan === 'projets' ? 'lock' : 'hash'));
       }
@@ -865,7 +1090,7 @@
       document.getElementById('messageInput').disabled = false;
       document.getElementById('sendBtn').disabled = false;
       document.getElementById('imgUploadBtn').disabled = false;
-      document.getElementById('messageInput').placeholder = "Écrire un message privé...";
+      document.getElementById('messageInput').placeholder = "Écrire un message privé chiffré...";
 
       styleChannelButtons(null);
       renderChannels();
@@ -875,7 +1100,7 @@
       lucide.createIcons();
     }
 
-    function sendMessage(e) {
+    async function sendMessage(e) {
       e.preventDefault();
       const input = document.getElementById('messageInput');
       const text = input.value.trim();
@@ -995,10 +1220,8 @@
         return;
       }
 
-      db.ref('messages').push({
-        id: Date.now(), sender: currentUser.name, senderKey: meKey, text: text, time: nowTime(), ...(replyingTo ? { replyTo: replyingTo } : {}),
-        channel: currentChannel, isGlobalAnnouncement: currentChannel === 'annonce-update'
-      });
+      const ok = await sendEncrypted({ t: text, ...(replyingTo ? { r: replyingTo } : {}) });
+      if (!ok) return;
       cancelReply(); clearTyping();
       input.value = '';
     }
@@ -1086,7 +1309,7 @@
         wrap.innerHTML = `
           <div class="flex items-center gap-2 text-[10px] text-gray-400 px-1">
             <span class="font-semibold text-gray-300">${esc(m.sender)}</span>
-            <span>• ${esc(m.time)}</span>${m.edited ? '<span class="italic">(modifié)</span>' : ''}
+            <span>• ${esc(m.time)}</span>${m.c ? '' : '<span title="Ancien message non chiffré">🔓</span>'}${m.edited ? '<span class="italic">(modifié)</span>' : ''}
           </div>
           <div class="msg-bubble max-w-[85%] sm:max-w-md p-3 rounded-2xl text-xs sm:text-sm ${mine ? 'bg-brand-600 text-white rounded-tr-none shadow-md shadow-brand-600/10' : 'bg-gray-800 text-gray-100 rounded-tl-none border border-gray-700/60'} ${mentioned ? 'ring-2 ring-amber-400/70' : ''}">${content}</div>
           ${chips ? `<div class="flex flex-wrap gap-1 px-1 ${mine ? 'justify-end' : ''}">${chips}</div>` : ''}
