@@ -208,6 +208,7 @@
             <option value="b:Membre">Membre</option>
             <option value="b:Ami">Ami</option>
             <option value="b:Admin">Admin (modérateur)</option>
+            <option value="b:Testeur">Testeur (modérateur)</option>
           </select></div>
         <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs rounded-xl transition">Créer le Compte</button>
       </form>
@@ -567,7 +568,8 @@
       if (!meKey) return false;
       return Object.keys(accounts).some(k => k !== meKey && dmName(meKey, k) === chan);
     }
-    const BADGE_RESERVED = ['owner', 'admin', 'ami', 'membre'];
+    const BADGE_RESERVED = ['owner', 'admin', 'testeur', 'ami', 'membre'];
+    const isStaffRole = r => r === 'Owner' || r === 'Admin' || r === 'Testeur';
     function safeColor(c) { return /^#[0-9a-fA-F]{6}$/.test(c || '') ? c : '#9ca3af'; }
     function customBadgeHtml(u, size) {
       const r = u && u.customRole && rolesData[u.customRole];
@@ -594,28 +596,28 @@
     // Un seul badge par personne : Owner/Admin d'abord, sinon rôle personnalisé, sinon rôle de base
     function roleBadgeFor(u, size) {
       if (!u) return '';
-      if (u.role === 'Owner' || u.role === 'Admin') return builtinBadgeHtml(u.role, size);
+      if (isStaffRole(u.role)) return builtinBadgeHtml(u.role, size);
       return customBadgeHtml(u, size) || builtinBadgeHtml(u.role, size);
     }
     function msgBadgeHtml(u) {
       if (!u) return '';
-      return (u.role === 'Owner' || u.role === 'Admin' || (u.customRole && rolesData[u.customRole])) ? roleBadgeFor(u) : '';
+      return (isStaffRole(u.role) || (u.customRole && rolesData[u.customRole])) ? roleBadgeFor(u) : '';
     }
     function roleLabel(u) {
       if (!u) return '';
-      if (u.role === 'Owner' || u.role === 'Admin') return u.role;
+      if (isStaffRole(u.role)) return u.role;
       const r = u.customRole && rolesData[u.customRole];
       return r ? r.name : u.role;
     }
     function roleSelectValue(u) {
-      if (u.role === 'Admin') return 'b:Admin';
+      if (u.role === 'Admin' || u.role === 'Testeur') return 'b:' + u.role;
       if (u.customRole && rolesData[u.customRole]) return 'c:' + u.customRole;
       return 'b:' + (u.role === 'Ami' ? 'Ami' : 'Membre');
     }
     function roleOptionsHtml(selected) {
       const sel = v => (v === selected ? ' selected' : '');
       const customs = Object.keys(rolesData).map(id => `<option value="c:${esc(id)}"${sel('c:' + id)}>${esc(rolesData[id].name)}</option>`).join('');
-      return `<option value="b:Membre"${sel('b:Membre')}>Membre</option><option value="b:Ami"${sel('b:Ami')}>Ami</option><option value="b:Admin"${sel('b:Admin')}>Admin (modérateur)</option>` + customs;
+      return `<option value="b:Membre"${sel('b:Membre')}>Membre</option><option value="b:Ami"${sel('b:Ami')}>Ami</option><option value="b:Admin"${sel('b:Admin')}>Admin (modérateur)</option><option value="b:Testeur"${sel('b:Testeur')}>Testeur (modérateur)</option>` + customs;
     }
     function fillNewRoleSelect() {
       const sel = document.getElementById('newRole');
@@ -628,7 +630,7 @@
       const el = document.getElementById('rolesList');
       if (!el) return;
       el.innerHTML = '<p class="w-full text-[10px] text-gray-500">Rôles de base (non supprimables)</p>' +
-        ['Membre', 'Ami', 'Admin'].map(r => builtinBadgeHtml(r, 'text-[10px]')).join('') +
+        ['Membre', 'Ami', 'Admin', 'Testeur'].map(r => builtinBadgeHtml(r, 'text-[10px]')).join('') +
         '<p class="w-full text-[10px] text-gray-500 mt-1">Tes rôles personnalisés</p>';
       const ids = Object.keys(rolesData);
       if (!ids.length) { el.insertAdjacentHTML('beforeend', `<span class="text-[11px] text-gray-500">Aucun pour l'instant.</span>`); return; }
@@ -666,14 +668,14 @@
       const upd = {};
       if (val.startsWith('b:')) {
         const r = val.slice(2);
-        if (!['Membre', 'Ami', 'Admin'].includes(r)) return;
+        if (!['Membre', 'Ami', 'Admin', 'Testeur'].includes(r)) return;
         upd['accounts/' + k + '/role'] = r;
         upd['accounts/' + k + '/customRole'] = null;
       } else {
         const id = val.slice(2);
         if (!rolesData[id]) return;
-        if (acc.role === 'Admin') {
-          if (!confirm(`${acc.name} est Admin. Lui donner ce rôle lui retire les droits Admin. Continuer ?`)) { updateAdminUsersList(); return; }
+        if (isStaffRole(acc.role)) {
+          if (!confirm(`${acc.name} est ${acc.role}. Lui donner ce rôle lui retire ses droits de modération. Continuer ?`)) { updateAdminUsersList(); return; }
           upd['accounts/' + k + '/role'] = 'Membre';
         }
         upd['accounts/' + k + '/customRole'] = id;
@@ -688,6 +690,7 @@
     function getRoleBadgeClass(role) {
       switch (role) {
         case 'Owner': return 'text-amber-400 font-bold bg-amber-500/10 border border-amber-500/20';
+        case 'Testeur': return 'text-yellow-300 font-bold bg-yellow-400/10 border border-yellow-400/25';
         case 'Admin': return 'text-red-400 font-bold bg-red-500/10 border border-red-500/20';
         case 'Ami': return 'text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20';
         default: return 'text-blue-400 font-medium bg-blue-500/10 border border-blue-500/20';
@@ -722,7 +725,7 @@
         if (!accounts[meKey]) { alert("Ton compte a été supprimé."); logout(); return; }
         currentUser = accounts[meKey];
         currentUser.username = currentUser.username || meKey;
-        const st = currentUser.role === 'Owner' || currentUser.role === 'Admin';
+        const st = isStaffRole(currentUser.role);
         document.getElementById('adminBtn').classList.toggle('hidden', !st);
         if (!st) closeAdminModal();
         if (!currentChannel.startsWith('dm_')) document.getElementById('headerCommandHint').textContent = st ? CMD_HINT : '';
@@ -864,7 +867,7 @@
       document.getElementById('userNameDisplay').textContent = currentUser.name;
       document.getElementById('userRoleDisplay').textContent = roleLabel(currentUser);
       document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
-      const isStaff = currentUser.role === 'Owner' || currentUser.role === 'Admin';
+      const isStaff = isStaffRole(currentUser.role);
       document.getElementById('adminBtn').classList.toggle('hidden', !isStaff);
       document.getElementById('headerCommandHint').textContent = isStaff ? CMD_HINT : '';
 
@@ -903,7 +906,7 @@
     }
 
     function openAdminModal() {
-      if (currentUser && (currentUser.role === 'Owner' || currentUser.role === 'Admin')) {
+      if (currentUser && (isStaffRole(currentUser.role))) {
         document.getElementById('adminModal').classList.remove('hidden');
         document.getElementById('createUserForm').classList.toggle('hidden', currentUser.role !== 'Owner');
         document.getElementById('rolesManager').classList.toggle('hidden', currentUser.role !== 'Owner');
@@ -964,7 +967,7 @@
       if (!/^[a-z0-9_-]{2,30}$/.test(key)) { alert("Identifiant : 2 à 30 caractères, lettres, chiffres, - ou _ uniquement."); return; }
       if (pass.length < 6) { alert("Mot de passe : 6 caractères minimum."); return; }
       if (accounts[key]) { alert("Cet identifiant existe déjà."); return; }
-      if (role === 'Admin' && currentUser.role !== 'Owner') { alert("Seul l'Owner peut créer un Admin."); return; }
+      if (isStaffRole(role) && currentUser.role !== 'Owner') { alert("Seul l'Owner peut créer un rôle de modération."); return; }
 
       const btn = e.target.querySelector('button[type=submit]');
       btn.disabled = true;
@@ -1211,7 +1214,7 @@
         setChannelIcon(chan === 'vocal' ? 'volume-2' : (chan === 'projets' ? 'lock' : 'hash'));
       }
 
-      if (currentUser && (currentUser.role === 'Owner' || currentUser.role === 'Admin')) {
+      if (currentUser && (isStaffRole(currentUser.role))) {
         document.getElementById('headerCommandHint').textContent = CMD_HINT;
       }
 
@@ -1282,7 +1285,7 @@
 
         if (cmd === 'toall') {
           if (currentChannel.startsWith('dm_')) { alert("La commande /toall ne peut pas être exécutée depuis un DM."); return; }
-          if (currentUser.role !== 'Owner' && currentUser.role !== 'Admin') { alert("Tu n'as pas les permissions suffisantes pour faire une annonce globale."); return; }
+          if (!isStaffRole(currentUser.role)) { alert("Tu n'as pas les permissions suffisantes pour faire une annonce globale."); return; }
           const annText = args.slice(1).join(' ');
           if (!annText) { alert("Utilisation : /toall [message d'annonce]"); return; }
           db.ref('messages').push({
@@ -1293,7 +1296,7 @@
         }
 
         if (currentChannel.startsWith('dm_')) { alert("Erreur : Les commandes d'administration sont strictement désactivées dans les discussions privées !"); return; }
-        if (currentUser.role !== 'Owner' && currentUser.role !== 'Admin') { alert("Tu n'as pas les permissions suffisantes pour exécuter des commandes."); return; }
+        if (!isStaffRole(currentUser.role)) { alert("Tu n'as pas les permissions suffisantes pour exécuter des commandes."); return; }
 
         if (cmd === 'clean' || cmd === 'clear') {
           const chanToClean = currentChannel;
@@ -1389,7 +1392,7 @@
       const sameChan = lastRenderedChannel === currentChannel;
       container.innerHTML = '';
       const q = ((document.getElementById('searchInput') || {}).value || '').trim().toLowerCase();
-      const isStaff = !!currentUser && (currentUser.role === 'Owner' || currentUser.role === 'Admin');
+      const isStaff = !!currentUser && (isStaffRole(currentUser.role));
 
       const filtered = messagesList.filter(m => {
         const msgChan = m.channel || (m.isGlobalAnnouncement ? 'annonce-update' : 'general');
