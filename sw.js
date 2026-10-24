@@ -1,5 +1,5 @@
 // Service worker minimal : réseau d'abord, cache en secours (pour l'installation)
-const CACHE = 'securechat-v1';
+const CACHE = 'securechat-v2';
 const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -21,4 +21,10 @@ self.addEventListener('fetch', e => {
       return res;
     }).catch(() => caches.match(req))
   );
+});
+
+// Clic sur une notification : ramène l'app au premier plan
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => (list.length ? list[0].focus() : clients.openWindow('./'))));
 });
