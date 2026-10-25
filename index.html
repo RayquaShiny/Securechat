@@ -102,7 +102,7 @@
               <span class="hidden sm:inline">Securechat</span>
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v3.4.0</span>
+                <span>v3.5.0</span>
               </button>
             </h2>
           </div>
@@ -150,13 +150,9 @@
               <span class="flex items-center gap-2"><i data-lucide="hash" class="w-4 h-4"></i><span>Général</span></span>
               <div class="flex items-center gap-2"><span id="dot-general" class="min-w-[16px] h-4 px-1 rounded-full bg-brand-500 text-[10px] font-bold text-white items-center justify-center hidden"></span></div>
             </button>
-            <button onclick="selectChannel('vocal')" id="chan-vocal" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition">
-              <span class="flex items-center gap-2"><i data-lucide="volume-2" class="w-4 h-4"></i><span>Salon Vocal</span></span>
-              <div class="flex items-center gap-2"><span id="dot-vocal" class="min-w-[16px] h-4 px-1 rounded-full bg-brand-500 text-[10px] font-bold text-white items-center justify-center hidden"></span></div>
-            </button>
-            <button onclick="selectChannel('projets')" id="chan-projets" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition">
+            <button onclick="selectChannel('self')" id="chan-self" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition">
               <span class="flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4"></i><span>Projets Privés</span></span>
-              <div class="flex items-center gap-2"><span id="dot-projets" class="min-w-[16px] h-4 px-1 rounded-full bg-brand-500 text-[10px] font-bold text-white items-center justify-center hidden"></span></div>
+              <div class="flex items-center gap-2"><span id="dot-self" class="min-w-[16px] h-4 px-1 rounded-full bg-brand-500 text-[10px] font-bold text-white items-center justify-center hidden"></span></div>
             </button>
           </nav>
         </div>
@@ -297,8 +293,18 @@
       <div class="space-y-4 text-gray-300">
         <div class="border-l-2 border-amber-500 pl-3 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.4.0</span>
+            <span class="font-bold text-white text-sm">v3.5.0</span>
             <span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
+          </div>
+          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
+            <li>« Projets Privés » devient un espace de notes que toi seul peux lire (chiffré avec tes clés)</li>
+            <li>Suppression du Salon Vocal</li>
+            <li>Guide ntfy iPhone : installation en PWA via Safari</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white text-sm">v3.4.0</span>
           </div>
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>Event « Chasse aux étoiles » : mini-jeu de 30 secondes</li>
@@ -395,16 +401,17 @@
   </div>
 
   <script>
-    const CURRENT_VERSION = "v3.4.0";
+    const CURRENT_VERSION = "v3.5.0";
     const DEV_MODE = false; // true = aucune annonce automatique
     const VERSION_CHANGELOG =
-      "🎮 Securechat v3.4 : le premier event est là !\n\n" +
-      "⭐ Chasse aux étoiles : un nouveau bloc sous les salons, juste avant les membres. Clique dessus pour jouer des parties de 30 secondes et attraper un maximum d'étoiles\n" +
-      "🎁 Tes étoiles s'additionnent et débloquent des décorations pour ton bouton de message privé : Étincelle (50), Néon (150), Galaxie (400), Flamme (1000) et Royal (2500)\n" +
-      "👀 Tout le monde voit ta décoration dans la liste des membres\n" +
-      "🏆 Un classement pour savoir qui est en tête\n\n" +
+      "🔒 Securechat v3.5 : tes notes privées !\n\n" +
+      "Voici les nouveautés :\n" +
+      "📝 « Projets Privés » devient ton espace perso : une discussion avec toi-même que personne d'autre ne peut lire, pas même l'Owner. Idéal pour tes idées, liens ou photos\n" +
+      "🔐 Tes notes sont chiffrées avec tes propres clés et te suivent sur tous tes appareils\n" +
+      "🗑️ Le Salon Vocal est supprimé\n" +
+      "📲 Notifications sur iPhone : installe ntfy depuis Safari (ntfy.sh/app puis « Sur l'écran d'accueil ») pour les recevoir même app fermée\n\n" +
       "Bon chat !";
-    const CHANNELS = ['annonce-update', 'general', 'vocal', 'projets'];
+    const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
 
     const firebaseConfig = {
@@ -577,7 +584,10 @@
     }
     async function encryptPayload(chan, payload) {
       let key;
-      if (chan.startsWith('dm_')) {
+      if (chan === 'self') {
+        key = await getDmKey(meKey);
+        if (!key) throw { userMsg: "Tes clés ne sont pas prêtes. Reconnecte-toi puis réessaie." };
+      } else if (chan.startsWith('dm_')) {
         const partner = partnerOf(chan);
         if (!partner) throw { userMsg: "Conversation introuvable." };
         key = await getDmKey(partner);
@@ -596,7 +606,7 @@
         try {
           const chan = m.channel || 'general';
           let key = null;
-          if (chan.startsWith('dm_')) { const pt = partnerOf(chan); key = pt ? await getDmKey(pt) : null; } else key = groupKey;
+          if (chan === 'self') key = await getDmKey(meKey); else if (chan.startsWith('dm_')) { const pt = partnerOf(chan); key = pt ? await getDmKey(pt) : null; } else key = groupKey;
           if (key) pl = JSON.parse(dec.decode(await aesDec(key, m.iv, m.c)));
         } catch (e) {}
         if (pl) decCache.set(ck, pl);
@@ -605,7 +615,32 @@
       else { m.text = '🔒 Message illisible'; m.locked = true; }
     }
     // Envoi : tout est chiffré, sauf le salon d'annonces (public par nature)
+    // Notes privées : stockées dans notes/<toi>, lisibles par toi seul (règles Firebase), chiffrées avec ta clé personnelle
     async function sendEncrypted(pl) {
+      if (currentChannel === 'self') return sendNote(pl);
+      return sendEncryptedShared(pl);
+    }
+    async function sendNote(pl) {
+      try {
+        const e = await encryptPayload('self', pl);
+        await db.ref('notes/' + meKey).push({ id: Date.now(), time: nowTime(), v: 3, iv: e.iv, c: e.c });
+        return true;
+      } catch (err) {
+        alert(err && err.userMsg ? err.userMsg : "Note non enregistrée : " + ((err && (err.code || err.message)) || 'erreur') + "\n(Les règles Firebase pour « notes » sont-elles ajoutées ?)");
+        return false;
+      }
+    }
+    let notesList = [], notesSeq = 0;
+    async function onNotes(snapshot) {
+      const v = snapshot.val() || {};
+      const seq = ++notesSeq;
+      const list = Object.entries(v).map(([k, x]) => ({ ...x, _key: k, _note: true, channel: 'self', sender: currentUser ? currentUser.name : '', senderKey: meKey }));
+      await Promise.all(list.map(decryptMessage));
+      if (seq !== notesSeq) return;
+      notesList = list;
+      if (currentChannel === 'self') renderMessages();
+    }
+    async function sendEncryptedShared(pl) {
       const base = { id: Date.now(), sender: currentUser.name, senderKey: meKey, time: nowTime(), channel: currentChannel };
       try {
         if (currentChannel === 'annonce-update') {
@@ -701,7 +736,7 @@
       const mention = !!(m.text && meKey && String(m.text).toLowerCase().includes('@' + meKey));
       const isDm = chan.startsWith('dm_');
       if (!(notifMode === 'all' || isDm || mention || chan === 'annonce-update')) return;
-      const names = { 'annonce-update': 'Annonces', general: 'Général', vocal: 'Vocal', projets: 'Projets' };
+      const names = { 'annonce-update': 'Annonces', general: 'Général' };
       const title = isDm ? m.sender : (m.sender || 'Securechat') + ' · ' + (names[chan] || chan);
       const body = m.locked ? '🔒 Nouveau message' : m.poll ? '📊 Sondage' : m.audio ? '🎤 Message vocal' : m.imageUrl ? '📷 Photo' : String(m.text || '').slice(0, 120);
       const opts = { body, icon: 'icon-192.png', tag: chan };
@@ -714,7 +749,7 @@
     // Le texte des messages ne passe jamais par ntfy : seulement « X a écrit ».
     const NTFY_URL = 'https://ntfy.sh/';
     const SITE_URL = /^https?:/.test(location.protocol) ? location.origin + location.pathname.replace(/[^/]*$/, '') : 'https://ntfy.sh';
-    const CHAN_NAMES = { general: 'Général', vocal: 'Vocal', projets: 'Projets', 'annonce-update': 'Annonces' };
+    const CHAN_NAMES = { general: 'Général', 'annonce-update': 'Annonces' };
     let myNtfy = null;
 
     // Bannissement : retire le compte et tout ce qui lui est lié dans la base
@@ -726,6 +761,7 @@
       upd['notifTopics/' + k] = null;
       upd['status/' + k] = null;
       upd['game/' + k] = null;
+      upd['notes/' + k] = null;
       upd['banned/' + k] = true;
       if (currentUser && currentUser.role === 'Owner') upd['secrets/' + k] = null;
       return db.ref().update(upd).catch(err => {
@@ -1119,6 +1155,7 @@
         if (m.senderKey ? m.senderKey === meKey : m.sender === currentUser.name) return;
         const chan = m.isGlobalAnnouncement ? 'annonce-update' : (m.channel || 'general');
         if (chan.startsWith('dm_') && !isMyDm(chan)) return;
+        if (!chan.startsWith('dm_') && !CHANNELS.includes(chan)) return;
         if (chan !== currentChannel) unreadChannels[chan] = (unreadChannels[chan] || 0) + 1;
         notifyMessage(byKey[key] || m, chan);
       });
@@ -1278,6 +1315,7 @@
       soft(db.ref('roles'), (r) => { rolesData = r.val() || {}; renderUsersList(); updateAdminUsersList(); renderRolesList(); renderMessages(); if (currentUser) document.getElementById('userRoleDisplay').textContent = roleLabel(currentUser); });
       soft(db.ref('lastPublishedVersion'), (v) => { const pub = v.val(); document.getElementById('updateBanner').classList.toggle('hidden', !(pub && isNewer(pub, CURRENT_VERSION))); });
       soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; renderUsersList(); renderGamePanel(); renderGameModal(); });
+      soft(db.ref('notes/' + key), onNotes);
       listen(db.ref('status'), (snap2) => { userStatuses = snap2.val() || {}; renderUsersList(); });
       listen(db.ref('messages').limitToLast(500), onMessages);
       listen(db.ref('typing'), (t) => { typingData = t.val() || {}; updateTypingLabel(); });
@@ -1291,7 +1329,7 @@
       if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline' }); } catch (e) {} }
       abortRound(); stopListeners(); wipeKeys();
       currentUser = null; meKey = ''; starting = false;
-      accounts = {}; rolesData = {}; gameData = {}; messagesList = []; unreadChannels = {};
+      accounts = {}; rolesData = {}; gameData = {}; notesList = []; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
       document.getElementById('appContainer').classList.add('hidden');
       document.getElementById('authScreen').classList.remove('hidden');
@@ -1484,18 +1522,18 @@
       try {
         if (m.c) {
           const e = await encryptPayload(m.channel || 'general', { t: v, ...(m.replyTo ? { r: m.replyTo } : {}) });
-          await db.ref('messages/' + m._key).update({ iv: e.iv, c: e.c, edited: true });
+          await db.ref((m._note ? 'notes/' + meKey + '/' : 'messages/') + m._key).update({ iv: e.iv, c: e.c, edited: true });
         } else {
-          await db.ref('messages/' + m._key).update({ text: v, edited: true });
+          await db.ref((m._note ? 'notes/' + meKey + '/' : 'messages/') + m._key).update({ text: v, edited: true });
         }
       } catch (err) { alert(err && err.userMsg ? err.userMsg : "Modification impossible."); }
     }
     function deleteMessage(m) {
-      if (confirm('Supprimer ce message ?')) db.ref('messages/' + m._key).remove();
+      if (confirm('Supprimer ce message ?')) db.ref((m._note ? 'notes/' + meKey + '/' : 'messages/') + m._key).remove();
     }
 
     function onTypingInput() {
-      if (!currentUser) return;
+      if (!currentUser || currentChannel === 'self') return;
       const now = Date.now();
       if (typingChan === currentChannel && now - typingTs < 2000) return;
       typingTs = now; typingChan = currentChannel;
@@ -1510,7 +1548,7 @@
     function updateTypingLabel() {
       const el = document.getElementById('typingIndicator');
       if (!el) return;
-      const t = typingData[currentChannel] || {};
+      const t = currentChannel === 'self' ? {} : (typingData[currentChannel] || {});
       const names = Object.keys(t).filter(k => k !== meKey && Date.now() - t[k] < 5000)
         .map(k => accounts[k] ? accounts[k].name : k);
       el.textContent = names.length === 0 ? ''
@@ -1609,9 +1647,9 @@
         inputEl.placeholder = isOwner ? "Publier une annonce officielle..." : "Seul l'Owner peut publier dans ce salon";
       } else {
         inputEl.disabled = sendBtnEl.disabled = imgBtnEl.disabled = false;
-        inputEl.placeholder = "Écrire un message chiffré...";
-        titleEl.textContent = chan === 'general' ? 'Général' : (chan === 'vocal' ? 'Salon Vocal' : 'Projets Privés');
-        setChannelIcon(chan === 'vocal' ? 'volume-2' : (chan === 'projets' ? 'lock' : 'hash'));
+        inputEl.placeholder = chan === 'self' ? "Note privée (visible par toi seul)..." : "Écrire un message chiffré...";
+        titleEl.textContent = chan === 'general' ? 'Général' : 'Projets Privés · visible par toi seul';
+        setChannelIcon(chan === 'self' ? 'lock' : 'hash');
       }
 
       if (currentUser && (isStaffRole(currentUser.role))) {
@@ -1685,6 +1723,7 @@
 
         if (['roll', 'pile', 'poll'].includes(cmd)) {
           if (currentChannel === 'annonce-update') { alert("Les commandes fun ne marchent pas dans le salon d'annonces."); return; }
+          if (cmd === 'poll' && currentChannel === 'self') { alert("Les sondages ne marchent pas dans tes notes privées."); return; }
           const rest = text.slice(1 + cmd.length).trim();
           let pl = null;
           if (cmd === 'pile') {
@@ -1708,7 +1747,7 @@
         }
 
         if (cmd === 'toall') {
-          if (currentChannel.startsWith('dm_')) { alert("La commande /toall ne peut pas être exécutée depuis un DM."); return; }
+          if (currentChannel.startsWith('dm_') || currentChannel === 'self') { alert("La commande /toall ne peut pas être exécutée depuis un DM."); return; }
           if (!isStaffRole(currentUser.role)) { alert("Tu n'as pas les permissions suffisantes pour faire une annonce globale."); return; }
           const annText = args.slice(1).join(' ');
           if (!annText) { alert("Utilisation : /toall [message d'annonce]"); return; }
@@ -1720,7 +1759,7 @@
           return;
         }
 
-        if (currentChannel.startsWith('dm_')) { alert("Erreur : Les commandes d'administration sont strictement désactivées dans les discussions privées !"); return; }
+        if (currentChannel.startsWith('dm_') || currentChannel === 'self') { alert("Erreur : Les commandes d'administration sont strictement désactivées dans les discussions privées !"); return; }
         if (!isStaffRole(currentUser.role)) { alert("Tu n'as pas les permissions suffisantes pour exécuter des commandes."); return; }
 
         if (cmd === 'clean' || cmd === 'clear') {
@@ -1819,7 +1858,8 @@
       const q = ((document.getElementById('searchInput') || {}).value || '').trim().toLowerCase();
       const isStaff = !!currentUser && (isStaffRole(currentUser.role));
 
-      const filtered = messagesList.filter(m => {
+      const source = currentChannel === 'self' ? notesList : messagesList;
+      const filtered = source.filter(m => {
         const msgChan = m.channel || (m.isGlobalAnnouncement ? 'annonce-update' : 'general');
         if (msgChan !== currentChannel) return false;
         return !q || (m.text && String(m.text).toLowerCase().includes(q));
@@ -1902,7 +1942,7 @@
           ${chips ? `<div class="flex flex-wrap gap-1 px-1 ${mine ? 'justify-end' : ''}">${chips}</div>` : ''}
           <div class="flex items-center gap-1 px-1 text-gray-500">
             <button data-act="reply" title="Répondre" class="p-1 hover:text-white"><i data-lucide="corner-up-left" class="w-3.5 h-3.5"></i></button>
-            <button data-act="react" title="Réagir" class="p-1 hover:text-white"><i data-lucide="smile" class="w-3.5 h-3.5"></i></button>
+            ${m._note ? '' : '<button data-act="react" title="Réagir" class="p-1 hover:text-white"><i data-lucide="smile" class="w-3.5 h-3.5"></i></button>'}
             ${canEdit ? '<button data-act="edit" title="Modifier" class="p-1 hover:text-white"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>' : ''}
             ${canDel ? '<button data-act="del" title="Supprimer" class="p-1 hover:text-red-400"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>' : ''}
           </div>
