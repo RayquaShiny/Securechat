@@ -191,19 +191,6 @@
           </div>
         </div>
 
-        <div id="voicePanel" class="hidden px-4 py-2 border-b border-gray-800 bg-darkpanel/60 shrink-0">
-          <div class="flex items-center justify-between gap-2">
-            <div class="min-w-0">
-              <p class="text-[11px] font-bold text-gray-300">🎙️ Vocal</p>
-              <p id="voiceMembers" class="text-[11px] text-gray-400 truncate">Personne pour l'instant</p>
-            </div>
-            <div class="flex items-center gap-1.5 shrink-0">
-              <button id="voiceMuteBtn" onclick="toggleVoiceMute()" class="hidden px-2.5 py-1.5 text-[11px] bg-gray-800 text-gray-200 rounded-lg">Couper le micro</button>
-              <button id="voiceJoinBtn" onclick="toggleVoice()" class="px-3 py-1.5 text-[11px] bg-brand-600 hover:bg-brand-500 text-white rounded-lg font-semibold">Rejoindre</button>
-            </div>
-          </div>
-          <div id="voiceAudio" class="hidden"></div>
-        </div>
         <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
 
         <div id="typingIndicator" class="px-4 h-5 text-[11px] text-gray-400 italic shrink-0"></div>
@@ -211,21 +198,11 @@
           <span id="replyBarText" class="truncate"></span>
           <button type="button" onclick="cancelReply()" class="ml-2 text-gray-400 hover:text-white">✕</button>
         </div>
-        <div id="recBar" style="display:none" class="px-4 py-2 border-t border-gray-800 bg-red-950/40 text-xs text-red-300 items-center justify-between shrink-0">
-          <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span><span id="recTime">0:00</span> · Enregistrement…</span>
-          <span class="flex items-center gap-2">
-            <button type="button" onclick="stopRecording(false)" class="px-2.5 py-1 bg-gray-800 text-gray-200 rounded-lg">Annuler</button>
-            <button type="button" onclick="stopRecording(true)" class="px-2.5 py-1 bg-brand-600 text-white rounded-lg font-semibold">Envoyer</button>
-          </span>
-        </div>
         <div class="composer p-3 sm:p-4 border-t border-gray-800 bg-darkpanel shrink-0">
           <form onsubmit="sendMessage(event)" class="flex items-center gap-2">
             <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
             <button type="button" id="imgUploadBtn" onclick="triggerImageUpload()" class="p-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition flex items-center justify-center shrink-0" title="Envoyer une photo">
               <i data-lucide="image" class="w-5 h-5"></i>
-            </button>
-            <button type="button" id="micBtn" onclick="toggleRecording()" class="p-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition flex items-center justify-center shrink-0" title="Message vocal">
-              <i data-lucide="mic" class="w-5 h-5"></i>
             </button>
             <input type="text" id="messageInput" oninput="onTypingInput()" placeholder="Écrire un message..." class="flex-1 py-2.5 px-4 bg-gray-900 border border-gray-700/80 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs sm:text-sm text-white placeholder-gray-500 disabled:opacity-50">
             <button type="submit" id="sendBtn" class="p-2.5 bg-brand-600 hover:bg-brand-500 active:scale-95 text-white rounded-xl shadow-md transition flex items-center justify-center shrink-0 disabled:opacity-50">
@@ -327,6 +304,7 @@
             <li>Event « Chasse aux étoiles » : mini-jeu de 30 secondes</li>
             <li>5 décorations à débloquer pour ton bouton de message privé</li>
             <li>Classement des joueurs</li>
+            <li>Retrait des appels vocaux et des messages vocaux</li>
           </ul>
         </div>
         <div class="border-l-2 border-gray-700 pl-3 space-y-1">
@@ -345,8 +323,8 @@
             <span class="font-bold text-white text-sm">v3.2.0</span>
           </div>
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Salon Vocal : appels vocaux (WebRTC), 6 personnes max</li>
-            <li>Messages vocaux chiffrés (1 minute max)</li>
+            <li>Salon Vocal : appels vocaux (retiré en v3.4.0)</li>
+            <li>Messages vocaux (retirés en v3.4.0)</li>
             <li>Sondages : /poll Question | choix 1 | choix 2</li>
             <li>Commandes /roll (dés) et /pile (pile ou face)</li>
             <li>Notifications (cloche) : DM, mentions ou tout</li>
@@ -670,13 +648,6 @@
       return Object.keys(accounts).some(k => k !== meKey && dmName(meKey, k) === chan);
     }
     // ================= FUN, MESSAGES VOCAUX, NOTIFICATIONS =================
-    function micErrorMessage(e) {
-      const n = e && e.name;
-      if (n === 'NotAllowedError' || n === 'SecurityError') return "Micro refusé. Autorise-le : sur iPhone, Réglages > Safari > Micro, puis ferme et rouvre l'app (ou réinstalle-la). Sur PC, clique sur le cadenas à côté de l'adresse.";
-      if (n === 'NotFoundError' || n === 'OverconstrainedError') return "Aucun micro détecté sur cet appareil (un Raspberry Pi n'en a pas d'origine : branche un micro USB).";
-      if (n === 'NotReadableError') return "Le micro est déjà utilisé par une autre application.";
-      return "Micro indisponible : " + (n || (e && e.message) || 'erreur inconnue');
-    }
     function rand(n) { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; }
 
     function pollHtml(m) {
@@ -696,185 +667,6 @@
     function audioHtml(m) {
       const src = String(m.audio).startsWith('data:audio/') ? m.audio : '';
       return `<audio controls preload="metadata" src="${src}" class="max-w-[220px] sm:max-w-xs"></audio>`;
-    }
-
-    // --- Enregistrement de messages vocaux
-    let rec = null, recChunks = [], recTimer = null, recStart = 0, recSend = false;
-    async function toggleRecording() {
-      if (rec) return stopRecording(true);
-      if (!currentUser || currentChannel === 'annonce-update') return;
-      const me = accounts[myKey()];
-      if (me && me.mutedUntil && me.mutedUntil > Date.now()) { alert("Tu es muet !"); return; }
-      if (!window.MediaRecorder || !navigator.mediaDevices) { alert("Enregistrement vocal impossible ici (sur iPhone il faut iOS 14.3 ou plus, et ouvrir le site en https)."); return; }
-      let stream;
-      try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (e) { alert(micErrorMessage(e)); return; }
-      const type = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm'].find(t => MediaRecorder.isTypeSupported(t));
-      recChunks = []; recSend = false;
-      rec = new MediaRecorder(stream, type ? { mimeType: type, audioBitsPerSecond: 24000 } : { audioBitsPerSecond: 24000 });
-      rec.ondataavailable = ev => { if (ev.data && ev.data.size) recChunks.push(ev.data); };
-      rec.onstop = () => {
-        stream.getTracks().forEach(t => t.stop());
-        clearInterval(recTimer);
-        document.getElementById('recBar').style.display = 'none';
-        document.getElementById('micBtn').classList.remove('text-red-400');
-        const mime = rec.mimeType || type || 'audio/webm';
-        rec = null;
-        if (!recSend || !recChunks.length) return;
-        const blob = new Blob(recChunks, { type: mime });
-        if (blob.size > 900000) { alert("Message vocal trop long."); return; }
-        const fr = new FileReader();
-        fr.onload = () => sendEncrypted({ a: fr.result });
-        fr.readAsDataURL(blob);
-      };
-      rec.start(); recStart = Date.now();
-      document.getElementById('recBar').style.display = 'flex';
-      document.getElementById('micBtn').classList.add('text-red-400');
-      recTimer = setInterval(() => {
-        const sec = Math.floor((Date.now() - recStart) / 1000);
-        document.getElementById('recTime').textContent = Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
-        if (sec >= 60) stopRecording(true);
-      }, 500);
-    }
-    function stopRecording(send) { if (!rec) return; recSend = send; try { rec.stop(); } catch (e) {} }
-
-    // --- Salon vocal (WebRTC en mesh ; signaux chiffrés avec la phrase secrète, transportés par Firebase)
-    // Pour les réseaux difficiles, ajoute ici un serveur TURN : { urls: 'turn:...', username: '...', credential: '...' }
-    // Serveur TURN (gratuit chez Metered, voir le guide) : nécessaire entre un réseau mobile et une box, sinon l'appel échoue
-    const TURN = { urls: [], username: '', credential: '' };
-    const ICE_SERVERS = [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }].concat(TURN.urls.length ? [TURN] : []);
-    let voiceJoined = false, voiceStream = null, voiceMuted = false, voiceParticipants = {}, voiceSigRef = null, voiceChain = Promise.resolve();
-    const voicePeers = {}, voiceQueue = {}, voiceState = {};
-
-    async function voiceSend(to, type, data) {
-      const e = await aesEnc(groupKey, enc.encode(JSON.stringify(data)));
-      await db.ref('voice/signals/' + to).push({ from: meKey, type, iv: e.iv, c: e.c });
-    }
-    function voiceClosePeer(k) {
-      const pc = voicePeers[k];
-      if (pc) { try { pc.close(); } catch (e) {} delete voicePeers[k]; }
-      delete voiceQueue[k];
-      const a = document.getElementById('va-' + k);
-      if (a) a.remove();
-    }
-    function voiceMakePeer(k) {
-      const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
-      voicePeers[k] = pc; voiceQueue[k] = [];
-      voiceStream.getTracks().forEach(t => pc.addTrack(t, voiceStream));
-      pc.onicecandidate = ev => { if (ev.candidate) voiceSend(k, 'ice', ev.candidate.toJSON()).catch(() => {}); };
-      pc.ontrack = ev => {
-        let a = document.getElementById('va-' + k);
-        if (!a) { a = document.createElement('audio'); a.id = 'va-' + k; a.autoplay = true; a.setAttribute('playsinline', ''); document.getElementById('voiceAudio').appendChild(a); }
-        a.srcObject = ev.streams[0];
-        a.play().catch(() => {});
-      };
-      pc.oniceconnectionstatechange = () => {
-        voiceState[k] = pc.iceConnectionState;
-        renderVoicePanel();
-        if (pc.iceConnectionState === 'failed') {
-          voiceClosePeer(k); voiceState[k] = 'failed'; renderVoicePanel();
-          alert("Connexion vocale impossible avec " + ((accounts[k] && accounts[k].name) || k) + ". Un réseau mobile ou une box stricte bloque l'appel direct : il faut un serveur TURN (voir le guide).");
-        }
-      };
-      return pc;
-    }
-    async function voiceFlush(k) {
-      const pc = voicePeers[k], q = voiceQueue[k] || [];
-      voiceQueue[k] = [];
-      for (const c of q) { try { await pc.addIceCandidate(c); } catch (e) {} }
-    }
-    async function voiceOffer(k) {
-      const pc = voiceMakePeer(k);
-      await pc.setLocalDescription(await pc.createOffer());
-      await voiceSend(k, 'offer', pc.localDescription.toJSON());
-    }
-    async function voiceOnSignal(snap) {
-      const sig = snap.val();
-      snap.ref.remove().catch(() => {});
-      if (!sig || !voiceJoined || !groupKey) return;
-      let data;
-      try { data = JSON.parse(dec.decode(await aesDec(groupKey, sig.iv, sig.c))); } catch (e) { return; }
-      const k = sig.from;
-      try {
-        if (sig.type === 'offer') {
-          voiceClosePeer(k);
-          const pc = voiceMakePeer(k);
-          await pc.setRemoteDescription(data);
-          await pc.setLocalDescription(await pc.createAnswer());
-          await voiceSend(k, 'answer', pc.localDescription.toJSON());
-          await voiceFlush(k);
-        } else if (sig.type === 'answer' && voicePeers[k]) {
-          await voicePeers[k].setRemoteDescription(data);
-          await voiceFlush(k);
-        } else if (sig.type === 'ice' && voicePeers[k]) {
-          if (voicePeers[k].remoteDescription) await voicePeers[k].addIceCandidate(data); else voiceQueue[k].push(data);
-        }
-      } catch (e) { console.warn('vocal', e); }
-    }
-    // Règle anti-collision : c'est celui dont l'identifiant est le plus petit qui appelle
-    function onVoiceParticipants(snap) {
-      voiceParticipants = snap.val() || {};
-      renderVoicePanel();
-      if (!voiceJoined) return;
-      Object.keys(voicePeers).forEach(k => { if (!voiceParticipants[k]) voiceClosePeer(k); });
-      Object.keys(voiceState).forEach(k => { if (!voiceParticipants[k]) delete voiceState[k]; });
-      Object.keys(voiceParticipants).forEach(k => {
-        if (k !== meKey && !voicePeers[k] && voiceState[k] !== 'failed' && meKey < k) voiceOffer(k).catch(() => voiceClosePeer(k));
-      });
-    }
-    async function toggleVoice() {
-      if (voiceJoined) { leaveVoice(); return; }
-      if (!groupKey) { alert("Le vocal a besoin de la phrase secrète du groupe (elle chiffre les signaux)."); return; }
-      if (!navigator.mediaDevices || !window.RTCPeerConnection) { alert("Ton navigateur ne supporte pas le vocal."); return; }
-      if (Object.keys(voiceParticipants).filter(k => k !== meKey).length >= 5) { alert("Le vocal est plein (6 personnes max)."); return; }
-      try { voiceStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); }
-      catch (e) { alert(micErrorMessage(e)); return; }
-      voiceJoined = true; voiceMuted = false;
-      try {
-        await db.ref('voice/signals/' + meKey).remove();
-        voiceSigRef = db.ref('voice/signals/' + meKey);
-        voiceSigRef.on('child_added', sn => { voiceChain = voiceChain.then(() => voiceOnSignal(sn)); });
-        const pRef = db.ref('voice/participants/' + meKey);
-        pRef.onDisconnect().remove();
-        await pRef.set(true);
-      } catch (e) { alert("Vocal indisponible : " + (e.code || e.message)); leaveVoice(); return; }
-      renderVoicePanel();
-    }
-    function leaveVoice() {
-      const was = voiceJoined;
-      voiceJoined = false;
-      if (voiceSigRef) { voiceSigRef.off(); voiceSigRef = null; }
-      Object.keys(voicePeers).forEach(voiceClosePeer);
-      Object.keys(voiceState).forEach(k => { delete voiceState[k]; });
-      if (voiceStream) { voiceStream.getTracks().forEach(t => t.stop()); voiceStream = null; }
-      if (was && meKey) db.ref('voice/participants/' + meKey).remove().catch(() => {});
-      renderVoicePanel();
-    }
-    function toggleVoiceMute() {
-      if (!voiceStream) return;
-      voiceMuted = !voiceMuted;
-      voiceStream.getAudioTracks().forEach(t => { t.enabled = !voiceMuted; });
-      renderVoicePanel();
-    }
-    function renderVoicePanel() {
-      const panel = document.getElementById('voicePanel');
-      if (!panel) return;
-      panel.classList.toggle('hidden', !(currentChannel === 'vocal' || voiceJoined));
-      const ks = Object.keys(voiceParticipants);
-      document.getElementById('voiceMembers').textContent = ks.length
-        ? ks.map(k => {
-            const nm = accounts[k] ? accounts[k].name : k;
-            if (k === meKey) return nm + (voiceMuted ? ' (micro coupé)' : '');
-            if (!voiceJoined) return nm;
-            const st = voiceState[k];
-            return nm + (st === 'connected' || st === 'completed' ? ' 🔊' : (st === 'failed' ? ' ⚠️ échec réseau' : ' …'));
-          }).join(', ')
-        : "Personne pour l'instant";
-      const jb = document.getElementById('voiceJoinBtn');
-      jb.textContent = voiceJoined ? 'Quitter' : 'Rejoindre';
-      jb.className = 'px-3 py-1.5 text-[11px] text-white rounded-lg font-semibold ' + (voiceJoined ? 'bg-red-600 hover:bg-red-500' : 'bg-brand-600 hover:bg-brand-500');
-      const mb = document.getElementById('voiceMuteBtn');
-      mb.classList.toggle('hidden', !voiceJoined);
-      mb.textContent = voiceMuted ? 'Réactiver le micro' : 'Couper le micro';
     }
 
     // --- Notifications (quand l'app est ouverte ou en arrière-plan)
@@ -957,7 +749,7 @@
             : isDm ? `💬 ${currentUser.name} t'a écrit en privé`
             : mention ? `@ ${currentUser.name} t'a mentionné`
             : `${currentUser.name} a écrit dans ${CHAN_NAMES[chan] || chan}`;
-          return fetch(NTFY_URL, { method: 'POST', body: JSON.stringify({ topic: all[k].topic, title: 'Securechat', message: msg, click: SITE_URL, tags: ['lock'] }) }).then(r => { if (!r.ok) console.warn('ntfy', r.status); }).catch(e => console.warn('ntfy', e));
+          return fetch(NTFY_URL, { method: 'POST', body: JSON.stringify({ topic: all[k].topic, title: 'Securechat', message: msg, click: SITE_URL, tags: ['lock'], priority: 4 }) }).then(r => { if (!r.ok) console.warn('ntfy', r.status); }).catch(e => console.warn('ntfy', e));
         }).filter(Boolean);
         await Promise.all(jobs);
       } catch (e) {}
@@ -984,7 +776,7 @@
       try { await db.ref('notifTopics/' + meKey + '/mode').set(mode); myNtfy.mode = mode; } catch (e) { alert("Impossible : " + (e.code || e.message)); }
     }
     function ntfyTest() {
-      fetch(NTFY_URL, { method: 'POST', body: JSON.stringify({ topic: myNtfy.topic, title: 'Securechat', message: '✅ Test réussi : les notifications marchent !', click: SITE_URL }) })
+      fetch(NTFY_URL, { method: 'POST', body: JSON.stringify({ topic: myNtfy.topic, title: 'Securechat', message: '✅ Test réussi : les notifications marchent !', click: SITE_URL, priority: 4 }) })
         .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); alert("Test envoyé. Tu dois le recevoir dans l'app ntfy dans quelques secondes."); })
         .catch(e => alert("Envoi du test impossible : " + (e.message || e)));
     }
@@ -1473,7 +1265,6 @@
       connRef.on('value', (c) => {
         if (c.val() !== true) return;
         statusRef.onDisconnect().set({ state: 'offline' }).then(() => statusRef.set({ state: 'online' })).catch(() => {});
-        if (voiceJoined) { const pr = db.ref('voice/participants/' + key); pr.onDisconnect().remove(); pr.set(true).catch(() => {}); }
       });
       listeners.push(connRef);
 
@@ -1483,7 +1274,6 @@
       const soft = (ref, cb) => { ref.on('value', cb, () => {}); listeners.push(ref); };
       soft(db.ref('roles'), (r) => { rolesData = r.val() || {}; renderUsersList(); updateAdminUsersList(); renderRolesList(); renderMessages(); if (currentUser) document.getElementById('userRoleDisplay').textContent = roleLabel(currentUser); });
       soft(db.ref('lastPublishedVersion'), (v) => { const pub = v.val(); document.getElementById('updateBanner').classList.toggle('hidden', !(pub && isNewer(pub, CURRENT_VERSION))); });
-      soft(db.ref('voice/participants'), onVoiceParticipants);
       soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; renderUsersList(); renderGamePanel(); renderGameModal(); });
       listen(db.ref('status'), (snap2) => { userStatuses = snap2.val() || {}; renderUsersList(); });
       listen(db.ref('messages').limitToLast(500), onMessages);
@@ -1496,7 +1286,7 @@
 
     async function logout() {
       if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline' }); } catch (e) {} }
-      leaveVoice(); stopRecording(false); abortRound(); stopListeners(); wipeKeys();
+      abortRound(); stopListeners(); wipeKeys();
       currentUser = null; meKey = ''; starting = false;
       accounts = {}; rolesData = {}; gameData = {}; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
@@ -1801,7 +1591,7 @@
 
     function selectChannel(chan) {
       currentChannel = chan;
-      clearTyping(); cancelReply(); clearSearch(); stopRecording(false); unreadChannels[chan] = 0;
+      clearTyping(); cancelReply(); clearSearch(); unreadChannels[chan] = 0;
 
       const titleEl = document.getElementById('currentChannelTitle');
       const inputEl = document.getElementById('messageInput');
@@ -1826,7 +1616,6 @@
       }
 
       styleChannelButtons(chan);
-      renderVoicePanel();
       renderChannels();
       renderUsersList();
       renderMessages();
@@ -1847,7 +1636,7 @@
       }
 
       currentChannel = dmName(me, keyClean);
-      clearTyping(); cancelReply(); clearSearch(); stopRecording(false); unreadChannels[currentChannel] = 0;
+      clearTyping(); cancelReply(); clearSearch(); unreadChannels[currentChannel] = 0;
 
       document.getElementById('currentChannelTitle').textContent = `DM : ${targetUser.name}`;
       setChannelIcon('lock');
@@ -1859,7 +1648,6 @@
       document.getElementById('messageInput').placeholder = "Écrire un message privé chiffré...";
 
       styleChannelButtons(null);
-      renderVoicePanel();
       renderChannels();
       renderUsersList();
       renderMessages();
