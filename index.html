@@ -101,6 +101,7 @@
           <span class="hidden sm:inline">Gérer les comptes</span>
         </button>
         <button id="notifBtn" onclick="cycleNotif()" class="p-2 rounded-lg text-gray-500" title="Notifications"></button>
+        <button id="ntfyBtn" onclick="openNtfyModal()" class="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition" title="Notifications app fermée (ntfy)"><i data-lucide="smartphone" class="w-4 h-4"></i></button>
         <div class="flex items-center gap-2 pl-2 border-l border-gray-800">
           <div id="userAvatar" class="w-8 h-8 rounded-full bg-brand-700 text-white font-bold flex items-center justify-center text-xs">U</div>
           <div class="hidden md:block">
@@ -252,6 +253,17 @@
     </div>
   </div>
 
+  <!-- MODAL NTFY -->
+  <div id="ntfyModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md glass-panel p-6 rounded-2xl border border-brand-500/30 space-y-4 max-h-[85vh] overflow-y-auto text-xs sm:text-sm">
+      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+        <h3 class="text-sm font-bold text-white">📲 Notifications app fermée</h3>
+        <button onclick="closeNtfyModal()" class="text-gray-400 hover:text-white text-base leading-none">✕</button>
+      </div>
+      <div id="ntfyBody" class="space-y-4 text-gray-300"></div>
+    </div>
+  </div>
+
   <!-- MODAL CLÉ SECRÈTE -->
   <div id="secretModal" class="hidden fixed inset-0 z-[60] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
     <form id="secretForm" class="w-full max-w-sm glass-panel p-6 rounded-2xl border border-brand-500/30 space-y-4">
@@ -283,6 +295,7 @@
             <li>Sondages : /poll Question | choix 1 | choix 2</li>
             <li>/roll et /pile</li>
             <li>Notifications (cloche) : DM, mentions ou tout</li>
+            <li>Notifications app fermée via l'app gratuite ntfy (icône téléphone)</li>
           </ul>
         </div>
         <div class="border-l-2 border-gray-700 pl-3 space-y-1">
@@ -361,7 +374,8 @@
       "🎤 Messages vocaux : appuie sur le micro, jusqu'à 1 minute, chiffrés comme le reste\n" +
       "📊 Sondages : /poll Question | choix 1 | choix 2\n" +
       "🎲 /roll (ex : /roll 20 ou /roll 2d6) et 🪙 /pile\n" +
-      "🔔 Notifications : active la cloche en haut à droite (DM et mentions, ou tout). Elles marchent quand l'app est ouverte ou en arrière-plan\n\n" +
+      "🔔 Notifications : active la cloche en haut à droite (DM et mentions, ou tout). Elles marchent quand l'app est ouverte ou en arrière-plan\n" +
+      "📲 Notifications app fermée : clique sur l'icône téléphone en haut à droite, installe l'app gratuite ntfy et suis les 3 étapes\n\n" +
       "Bon chat !";
     const CHANNELS = ['annonce-update', 'general', 'vocal', 'projets'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
@@ -577,6 +591,7 @@
           const e = await encryptPayload(currentChannel, pl);
           await db.ref('messages').push({ ...base, v: 3, iv: e.iv, c: e.c });
         }
+        pingNtfy(base.channel, pl);
         return true;
       } catch (err) {
         alert(err && err.userMsg ? err.userMsg : "Envoi impossible : " + ((err && (err.code || err.message)) || 'erreur'));
@@ -827,6 +842,99 @@
       const opts = { body, icon: 'icon-192.png', tag: chan };
       if (navigator.serviceWorker && navigator.serviceWorker.controller) navigator.serviceWorker.ready.then(r => r.showNotification(title, opts)).catch(() => {});
       else { try { new Notification(title, opts); } catch (e) {} }
+    }
+    // =======================================================================
+
+    // ================= NOTIFICATIONS APP FERMÉE (ntfy.sh) =================
+    // Le texte des messages ne passe jamais par ntfy : seulement « X a écrit ».
+    const NTFY_URL = 'https://ntfy.sh/';
+    const SITE_URL = location.origin + location.pathname.replace(/[^/]*$/, '');
+    const CHAN_NAMES = { general: 'Général', vocal: 'Vocal', projets: 'Projets', 'annonce-update': 'Annonces' };
+    let myNtfy = null;
+
+    async function pingNtfy(chan, pl) {
+      try {
+        const all = (await db.ref('notifTopics').once('value')).val() || {};
+        const isDm = chan.startsWith('dm_'), isAnn = chan === 'annonce-update';
+        let targets;
+        if (isDm) { const pt = partnerOf(chan); targets = pt ? [pt] : []; }
+        else targets = Object.keys(all).filter(k => k !== meKey && accounts[k]);
+        const text = String((pl && pl.t) || '').toLowerCase();
+        const jobs = targets.filter(k => all[k] && all[k].topic).map(k => {
+          const mention = text.includes('@' + k);
+          if (all[k].mode !== 'all' && !(isDm || mention || isAnn)) return null;
+          const msg = isAnn ? '📢 Nouvelle annonce'
+            : isDm ? `💬 ${currentUser.name} t'a écrit en privé`
+            : mention ? `@ ${currentUser.name} t'a mentionné`
+            : `${currentUser.name} a écrit dans ${CHAN_NAMES[chan] || chan}`;
+          return fetch(NTFY_URL, { method: 'POST', body: JSON.stringify({ topic: all[k].topic, title: 'Securechat', message: msg, click: SITE_URL, tags: ['lock'] }) }).catch(() => {});
+        }).filter(Boolean);
+        await Promise.all(jobs);
+      } catch (e) {}
+    }
+
+    async function openNtfyModal() {
+      if (!currentUser) return;
+      document.getElementById('ntfyModal').classList.remove('hidden');
+      try { myNtfy = (await db.ref('notifTopics/' + meKey).once('value')).val(); } catch (e) { myNtfy = null; }
+      renderNtfyModal();
+    }
+    function closeNtfyModal() { document.getElementById('ntfyModal').classList.add('hidden'); }
+    async function ntfyEnable() {
+      const topic = 'sc-' + Array.from({ length: 24 }, () => 'abcdefghijklmnopqrstuvwxyz0123456789'[rand(36)]).join('');
+      const mode = notifMode === 'all' ? 'all' : 'mentions';
+      try { await db.ref('notifTopics/' + meKey).set({ topic, mode }); myNtfy = { topic, mode }; renderNtfyModal(); }
+      catch (e) { alert("Activation impossible : " + (e.code || e.message) + "\n(Les règles Firebase pour notifTopics sont-elles ajoutées ?)"); }
+    }
+    async function ntfyDisable() {
+      if (!confirm("Désactiver les notifications app fermée ?")) return;
+      try { await db.ref('notifTopics/' + meKey).remove(); myNtfy = null; renderNtfyModal(); } catch (e) { alert("Impossible : " + (e.code || e.message)); }
+    }
+    async function ntfySetMode(mode) {
+      try { await db.ref('notifTopics/' + meKey + '/mode').set(mode); myNtfy.mode = mode; } catch (e) { alert("Impossible : " + (e.code || e.message)); }
+    }
+    function ntfyTest() {
+      fetch(NTFY_URL, { method: 'POST', body: JSON.stringify({ topic: myNtfy.topic, title: 'Securechat', message: '✅ Test réussi : les notifications marchent !', click: SITE_URL }) })
+        .then(r => { if (!r.ok) throw new Error('http'); alert("Test envoyé. Tu dois le recevoir dans l'app ntfy dans quelques secondes."); })
+        .catch(() => alert("Envoi du test impossible."));
+    }
+    function renderNtfyModal() {
+      const el = document.getElementById('ntfyBody');
+      if (!el) return;
+      if (!myNtfy) {
+        el.innerHTML = `<p>Reçois une notification même quand Securechat est fermé, grâce à l'app gratuite <b class="text-white">ntfy</b>.</p>
+          <p class="text-gray-400">Le texte de tes messages ne passe jamais par ntfy : tu reçois seulement « Alex a écrit dans Général ».</p>
+          <button id="ntfyEnableBtn" class="w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs rounded-xl transition">Activer</button>`;
+        document.getElementById('ntfyEnableBtn').onclick = ntfyEnable;
+        return;
+      }
+      const t = esc(myNtfy.topic);
+      el.innerHTML = `
+        <div class="space-y-1">
+          <p class="font-semibold text-white">1. Installe l'app gratuite ntfy</p>
+          <p><a class="text-brand-400 underline" target="_blank" rel="noopener" href="https://apps.apple.com/app/ntfy/id1625396347">iPhone</a> · <a class="text-brand-400 underline" target="_blank" rel="noopener" href="https://play.google.com/store/apps/details?id=io.heckel.ntfy">Android</a> · <a class="text-brand-400 underline" target="_blank" rel="noopener" href="https://ntfy.sh/app">PC (navigateur)</a></p>
+        </div>
+        <div class="space-y-1.5">
+          <p class="font-semibold text-white">2. Abonne-toi à ton canal secret</p>
+          <p class="text-gray-400">Dans ntfy : bouton « + », colle ce nom, serveur par défaut (ntfy.sh), puis « S'abonner ».</p>
+          <div class="flex gap-2"><input readonly value="${t}" class="flex-1 min-w-0 py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white"><button id="ntfyCopy" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl text-xs">Copier</button></div>
+          <a class="inline-block text-brand-400 underline" href="ntfy://ntfy.sh/${t}">Ou ouvre-le directement dans l'app ntfy</a>
+        </div>
+        <div class="space-y-1.5">
+          <p class="font-semibold text-white">3. Choisis ce que tu reçois</p>
+          <select id="ntfyMode" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none"><option value="mentions">DM, mentions et annonces</option><option value="all">Tous les messages</option></select>
+        </div>
+        <div class="flex gap-2">
+          <button id="ntfyTestBtn" class="flex-1 py-2 bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs rounded-xl transition">Envoyer un test</button>
+          <button id="ntfyOffBtn" class="px-3 py-2 bg-gray-800 hover:bg-red-500/20 text-gray-300 text-xs rounded-xl transition">Désactiver</button>
+        </div>
+        <p class="text-[11px] text-gray-500">Ne partage jamais ce nom de canal : quiconque le connaît peut lire tes notifications. Si l'app est ouverte, tu peux recevoir un doublon : mets alors la cloche sur « désactivé ».</p>`;
+      document.getElementById('ntfyCopy').onclick = () => navigator.clipboard.writeText(myNtfy.topic).then(() => alert("Copié !")).catch(() => alert("Copie à la main : " + myNtfy.topic));
+      const ms = document.getElementById('ntfyMode');
+      ms.value = myNtfy.mode;
+      ms.onchange = () => ntfySetMode(ms.value);
+      document.getElementById('ntfyTestBtn').onclick = ntfyTest;
+      document.getElementById('ntfyOffBtn').onclick = ntfyDisable;
     }
     // =======================================================================
 
@@ -1584,6 +1692,7 @@
             id: Date.now(), sender: currentUser.name, senderKey: meKey, role: currentUser.role,
             text: annText, time: nowTime(), channel: 'annonce-update', isGlobalAnnouncement: true
           });
+          pingNtfy('annonce-update', { t: annText });
           return;
         }
 
