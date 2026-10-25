@@ -670,6 +670,13 @@
       return Object.keys(accounts).some(k => k !== meKey && dmName(meKey, k) === chan);
     }
     // ================= FUN, MESSAGES VOCAUX, NOTIFICATIONS =================
+    function micErrorMessage(e) {
+      const n = e && e.name;
+      if (n === 'NotAllowedError' || n === 'SecurityError') return "Micro refusé. Autorise-le : sur iPhone, Réglages > Safari > Micro, puis ferme et rouvre l'app (ou réinstalle-la). Sur PC, clique sur le cadenas à côté de l'adresse.";
+      if (n === 'NotFoundError' || n === 'OverconstrainedError') return "Aucun micro détecté sur cet appareil (un Raspberry Pi n'en a pas d'origine : branche un micro USB).";
+      if (n === 'NotReadableError') return "Le micro est déjà utilisé par une autre application.";
+      return "Micro indisponible : " + (n || (e && e.message) || 'erreur inconnue');
+    }
     function rand(n) { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; }
 
     function pollHtml(m) {
@@ -698,9 +705,9 @@
       if (!currentUser || currentChannel === 'annonce-update') return;
       const me = accounts[myKey()];
       if (me && me.mutedUntil && me.mutedUntil > Date.now()) { alert("Tu es muet !"); return; }
-      if (!window.MediaRecorder || !navigator.mediaDevices) { alert("Ton navigateur ne supporte pas l'enregistrement vocal."); return; }
+      if (!window.MediaRecorder || !navigator.mediaDevices) { alert("Enregistrement vocal impossible ici (sur iPhone il faut iOS 14.3 ou plus, et ouvrir le site en https)."); return; }
       let stream;
-      try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (e) { alert("Impossible d'accéder au micro. Vérifie l'autorisation."); return; }
+      try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (e) { alert(micErrorMessage(e)); return; }
       const type = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm'].find(t => MediaRecorder.isTypeSupported(t));
       recChunks = []; recSend = false;
       rec = new MediaRecorder(stream, type ? { mimeType: type, audioBitsPerSecond: 24000 } : { audioBitsPerSecond: 24000 });
@@ -732,9 +739,11 @@
 
     // --- Salon vocal (WebRTC en mesh ; signaux chiffrés avec la phrase secrète, transportés par Firebase)
     // Pour les réseaux difficiles, ajoute ici un serveur TURN : { urls: 'turn:...', username: '...', credential: '...' }
-    const ICE_SERVERS = [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }];
+    // Serveur TURN (gratuit chez Metered, voir le guide) : nécessaire entre un réseau mobile et une box, sinon l'appel échoue
+    const TURN = { urls: [], username: '', credential: '' };
+    const ICE_SERVERS = [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }].concat(TURN.urls.length ? [TURN] : []);
     let voiceJoined = false, voiceStream = null, voiceMuted = false, voiceParticipants = {}, voiceSigRef = null, voiceChain = Promise.resolve();
-    const voicePeers = {}, voiceQueue = {};
+    const voicePeers = {}, voiceQueue = {}, voiceState = {};
 
     async function voiceSend(to, type, data) {
       const e = await aesEnc(groupKey, enc.encode(JSON.stringify(data)));
@@ -758,7 +767,14 @@
         a.srcObject = ev.streams[0];
         a.play().catch(() => {});
       };
-      pc.onconnectionstatechange = () => { if (pc.connectionState === 'failed') voiceClosePeer(k); };
+      pc.oniceconnectionstatechange = () => {
+        voiceState[k] = pc.iceConnectionState;
+        renderVoicePanel();
+        if (pc.iceConnectionState === 'failed') {
+          voiceClosePeer(k); voiceState[k] = 'failed'; renderVoicePanel();
+          alert("Connexion vocale impossible avec " + ((accounts[k] && accounts[k].name) || k) + ". Un réseau mobile ou une box stricte bloque l'appel direct : il faut un serveur TURN (voir le guide).");
+        }
+      };
       return pc;
     }
     async function voiceFlush(k) {
@@ -800,8 +816,9 @@
       renderVoicePanel();
       if (!voiceJoined) return;
       Object.keys(voicePeers).forEach(k => { if (!voiceParticipants[k]) voiceClosePeer(k); });
+      Object.keys(voiceState).forEach(k => { if (!voiceParticipants[k]) delete voiceState[k]; });
       Object.keys(voiceParticipants).forEach(k => {
-        if (k !== meKey && !voicePeers[k] && meKey < k) voiceOffer(k).catch(() => voiceClosePeer(k));
+        if (k !== meKey && !voicePeers[k] && voiceState[k] !== 'failed' && meKey < k) voiceOffer(k).catch(() => voiceClosePeer(k));
       });
     }
     async function toggleVoice() {
@@ -810,7 +827,7 @@
       if (!navigator.mediaDevices || !window.RTCPeerConnection) { alert("Ton navigateur ne supporte pas le vocal."); return; }
       if (Object.keys(voiceParticipants).filter(k => k !== meKey).length >= 5) { alert("Le vocal est plein (6 personnes max)."); return; }
       try { voiceStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); }
-      catch (e) { alert("Impossible d'accéder au micro. Vérifie l'autorisation."); return; }
+      catch (e) { alert(micErrorMessage(e)); return; }
       voiceJoined = true; voiceMuted = false;
       try {
         await db.ref('voice/signals/' + meKey).remove();
@@ -827,6 +844,7 @@
       voiceJoined = false;
       if (voiceSigRef) { voiceSigRef.off(); voiceSigRef = null; }
       Object.keys(voicePeers).forEach(voiceClosePeer);
+      Object.keys(voiceState).forEach(k => { delete voiceState[k]; });
       if (voiceStream) { voiceStream.getTracks().forEach(t => t.stop()); voiceStream = null; }
       if (was && meKey) db.ref('voice/participants/' + meKey).remove().catch(() => {});
       renderVoicePanel();
@@ -843,7 +861,13 @@
       panel.classList.toggle('hidden', !(currentChannel === 'vocal' || voiceJoined));
       const ks = Object.keys(voiceParticipants);
       document.getElementById('voiceMembers').textContent = ks.length
-        ? ks.map(k => (accounts[k] ? accounts[k].name : k) + (k === meKey && voiceMuted ? ' (micro coupé)' : '')).join(', ')
+        ? ks.map(k => {
+            const nm = accounts[k] ? accounts[k].name : k;
+            if (k === meKey) return nm + (voiceMuted ? ' (micro coupé)' : '');
+            if (!voiceJoined) return nm;
+            const st = voiceState[k];
+            return nm + (st === 'connected' || st === 'completed' ? ' 🔊' : (st === 'failed' ? ' ⚠️ échec réseau' : ' …'));
+          }).join(', ')
         : "Personne pour l'instant";
       const jb = document.getElementById('voiceJoinBtn');
       jb.textContent = voiceJoined ? 'Quitter' : 'Rejoindre';
@@ -897,7 +921,7 @@
     // ================= NOTIFICATIONS APP FERMÉE (ntfy.sh) =================
     // Le texte des messages ne passe jamais par ntfy : seulement « X a écrit ».
     const NTFY_URL = 'https://ntfy.sh/';
-    const SITE_URL = location.origin + location.pathname.replace(/[^/]*$/, '');
+    const SITE_URL = /^https?:/.test(location.protocol) ? location.origin + location.pathname.replace(/[^/]*$/, '') : 'https://ntfy.sh';
     const CHAN_NAMES = { general: 'Général', vocal: 'Vocal', projets: 'Projets', 'annonce-update': 'Annonces' };
     let myNtfy = null;
 
@@ -933,7 +957,7 @@
             : isDm ? `💬 ${currentUser.name} t'a écrit en privé`
             : mention ? `@ ${currentUser.name} t'a mentionné`
             : `${currentUser.name} a écrit dans ${CHAN_NAMES[chan] || chan}`;
-          return fetch(NTFY_URL, { method: 'POST', body: JSON.stringify({ topic: all[k].topic, title: 'Securechat', message: msg, click: SITE_URL, tags: ['lock'] }) }).catch(() => {});
+          return fetch(NTFY_URL, { method: 'POST', body: JSON.stringify({ topic: all[k].topic, title: 'Securechat', message: msg, click: SITE_URL, tags: ['lock'] }) }).then(r => { if (!r.ok) console.warn('ntfy', r.status); }).catch(e => console.warn('ntfy', e));
         }).filter(Boolean);
         await Promise.all(jobs);
       } catch (e) {}
@@ -948,7 +972,7 @@
     function closeNtfyModal() { document.getElementById('ntfyModal').classList.add('hidden'); }
     async function ntfyEnable() {
       const topic = 'sc-' + Array.from({ length: 24 }, () => 'abcdefghijklmnopqrstuvwxyz0123456789'[rand(36)]).join('');
-      const mode = notifMode === 'all' ? 'all' : 'mentions';
+      const mode = 'all';
       try { await db.ref('notifTopics/' + meKey).set({ topic, mode }); myNtfy = { topic, mode }; renderNtfyModal(); }
       catch (e) { alert("Activation impossible : " + (e.code || e.message) + "\n(Les règles Firebase pour notifTopics sont-elles ajoutées ?)"); }
     }
@@ -961,8 +985,8 @@
     }
     function ntfyTest() {
       fetch(NTFY_URL, { method: 'POST', body: JSON.stringify({ topic: myNtfy.topic, title: 'Securechat', message: '✅ Test réussi : les notifications marchent !', click: SITE_URL }) })
-        .then(r => { if (!r.ok) throw new Error('http'); alert("Test envoyé. Tu dois le recevoir dans l'app ntfy dans quelques secondes."); })
-        .catch(() => alert("Envoi du test impossible."));
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); alert("Test envoyé. Tu dois le recevoir dans l'app ntfy dans quelques secondes."); })
+        .catch(e => alert("Envoi du test impossible : " + (e.message || e)));
     }
     function renderNtfyModal() {
       const el = document.getElementById('ntfyBody');
@@ -994,7 +1018,7 @@
           <button id="ntfyTestBtn" class="flex-1 py-2 bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs rounded-xl transition">Envoyer un test</button>
           <button id="ntfyOffBtn" class="px-3 py-2 bg-gray-800 hover:bg-red-500/20 text-gray-300 text-xs rounded-xl transition">Désactiver</button>
         </div>
-        <p class="text-[11px] text-gray-500">Ne partage jamais ce nom de canal : quiconque le connaît peut lire tes notifications. Si l'app est ouverte, tu peux recevoir un doublon : mets alors la cloche sur « désactivé ».</p>`;
+        <p class="text-[11px] text-gray-500">Tu ne reçois pas les notifications de tes propres messages, même depuis un autre appareil : pour tester, utilise « Envoyer un test » ou fais écrire un ami. Ne partage jamais ce nom de canal : quiconque le connaît peut lire tes notifications. Si l'app est ouverte, tu peux recevoir un doublon : mets alors la cloche sur « désactivé ».</p>`;
       document.getElementById('ntfyCopy').onclick = () => navigator.clipboard.writeText(myNtfy.topic).then(() => alert("Copié !")).catch(() => alert("Copie à la main : " + myNtfy.topic));
       const ms = document.getElementById('ntfyMode');
       ms.value = myNtfy.mode;
@@ -1005,7 +1029,7 @@
     // =======================================================================
 
     // ================= EVENT : CHASSE AUX ÉTOILES =================
-    const EVENT = { name: 'Chasse aux étoiles', endsAt: null }; // pour limiter dans le temps : endsAt: '2026-12-31T23:59:59' sinon null
+    const EVENT = { name: 'Chasse aux étoiles', endsAt: null }; // pour limiter dans le temps : endsAt: '2026-12-31T23:59:59'
     const DECOS = [
       { id: 'aura',   name: 'Étincelle', at: 50,   cls: 'deco-aura',   icon: '✨' },
       { id: 'neon',   name: 'Néon',      at: 150,  cls: 'deco-neon',   icon: '💚' },
@@ -1319,6 +1343,15 @@
 
     window.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
 
+    // Retour au premier plan après un long passage en arrière-plan (iOS suspend la page) : reconnexion propre
+    let hiddenAt = 0;
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { hiddenAt = Date.now(); return; }
+      if (meKey && hiddenAt && Date.now() - hiddenAt > 30000) { db.goOffline(); db.goOnline(); }
+      hiddenAt = 0;
+    });
+    window.addEventListener('pageshow', (e) => { if (e.persisted && meKey) { db.goOffline(); db.goOnline(); } });
+
     // PWA : fonctionne uniquement en https (GitHub Pages, Firebase Hosting...)
     if ('serviceWorker' in navigator && location.protocol === 'https:') {
       window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
@@ -1435,8 +1468,14 @@
       seenKeys.clear();
       firstLoadDone = false;
       const statusRef = db.ref('status/' + key);
-      statusRef.onDisconnect().set({ state: 'offline' });
-      statusRef.set({ state: 'online' });
+      // À CHAQUE (re)connexion à Firebase : on se remet "en ligne" (avant, ça n'était fait qu'une fois)
+      const connRef = db.ref('.info/connected');
+      connRef.on('value', (c) => {
+        if (c.val() !== true) return;
+        statusRef.onDisconnect().set({ state: 'offline' }).then(() => statusRef.set({ state: 'online' })).catch(() => {});
+        if (voiceJoined) { const pr = db.ref('voice/participants/' + key); pr.onDisconnect().remove(); pr.set(true).catch(() => {}); }
+      });
+      listeners.push(connRef);
 
       try { accounts = (await db.ref('accounts').once('value')).val() || {}; } catch (e) {}
       try { await initCrypto(); } catch (e) { console.error(e); alert("Erreur de chiffrement : " + (e.code || e.message || e) + "\n(Les règles Firebase pour pubkeys, privkeys et crypto sont-elles ajoutées ?)"); }
