@@ -775,9 +775,9 @@
     async function ntfySetMode(mode) {
       try { await db.ref('notifTopics/' + meKey + '/mode').set(mode); myNtfy.mode = mode; } catch (e) { alert("Impossible : " + (e.code || e.message)); }
     }
-    function ntfyTest() {
+    function ntfyTest(quiet) {
       fetch(NTFY_URL, { method: 'POST', body: JSON.stringify({ topic: myNtfy.topic, title: 'Securechat', message: '✅ Test réussi : les notifications marchent !', click: SITE_URL, priority: 4 }) })
-        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); alert("Test envoyé. Tu dois le recevoir dans l'app ntfy dans quelques secondes."); })
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); if (!quiet) alert("Test envoyé. Tu dois le recevoir dans ntfy dans quelques secondes."); })
         .catch(e => alert("Envoi du test impossible : " + (e.message || e)));
     }
     function renderNtfyModal() {
@@ -794,13 +794,14 @@
       el.innerHTML = `
         <div class="space-y-1">
           <p class="font-semibold text-white">1. Installe l'app gratuite ntfy</p>
-          <p><a class="text-brand-400 underline" target="_blank" rel="noopener" href="https://apps.apple.com/app/ntfy/id1625396347">iPhone</a> · <a class="text-brand-400 underline" target="_blank" rel="noopener" href="https://play.google.com/store/apps/details?id=io.heckel.ntfy">Android</a> · <a class="text-brand-400 underline" target="_blank" rel="noopener" href="https://ntfy.sh/app">PC (navigateur)</a></p>
+          <p><b class="text-white">iPhone :</b> dans <b>Safari</b>, ouvre <a class="text-brand-400 underline" target="_blank" rel="noopener" href="https://ntfy.sh/app">ntfy.sh/app</a>, touche Partager puis « Sur l'écran d'accueil », et ouvre ntfy depuis sa nouvelle icône. C'est plus fiable que l'app de l'App Store.</p>
+          <p><b class="text-white">Android :</b> <a class="text-brand-400 underline" target="_blank" rel="noopener" href="https://play.google.com/store/apps/details?id=io.heckel.ntfy">app ntfy</a> · <b class="text-white">PC :</b> <a class="text-brand-400 underline" target="_blank" rel="noopener" href="https://ntfy.sh/app">ntfy.sh/app</a></p>
         </div>
         <div class="space-y-1.5">
           <p class="font-semibold text-white">2. Abonne-toi à ton canal secret</p>
           <p class="text-gray-400">Dans ntfy : bouton « + », colle ce nom, serveur par défaut (ntfy.sh), puis « S'abonner ».</p>
           <div class="flex gap-2"><input readonly value="${t}" class="flex-1 min-w-0 py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white"><button id="ntfyCopy" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl text-xs">Copier</button></div>
-          <a class="inline-block text-brand-400 underline" href="ntfy://ntfy.sh/${t}">Ou ouvre-le directement dans l'app ntfy</a>
+          <a class="inline-block text-brand-400 underline" href="ntfy://ntfy.sh/${t}">Android ou app ntfy : ouvrir directement</a>
         </div>
         <div class="space-y-1.5">
           <p class="font-semibold text-white">3. Choisis ce que tu reçois</p>
@@ -808,6 +809,7 @@
         </div>
         <div class="flex gap-2">
           <button id="ntfyTestBtn" class="flex-1 py-2 bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs rounded-xl transition">Envoyer un test</button>
+          <button id="ntfyTest10Btn" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs rounded-xl transition">Test dans 10 s</button>
           <button id="ntfyOffBtn" class="px-3 py-2 bg-gray-800 hover:bg-red-500/20 text-gray-300 text-xs rounded-xl transition">Désactiver</button>
         </div>
         <p class="text-[11px] text-gray-500">Tu ne reçois pas les notifications de tes propres messages, même depuis un autre appareil : pour tester, utilise « Envoyer un test » ou fais écrire un ami. Ne partage jamais ce nom de canal : quiconque le connaît peut lire tes notifications. Si l'app est ouverte, tu peux recevoir un doublon : mets alors la cloche sur « désactivé ».</p>`;
@@ -815,7 +817,8 @@
       const ms = document.getElementById('ntfyMode');
       ms.value = myNtfy.mode;
       ms.onchange = () => ntfySetMode(ms.value);
-      document.getElementById('ntfyTestBtn').onclick = ntfyTest;
+      document.getElementById('ntfyTestBtn').onclick = () => ntfyTest(false);
+      document.getElementById('ntfyTest10Btn').onclick = () => { alert("Verrouille ton téléphone maintenant : le test part dans 10 secondes."); setTimeout(() => ntfyTest(true), 10000); };
       document.getElementById('ntfyOffBtn').onclick = ntfyDisable;
     }
     // =======================================================================
