@@ -44,7 +44,13 @@
     .deco-flame { background: linear-gradient(90deg, rgba(234,88,12,.25), rgba(220,38,38,.18)) !important; border-color: rgba(249,115,22,.7) !important; animation: flicker 2.2s ease-in-out infinite; }
     .deco-royal { background: linear-gradient(90deg, rgba(234,179,8,.28), rgba(253,224,71,.12)) !important; border-color: rgba(250,204,21,.9) !important; box-shadow: 0 0 14px rgba(250,204,21,.5); }
     @keyframes flicker { 0%,100% { box-shadow: 0 0 10px rgba(249,115,22,.35); } 50% { box-shadow: 0 0 18px rgba(249,115,22,.65); } }
-    @media (prefers-reduced-motion: reduce) { .deco-flame { animation: none; } }
+    .deco-404 { background: linear-gradient(90deg, rgba(0,0,0,.65), rgba(127,29,29,.4)) !important; border-color: rgba(239,68,68,.85) !important; box-shadow: 0 0 12px rgba(239,68,68,.45); animation: glitch404 3s steps(1) infinite; }
+    .deco-404 .av { background: #000 !important; color: #ef4444 !important; border: 1px solid rgba(239,68,68,.8); text-shadow: 1px 0 #22d3ee, -1px 0 #ef4444; }
+    .deco-founder { background: linear-gradient(90deg, rgba(236,72,153,.3), rgba(139,92,246,.3), rgba(34,211,238,.3), rgba(236,72,153,.3)) !important; background-size: 300% 100% !important; border-color: rgba(244,114,182,.9) !important; box-shadow: 0 0 16px rgba(168,85,247,.55); animation: founderShift 6s linear infinite; }
+    .deco-founder .av { box-shadow: 0 0 8px rgba(168,85,247,.9); }
+    @keyframes glitch404 { 0%,92%,100% { transform: none; } 93% { transform: translateX(-2px); } 95% { transform: translateX(2px) skewX(-4deg); } 97% { transform: translateX(-1px); } }
+    @keyframes founderShift { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+    @media (prefers-reduced-motion: reduce) { .deco-flame, .deco-404, .deco-founder { animation: none; } }
   </style>
 </head>
 <body class="h-screen h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-hidden">
@@ -102,7 +108,7 @@
               <span class="hidden sm:inline">Securechat</span>
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v3.5.0</span>
+                <span>v3.6.0</span>
               </button>
             </h2>
           </div>
@@ -164,6 +170,10 @@
             </div>
             <div class="h-1.5 rounded-full bg-gray-800 overflow-hidden"><div id="eventBar" class="h-full bg-gradient-to-r from-fuchsia-400 to-indigo-400" style="width:0%"></div></div>
             <p id="eventNext" class="text-[10px] text-gray-400"></p>
+          </button>
+          <button onclick="openDecoModal()" class="mt-2 w-full text-left px-3 py-2 rounded-xl border border-gray-800 bg-gray-900/50 hover:bg-gray-800/80 transition flex items-center justify-between gap-2">
+            <span class="text-xs font-semibold text-gray-200">🎨 Décorations</span>
+            <span id="decoBtnSub" class="text-[10px] text-gray-400 truncate">Aucune</span>
           </button>
         </div>
         <div class="p-4 space-y-3 flex-1 overflow-y-auto">
@@ -249,6 +259,17 @@
     </div>
   </div>
 
+  <!-- MODAL DÉCORATIONS -->
+  <div id="decoModal" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+    <div class="w-full max-w-md glass-panel p-5 rounded-2xl border border-fuchsia-500/30 space-y-4 max-h-[88vh] overflow-y-auto text-xs sm:text-sm">
+      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+        <h3 class="text-sm font-bold text-white">🎨 Décorations</h3>
+        <button onclick="closeDecoModal()" class="text-gray-400 hover:text-white text-base leading-none">✕</button>
+      </div>
+      <div id="decoBody" class="space-y-4 text-gray-300"></div>
+    </div>
+  </div>
+
   <!-- MODAL EVENT -->
   <div id="gameModal" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
     <div class="w-full max-w-md glass-panel p-5 rounded-2xl border border-fuchsia-500/30 space-y-4 max-h-[88vh] overflow-y-auto text-xs sm:text-sm">
@@ -293,8 +314,18 @@
       <div class="space-y-4 text-gray-300">
         <div class="border-l-2 border-amber-500 pl-3 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.5.0</span>
+            <span class="font-bold text-white text-sm">v3.6.0</span>
             <span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
+          </div>
+          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
+            <li>Menu « Décorations » séparé du jeu, avec aperçu</li>
+            <li>Décorations exclusives (attribuées par l'Owner)</li>
+            <li>Une décoration secrète à découvrir</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white text-sm">v3.5.0</span>
           </div>
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>« Projets Privés » devient un espace de notes que toi seul peux lire (chiffré avec tes clés)</li>
@@ -401,15 +432,14 @@
   </div>
 
   <script>
-    const CURRENT_VERSION = "v3.5.0";
+    const CURRENT_VERSION = "v3.6.0";
     const DEV_MODE = false; // true = aucune annonce automatique
     const VERSION_CHANGELOG =
-      "🔒 Securechat v3.5 : tes notes privées !\n\n" +
+      "🎨 Securechat v3.6 : le menu Décorations !\n\n" +
       "Voici les nouveautés :\n" +
-      "📝 « Projets Privés » devient ton espace perso : une discussion avec toi-même que personne d'autre ne peut lire, pas même l'Owner. Idéal pour tes idées, liens ou photos\n" +
-      "🔐 Tes notes sont chiffrées avec tes propres clés et te suivent sur tous tes appareils\n" +
-      "🗑️ Le Salon Vocal est supprimé\n" +
-      "📲 Notifications sur iPhone : installe ntfy depuis Safari (ntfy.sh/app puis « Sur l'écran d'accueil ») pour les recevoir même app fermée\n\n" +
+      "🎨 Un nouveau menu « Décorations » dans le menu de gauche, séparé du jeu : choisis, change ou retire ta décoration quand tu veux, avec un aperçu\n" +
+      "⚡ Des décorations exclusives, réservées à certaines personnes, apparaîtront dans ce menu\n" +
+      "💀 Une décoration secrète se cache dans l'event… à toi de la trouver\n\n" +
       "Bon chat !";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
@@ -763,7 +793,7 @@
       upd['game/' + k] = null;
       upd['notes/' + k] = null;
       upd['banned/' + k] = true;
-      if (currentUser && currentUser.role === 'Owner') upd['secrets/' + k] = null;
+      if (currentUser && currentUser.role === 'Owner') { upd['secrets/' + k] = null; upd['grants/' + k] = null; }
       return db.ref().update(upd).catch(err => {
         alert("Bannissement impossible : " + (err.code || err.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)");
         return new Promise(() => {});
@@ -859,74 +889,105 @@
     }
     // =======================================================================
 
-    // ================= EVENT : CHASSE AUX ÉTOILES =================
+    // ================= EVENT : CHASSE AUX ÉTOILES + DÉCORATIONS =================
     const EVENT = { name: 'Chasse aux étoiles', endsAt: null }; // pour limiter dans le temps : endsAt: '2026-12-31T23:59:59'
+    // kind : 'stars' (palier d'étoiles), 'secret' (à découvrir), 'exclusive' (réservée : who = comptes d'office, ou attribuée par l'Owner avec /deco give)
     const DECOS = [
-      { id: 'aura',   name: 'Étincelle', at: 50,   cls: 'deco-aura',   icon: '✨' },
-      { id: 'neon',   name: 'Néon',      at: 150,  cls: 'deco-neon',   icon: '💚' },
-      { id: 'galaxy', name: 'Galaxie',   at: 400,  cls: 'deco-galaxy', icon: '🌌' },
-      { id: 'flame',  name: 'Flamme',    at: 1000, cls: 'deco-flame',  icon: '🔥' },
-      { id: 'royal',  name: 'Royal',     at: 2500, cls: 'deco-royal',  icon: '👑' }
+      { id: 'founder',  name: 'Fondateur', icon: '⚡', cls: 'deco-founder', kind: 'exclusive', who: ['rayqua'], only: true },
+      { id: 'aura',     name: 'Étincelle', icon: '✨', cls: 'deco-aura',    kind: 'stars', at: 50 },
+      { id: 'neon',     name: 'Néon',      icon: '💚', cls: 'deco-neon',    kind: 'stars', at: 150 },
+      { id: 'galaxy',   name: 'Galaxie',   icon: '🌌', cls: 'deco-galaxy',  kind: 'stars', at: 400 },
+      { id: 'flame',    name: 'Flamme',    icon: '🔥', cls: 'deco-flame',   kind: 'stars', at: 1000 },
+      { id: 'royal',    name: 'Royal',     icon: '👑', cls: 'deco-royal',   kind: 'stars', at: 2500 },
+      { id: 'error404', name: 'ERROR 404', icon: '💀', cls: 'deco-404',     kind: 'secret' }
     ];
-    let gameData = {}, gameTimers = [], gameRunning = false, lastGain = null;
+    let gameData = {}, grantsData = {}, gameTimers = [], gameRunning = false, lastGain = null;
 
     function eventEnded() { return !!EVENT.endsAt && Date.now() > new Date(EVENT.endsAt).getTime(); }
     function myStars() { return Number((gameData[meKey] || {}).stars) || 0; }
+    function ownsDeco(k, d) {
+      const g = gameData[k] || {};
+      if (d.kind === 'stars') return (Number(g.stars) || 0) >= d.at;
+      if (d.kind === 'secret') return g.s404 === true;
+      if (d.kind === 'exclusive') return (d.who || []).includes(k) || !!((grantsData[k] || {})[d.id]);
+      return false;
+    }
     function decoFor(k) {
       const g = gameData[k];
-      if (!g || !g.deco) return null;
+      if (!k || !g || !g.deco) return null;
       const d = DECOS.find(x => x.id === g.deco);
-      return d && (Number(g.stars) || 0) >= d.at ? d : null;
+      return d && ownsDeco(k, d) ? d : null;
     }
     function renderGamePanel() {
       const nameEl = document.getElementById('eventName');
       if (!nameEl) return;
       const stars = myStars();
+      const starDecos = DECOS.filter(d => d.kind === 'stars');
       nameEl.textContent = EVENT.name;
       document.getElementById('eventStars').textContent = stars + ' ⭐';
-      const next = DECOS.find(d => d.at > stars);
-      const prev = [...DECOS].reverse().find(d => d.at <= stars);
+      const next = starDecos.find(d => d.at > stars);
+      const prev = [...starDecos].reverse().find(d => d.at <= stars);
       const base = prev ? prev.at : 0;
       document.getElementById('eventBar').style.width = (next ? Math.min(100, Math.round((stars - base) * 100 / (next.at - base))) : 100) + '%';
       document.getElementById('eventNext').textContent = eventEnded() ? 'Event terminé'
         : (next ? `Prochain palier : ${next.icon} ${next.name} à ${next.at} ⭐` : 'Tous les paliers débloqués 🎉');
     }
+    function renderDecoButton() {
+      const sub = document.getElementById('decoBtnSub');
+      if (!sub) return;
+      const d = decoFor(meKey);
+      sub.textContent = d ? d.icon + ' ' + d.name : 'Aucune';
+    }
+
+    // ----- Fenêtre du jeu
     function openGameModal() {
       document.getElementById('gameModal').classList.remove('hidden');
       renderGameModal();
       toggleSidebar(false);
     }
-    function closeGameModal() { abortRound(); document.getElementById('gameModal').classList.add('hidden'); renderGameModal(); }
+    // Fermer avec la croix PENDANT une partie : débloque la décoration secrète
+    function closeGameModal() {
+      const wasRunning = gameRunning;
+      abortRound();
+      document.getElementById('gameModal').classList.add('hidden');
+      if (wasRunning) unlock404();
+    }
+    async function unlock404() {
+      if (!meKey || (gameData[meKey] || {}).s404 === true) return;
+      const g = gameData[meKey];
+      const upd = { s404: true };
+      if (!g || g.stars === undefined) upd.stars = 0;
+      try {
+        await db.ref('game/' + meKey).update(upd);
+        alert("ERROR 404 : partie introuvable.\n💀 Décoration secrète débloquée ! Tu la trouveras dans le menu 🎨 Décorations.");
+      } catch (e) {
+        alert("Impossible d'enregistrer le secret : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)");
+      }
+    }
     function abortRound() { gameTimers.forEach(t => clearInterval(t)); gameTimers = []; gameRunning = false; }
 
     function renderGameModal() {
       const body = document.getElementById('gameBody');
       if (!body || document.getElementById('gameModal').classList.contains('hidden') || gameRunning) return;
       document.getElementById('gameTitle').textContent = EVENT.name;
-      const stars = myStars(), g = gameData[meKey] || {}, ended = eventEnded();
+      const stars = myStars(), ended = eventEnded();
       const endTxt = EVENT.endsAt ? ' Fin de l\'event : ' + new Date(EVENT.endsAt).toLocaleDateString('fr-FR') + '.' : '';
-      const decosHtml = DECOS.map(d => {
-        const unlocked = stars >= d.at, equipped = g.deco === d.id;
-        return `<div class="flex items-center gap-2 p-2 rounded-xl bg-gray-900/50 border border-gray-800 ${unlocked ? d.cls : 'opacity-60'}">
-          <span class="text-lg">${unlocked ? d.icon : '🔒'}</span>
-          <div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100 truncate">${esc(d.name)}</p><p class="text-[10px] text-gray-400">${unlocked ? 'Débloquée' : 'À ' + d.at + ' ⭐'}</p></div>
-          ${unlocked ? `<button data-deco="${d.id}" class="px-2.5 py-1 rounded-lg text-[11px] ${equipped ? 'bg-brand-600 text-white' : 'bg-gray-800 text-gray-200 hover:bg-gray-700'}">${equipped ? 'Équipée ✓' : 'Équiper'}</button>` : ''}
-        </div>`;
-      }).join('');
+      const miles = DECOS.filter(d => d.kind === 'stars').map(d => `<div class="flex items-center justify-between text-xs ${stars >= d.at ? 'text-gray-100' : 'text-gray-500'}"><span>${stars >= d.at ? d.icon : '🔒'} ${esc(d.name)}</span><span class="font-mono">${d.at} ⭐</span></div>`).join('');
       const medals = ['🥇', '🥈', '🥉', '4.', '5.'];
       const board = Object.keys(gameData).filter(k => accounts[k] && (Number(gameData[k].stars) || 0) > 0)
         .sort((a, b) => (Number(gameData[b].stars) || 0) - (Number(gameData[a].stars) || 0)).slice(0, 5)
         .map((k, i) => `<div class="flex items-center justify-between text-xs"><span>${medals[i]} ${esc(accounts[k].name)}</span><span class="font-mono text-fuchsia-300">${Number(gameData[k].stars) || 0} ⭐</span></div>`).join('')
         || `<p class="text-xs text-gray-500">Personne n'a encore joué.</p>`;
       body.innerHTML = `
-        <p>Attrape un maximum d'étoiles en 30 secondes (🌟 = 3 points). Tes étoiles s'additionnent et débloquent des décorations pour ton bouton de message privé, visibles par tous dans la liste des membres.${endTxt}</p>
+        <p>Attrape un maximum d'étoiles en 30 secondes (🌟 = 3 points). Tes étoiles débloquent des décorations pour ton bouton de message privé.${endTxt}</p>
         <div class="flex items-center justify-between"><span class="text-sm font-bold text-white">${stars} ⭐</span><span id="gameHud" class="text-xs text-fuchsia-300 font-mono">${lastGain !== null ? 'Dernière partie : +' + lastGain + ' ⭐' : ''}</span></div>
         <div id="gameArea" class="relative h-56 rounded-xl bg-gray-900 border border-gray-800 overflow-hidden"></div>
         <button id="gameStart" class="w-full py-2.5 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-semibold text-xs rounded-xl transition ${ended ? 'opacity-50' : ''}">${ended ? 'Event terminé' : 'Jouer (30 s)'}</button>
-        <div class="space-y-2"><p class="font-semibold text-white">Décorations</p>${decosHtml}</div>
+        <button id="gameToDecos" class="w-full py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs rounded-xl transition">🎨 Choisir ma décoration</button>
+        <div class="space-y-1.5"><p class="font-semibold text-white">Paliers</p>${miles}</div>
         <div class="space-y-1.5"><p class="font-semibold text-white">Classement</p>${board}</div>`;
       document.getElementById('gameStart').onclick = startRound;
-      body.querySelectorAll('[data-deco]').forEach(b => { b.onclick = () => equipDeco(b.dataset.deco); });
+      document.getElementById('gameToDecos').onclick = openDecoModal;
     }
 
     function startRound() {
@@ -963,10 +1024,53 @@
       }
       renderGameModal();
     }
+
+    // ----- Menu Décorations (séparé du jeu)
+    function openDecoModal() {
+      abortRound(); // quitter le jeu par ce chemin ne débloque PAS le secret
+      document.getElementById('gameModal').classList.add('hidden');
+      document.getElementById('decoModal').classList.remove('hidden');
+      renderDecoModal();
+      toggleSidebar(false);
+    }
+    function closeDecoModal() { document.getElementById('decoModal').classList.add('hidden'); }
+    function renderDecoModal() {
+      const body = document.getElementById('decoBody'), modal = document.getElementById('decoModal');
+      if (!body || !modal || modal.classList.contains('hidden') || !meKey) return;
+      const stars = myStars(), cur = decoFor(meKey), u = accounts[meKey] || currentUser || {};
+      const initial = esc(String(u.name || '?').charAt(0).toUpperCase());
+      const row = (d) => {
+        const owned = ownsDeco(meKey, d), equipped = !!cur && cur.id === d.id, hidden = d.kind === 'secret' && !owned;
+        const sub = owned ? (equipped ? 'Équipée ✓' : 'Débloquée') : (d.kind === 'stars' ? `À ${d.at} ⭐ · tu en as ${stars}` : 'Secrète : à toi de la trouver');
+        const btn = owned ? `<button type="button" data-equip="${d.id}" class="px-2.5 py-1 rounded-lg text-[11px] ${equipped ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${equipped ? 'Retirer' : 'Équiper'}</button>` : '';
+        return `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800 ${owned ? d.cls : 'opacity-60'}">
+          <div class="av w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-sm shrink-0">${owned ? d.icon : (hidden ? '❓' : '🔒')}</div>
+          <div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100 truncate">${hidden ? '???' : esc(d.name)}</p><p class="text-[10px] text-gray-400">${sub}</p></div>${btn}</div>`;
+      };
+      const sec = (title, list) => list.length ? `<div class="space-y-2"><p class="font-semibold text-white">${title}</p>${list.map(row).join('')}</div>` : '';
+      body.innerHTML = `
+        <p>Choisis la décoration de ton bouton dans la liste des membres, là où les autres cliquent pour t'écrire en privé. Tout le monde la voit.</p>
+        <div>
+          <p class="text-[11px] text-gray-500 mb-1">Aperçu</p>
+          <div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800/60 ${cur ? cur.cls : ''}">
+            <div class="av w-7 h-7 rounded-full bg-brand-600/30 text-brand-400 font-bold flex items-center justify-center text-xs">${initial}</div>
+            <p class="text-xs font-medium text-gray-200 truncate">${esc(u.name || '')}${cur ? ' ' + cur.icon : ''}</p>
+          </div>
+        </div>
+        ${sec('Exclusives', DECOS.filter(d => d.kind === 'exclusive' && ownsDeco(meKey, d)))}
+        ${sec('Étoiles ⭐', DECOS.filter(d => d.kind === 'stars'))}
+        ${sec('Secrète', DECOS.filter(d => d.kind === 'secret'))}
+        <p class="text-[11px] text-gray-500">Gagne des étoiles dans l'event « ${esc(EVENT.name)} » pour débloquer les autres.</p>`;
+      body.querySelectorAll('[data-equip]').forEach(b => { b.onclick = () => equipDeco(b.dataset.equip); });
+    }
     async function equipDeco(id) {
-      const cur = (gameData[meKey] || {}).deco;
-      try { await db.ref('game/' + meKey).update({ deco: cur === id ? null : id }); }
-      catch (e) { alert("Impossible : " + (e.code || e.message)); }
+      const d = DECOS.find(x => x.id === id);
+      if (!meKey || !d || !ownsDeco(meKey, d)) return;
+      const g = gameData[meKey];
+      const upd = { deco: (g && g.deco === id) ? null : id };
+      if (!g || g.stars === undefined) upd.stars = 0;
+      try { await db.ref('game/' + meKey).update(upd); }
+      catch (e) { alert("Impossible : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)"); }
     }
     // =======================================================================
 
@@ -1314,7 +1418,8 @@
       const soft = (ref, cb) => { ref.on('value', cb, () => {}); listeners.push(ref); };
       soft(db.ref('roles'), (r) => { rolesData = r.val() || {}; renderUsersList(); updateAdminUsersList(); renderRolesList(); renderMessages(); if (currentUser) document.getElementById('userRoleDisplay').textContent = roleLabel(currentUser); });
       soft(db.ref('lastPublishedVersion'), (v) => { const pub = v.val(); document.getElementById('updateBanner').classList.toggle('hidden', !(pub && isNewer(pub, CURRENT_VERSION))); });
-      soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; renderUsersList(); renderGamePanel(); renderGameModal(); });
+      soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; renderUsersList(); renderGamePanel(); renderGameModal(); renderDecoButton(); renderDecoModal(); });
+      soft(db.ref('grants'), (gr) => { grantsData = gr.val() || {}; renderUsersList(); renderDecoButton(); renderDecoModal(); });
       soft(db.ref('notes/' + key), onNotes);
       listen(db.ref('status'), (snap2) => { userStatuses = snap2.val() || {}; renderUsersList(); });
       listen(db.ref('messages').limitToLast(500), onMessages);
@@ -1329,7 +1434,7 @@
       if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline' }); } catch (e) {} }
       abortRound(); stopListeners(); wipeKeys();
       currentUser = null; meKey = ''; starting = false;
-      accounts = {}; rolesData = {}; gameData = {}; notesList = []; messagesList = []; unreadChannels = {};
+      accounts = {}; rolesData = {}; gameData = {}; grantsData = {}; notesList = []; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
       document.getElementById('appContainer').classList.add('hidden');
       document.getElementById('authScreen').classList.remove('hidden');
@@ -1601,7 +1706,7 @@
 
         item.innerHTML = `
           <div class="relative">
-            <div class="w-7 h-7 rounded-full bg-brand-600/30 text-brand-400 font-bold flex items-center justify-center text-xs">${esc(u.name.charAt(0).toUpperCase())}</div>
+            <div class="av w-7 h-7 rounded-full bg-brand-600/30 text-brand-400 font-bold flex items-center justify-center text-xs">${esc(u.name.charAt(0).toUpperCase())}</div>
             <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full ${dotColorClass} border border-gray-900"></span>
           </div>
           <div class="overflow-hidden flex-1 flex items-center justify-between gap-1">
@@ -1822,6 +1927,23 @@
           return;
         }
 
+        if (cmd === 'deco') {
+          if (currentUser.role !== 'Owner') { alert("Réservé à l'Owner."); return; }
+          const sub = (args[1] || '').toLowerCase(), target = (args[2] || '').toLowerCase(), did = (args[3] || '').toLowerCase();
+          const ex = DECOS.filter(d => d.kind === 'exclusive' && !d.only);
+          if (!sub || sub === 'list') {
+            alert("Décorations exclusives attribuables : " + (ex.length ? ex.map(d => d.id + ' (' + d.name + ')').join(', ') : 'aucune pour l\'instant') + "\nUtilisation : /deco give [user] [id]  ou  /deco remove [user] [id]");
+            return;
+          }
+          const d = ex.find(x => x.id === did);
+          if (!['give', 'remove'].includes(sub) || !accounts[target] || !d) { alert("Utilisation : /deco give [user] [id]  (voir /deco list)"); return; }
+          const gref = db.ref('grants/' + target + '/' + did);
+          (sub === 'give' ? gref.set(true) : gref.remove())
+            .then(() => alert(sub === 'give' ? `${accounts[target].name} peut maintenant équiper « ${d.name} ».` : `« ${d.name} » retirée à ${accounts[target].name}.`))
+            .catch(err => alert("Impossible : " + (err.code || err.message)));
+          return;
+        }
+
         if (cmd === 'purgepass') {
           if (currentUser.role !== 'Owner') { alert("Réservé à l'Owner."); return; }
           const updates = {};
@@ -1834,7 +1956,7 @@
         }
 
         if (cmd === 'help') {
-          alert("Commandes disponibles :\n- /clean : Nettoie le salon\n- /ban [user] : Banni un compte\n- /mute [user] [sec] : Mute un utilisateur\n- /toall [msg] : Annonce globale\n- /admin [user] : Nomme un Admin\n- /help : Aide\n\nPour tout le monde :\n- /roll 20 ou /roll 2d6 : dés\n- /pile : pile ou face\n- /poll Question | choix 1 | choix 2 : sondage");
+          alert("Commandes disponibles :\n- /clean : Nettoie le salon\n- /ban [user] : Banni un compte\n- /mute [user] [sec] : Mute un utilisateur\n- /toall [msg] : Annonce globale\n- /admin [user] : Nomme un Admin\n- /help : Aide\n- /deco list|give|remove [user] [id] : décorations exclusives (Owner)\n\nPour tout le monde :\n- /roll 20 ou /roll 2d6 : dés\n- /pile : pile ou face\n- /poll Question | choix 1 | choix 2 : sondage");
           return;
         }
 
