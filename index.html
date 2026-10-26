@@ -60,8 +60,6 @@
     /* ===== Thème Halloween (secret) ===== */
     body.theme-halloween { background-color:#140a05 !important; }
     body.theme-halloween::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0; background: radial-gradient(ellipse at 15% 0%, rgba(234,88,12,.22), transparent 55%), radial-gradient(ellipse at 90% 100%, rgba(124,58,237,.18), transparent 55%); }
-    body.theme-halloween::after { content:'🎃  🦇  🕸️  👻  🦇  🎃'; position:fixed; left:0; right:0; bottom:calc(env(safe-area-inset-bottom,0px) + 2px); text-align:center; font-size:12px; letter-spacing:.35em; opacity:.35; pointer-events:none; z-index:60; animation: hwFloat 4s ease-in-out infinite; }
-    @keyframes hwFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
     body.theme-halloween .bg-darkbg, body.theme-halloween .bg-darkpanel { background-color:#140a05 !important; }
     body.theme-halloween .bg-gray-950, body.theme-halloween .bg-gray-900 { background-color:#1d0f07 !important; }
     body.theme-halloween .bg-gray-800 { background-color:#2a1609 !important; }
@@ -77,7 +75,6 @@
     body.theme-halloween .app-header { border-bottom: 1px solid rgba(251,146,60,.35); }
     body.theme-halloween ::-webkit-scrollbar-thumb { background: rgba(234,88,12,.6); }
     body.theme-halloween input:focus, body.theme-halloween textarea:focus { --tw-ring-color:#f97316 !important; border-color:#f97316 !important; }
-    @media (prefers-reduced-motion: reduce) { body.theme-halloween::after { animation: none; } }
   </style>
 </head>
 <body class="h-screen h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-hidden">
@@ -149,7 +146,7 @@
         <button id="notifBtn" onclick="cycleNotif()" class="p-2 rounded-lg text-gray-500" title="Notifications"></button>
         <button id="ntfyBtn" onclick="openNtfyModal()" class="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition" title="Notifications app fermée (ntfy)"><i data-lucide="smartphone" class="w-4 h-4"></i></button>
         <div class="flex items-center gap-2 pl-2 border-l border-gray-800">
-          <div id="userAvatar" class="w-8 h-8 rounded-full bg-brand-700 text-white font-bold flex items-center justify-center text-xs">U</div>
+          <div id="userAvatar" onclick="openDecoModal()" title="Changer ma photo de profil" class="w-8 h-8 rounded-full bg-brand-700 text-white font-bold flex items-center justify-center text-xs overflow-hidden cursor-pointer shrink-0">U</div>
           <div class="hidden md:block">
             <p id="userNameDisplay" class="text-xs font-semibold text-gray-200">User</p>
             <p id="userRoleDisplay" class="text-[10px] text-gray-400">Membre</p>
@@ -301,11 +298,13 @@
     </div>
   </div>
 
+  <input type="file" id="avatarInput" accept="image/*" class="hidden">
+
   <!-- MODAL DÉCORATIONS -->
   <div id="decoModal" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
     <div class="w-full max-w-md glass-panel p-5 rounded-2xl border border-fuchsia-500/30 space-y-4 max-h-[88vh] overflow-y-auto text-xs sm:text-sm">
       <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-        <h3 class="text-sm font-bold text-white">🎨 Décorations &amp; titres</h3>
+        <h3 class="text-sm font-bold text-white">🎨 Profil, décorations &amp; titres</h3>
         <button onclick="closeDecoModal()" class="text-gray-400 hover:text-white text-base leading-none">✕</button>
       </div>
       <div id="decoBody" class="space-y-4 text-gray-300"></div>
@@ -360,6 +359,7 @@
             <span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
           </div>
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
+            <li>Photo de profil : visible dans la liste des membres et les messages</li>
             <li>Thèmes d'application, à choisir dans le menu « Décorations &amp; titres »</li>
             <li>Un premier thème secret à découvrir</li>
             <li>Les secrets (décorations, titres, thèmes) sont regroupés en bas du menu</li>
@@ -500,6 +500,7 @@
     const VERSION_CHANGELOG =
       "🎨 Securechat v3.8 : les thèmes d'application !\n\n" +
       "Voici les nouveautés :\n" +
+      "📷 Tu peux maintenant mettre une photo de profil : clique sur ton rond en haut à droite\n" +
       "🎨 Tu peux maintenant changer l'ambiance de toute l'application avec un thème, depuis le menu « Décorations & titres »\n" +
       "🕵️ Tous les secrets (décorations, titres et thèmes) sont regroupés tout en bas de ce menu\n" +
       "🤫 Il y a un premier thème caché… à toi de le trouver, un mot dans le Général pourrait suffire\n\n" +
@@ -855,6 +856,7 @@
       upd['status/' + k] = null;
       upd['game/' + k] = null;
       upd['memory/' + k] = null;
+      upd['avatars/' + k] = null;
       upd['notes/' + k] = null;
       upd['banned/' + k] = true;
       if (currentUser && currentUser.role === 'Owner') { upd['secrets/' + k] = null; upd['grants/' + k] = null; }
@@ -965,6 +967,50 @@
       { id: 'royal',    name: 'Royal',     icon: '👑', cls: 'deco-royal',   kind: 'stars', at: 2500 },
       { id: 'error404', name: 'Écran bleu', icon: ':(', cls: 'deco-404', kind: 'secret' }
     ];
+    // ----- Photos de profil (avatars/<clé> : petite image JPEG en data URL)
+    let avatarsData = {};
+    function avatarSrc(k) { const v = avatarsData[k]; return (typeof v === 'string' && v.startsWith('data:image/')) ? v : ''; }
+    function avatarHtml(k, size, textCls) {
+      const src = avatarSrc(k), nm = String((accounts[k] || {}).name || '?');
+      if (src) return `<div class="av ${size} rounded-full overflow-hidden shrink-0 bg-gray-800"><img src="${src}" alt="" class="w-full h-full object-cover"></div>`;
+      return `<div class="av ${size} rounded-full bg-brand-600/30 text-brand-400 font-bold flex items-center justify-center ${textCls} shrink-0">${esc(nm.charAt(0).toUpperCase())}</div>`;
+    }
+    function renderMyAvatar() {
+      const el = document.getElementById('userAvatar');
+      if (!el || !currentUser) return;
+      const src = avatarSrc(meKey);
+      if (src) { el.innerHTML = `<img src="${src}" alt="" class="w-full h-full object-cover">`; }
+      else { el.textContent = String(currentUser.name || '?').charAt(0).toUpperCase(); }
+    }
+    function pickAvatar() { document.getElementById('avatarInput').click(); }
+    function handleAvatarFile(e) {
+      const file = e.target.files && e.target.files[0];
+      e.target.value = '';
+      if (!file || !meKey) return;
+      if (!/^image\//.test(file.type)) { alert("Choisis une image."); return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = async () => {
+          const side = Math.min(img.width, img.height), SZ = 128;
+          const c = document.createElement('canvas'); c.width = c.height = SZ;
+          c.getContext('2d').drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, SZ, SZ);
+          const url = c.toDataURL('image/jpeg', 0.82);
+          try { await db.ref('avatars/' + meKey).set(url); }
+          catch (err) { alert("Photo non enregistrée : " + (err.code || err.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)"); }
+        };
+        img.onerror = () => alert("Image illisible.");
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+    async function clearAvatar() {
+      if (!meKey) return;
+      try { await db.ref('avatars/' + meKey).remove(); }
+      catch (err) { alert("Impossible : " + (err.code || err.message)); }
+    }
+    document.getElementById('avatarInput').addEventListener('change', handleAvatarFile);
+
     // Thèmes d'application. kind 'secret' : débloqué par le drapeau gameData[k][flag]
     const THEMES = [
       { id: 'halloween', name: 'Halloween', icon: '🎃', kind: 'secret', flag: 'sHalloween', bg: 'linear-gradient(120deg,#7c2d12,#ea580c,#4c1d95)' }
@@ -1205,11 +1251,22 @@
       ];
       const secretsHtml = `<div class="space-y-2"><p class="font-semibold text-white">🤫 Secrets <span class="text-[10px] font-normal text-gray-400">${secrets.filter(x => x.owned).length}/${secrets.length} trouvés</span></p>${secrets.map(secRow).join('')}</div>`;
       body.innerHTML = `
+        <div class="space-y-2">
+          <p class="font-semibold text-white">Photo de profil</p>
+          <div class="flex items-center gap-3 p-2 rounded-xl bg-gray-900/50 border border-gray-800">
+            ${avatarHtml(meKey, 'w-12 h-12', 'text-lg')}
+            <div class="flex-1 min-w-0 text-[11px] text-gray-400">${avatarSrc(meKey) ? 'Visible par tout le monde.' : 'Aucune photo : ton initiale est affichée.'}</div>
+            <div class="flex flex-col gap-1">
+              <button type="button" data-avatar-pick class="px-2.5 py-1 rounded-lg text-[11px] bg-brand-600 hover:bg-brand-500 text-white">${avatarSrc(meKey) ? 'Changer' : 'Ajouter'}</button>
+              ${avatarSrc(meKey) ? '<button type="button" data-avatar-clear class="px-2.5 py-1 rounded-lg text-[11px] bg-gray-700 text-white">Retirer</button>' : ''}
+            </div>
+          </div>
+        </div>
         <p>Choisis la décoration de ton bouton dans la liste des membres, là où les autres cliquent pour t'écrire en privé. Tout le monde la voit.</p>
         <div>
           <p class="text-[11px] text-gray-500 mb-1">Aperçu</p>
           <div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800/60 ${cur ? cur.cls : ''}">
-            <div class="av w-7 h-7 rounded-full bg-brand-600/30 text-brand-400 font-bold flex items-center justify-center text-xs">${initial}</div>
+            ${avatarHtml(meKey, 'w-7 h-7', 'text-xs')}
             <p class="text-xs font-medium text-gray-200 truncate">${esc(u.name || '')}${cur ? ' ' + cur.icon : ''}${titleIcon(meKey)}</p>
           </div>
         </div>
@@ -1220,6 +1277,8 @@
         <p class="text-[11px] text-gray-500">Gagne des étoiles dans l'event « ${esc(EVENT.name)} » pour débloquer les autres.</p>`;
       body.querySelectorAll('[data-equip]').forEach(b => { b.onclick = () => equipDeco(b.dataset.equip); });
       body.querySelectorAll('[data-title]').forEach(b => { b.onclick = () => equipTitle(b.dataset.title); });
+      body.querySelectorAll('[data-avatar-pick]').forEach(b => { b.onclick = pickAvatar; });
+      body.querySelectorAll('[data-avatar-clear]').forEach(b => { b.onclick = clearAvatar; });
       body.querySelectorAll('[data-theme]').forEach(b => { b.onclick = () => equipTheme(b.dataset.theme); });
     }
     async function equipDeco(id) {
@@ -1681,7 +1740,7 @@
       document.getElementById('appContainer').classList.remove('hidden');
       document.getElementById('userNameDisplay').textContent = currentUser.name;
       document.getElementById('userRoleDisplay').textContent = roleLabel(currentUser);
-      document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+      renderMyAvatar();
       const isStaff = isStaffRole(currentUser.role);
       document.getElementById('adminBtn').classList.toggle('hidden', !isStaff);
       document.getElementById('headerCommandHint').textContent = isStaff ? CMD_HINT : '';
@@ -1705,6 +1764,7 @@
       soft(db.ref('roles'), (r) => { rolesData = r.val() || {}; renderUsersList(); updateAdminUsersList(); renderRolesList(); renderMessages(); if (currentUser) document.getElementById('userRoleDisplay').textContent = roleLabel(currentUser); });
       soft(db.ref('lastPublishedVersion'), (v) => { const pub = v.val(); document.getElementById('updateBanner').classList.toggle('hidden', !(pub && isNewer(pub, CURRENT_VERSION))); });
       soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; applyTheme(); renderUsersList(); renderGamePanel(); renderGameModal(); renderDecoButton(); renderDecoModal(); });
+      soft(db.ref('avatars'), (as) => { avatarsData = as.val() || {}; renderMyAvatar(); renderUsersList(); renderDecoModal(); renderMessages(); });
       soft(db.ref('memory'), (ms) => { memData = ms.val() || {}; renderUsersList(); renderMemPanel(); renderMemModal(); renderDecoButton(); renderDecoModal(); renderMessages(); });
       soft(db.ref('grants'), (gr) => { grantsData = gr.val() || {}; renderUsersList(); renderDecoButton(); renderDecoModal(); });
       soft(db.ref('notes/' + key), onNotes);
@@ -1719,7 +1779,7 @@
 
     async function logout() {
       if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline' }); } catch (e) {} }
-      abortRound(); stopListeners(); wipeKeys(); gameData = {}; applyTheme();
+      abortRound(); stopListeners(); wipeKeys(); gameData = {}; avatarsData = {}; applyTheme();
       currentUser = null; meKey = ''; starting = false;
       accounts = {}; rolesData = {}; gameData = {}; grantsData = {}; memData = {}; memGame = null; notesList = []; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
@@ -1994,7 +2054,7 @@
 
         item.innerHTML = `
           <div class="relative">
-            <div class="av w-7 h-7 rounded-full bg-brand-600/30 text-brand-400 font-bold flex items-center justify-center text-xs">${esc(u.name.charAt(0).toUpperCase())}</div>
+            ${avatarHtml(k, 'w-7 h-7', 'text-xs')}
             <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full ${dotColorClass} border border-gray-900"></span>
           </div>
           <div class="overflow-hidden flex-1 flex items-center justify-between gap-1">
@@ -2347,7 +2407,7 @@
 
         wrap.innerHTML = `
           <div class="flex items-center gap-2 text-[10px] text-gray-400 px-1">
-            <span class="font-semibold text-gray-300">${esc(m.sender)}</span>${msgBadgeHtml(accounts[m.senderKey])}${titleTagHtml(m.senderKey)}
+            ${avatarHtml(m.senderKey, 'w-5 h-5', 'text-[9px]')}<span class="font-semibold text-gray-300">${esc(m.sender)}</span>${msgBadgeHtml(accounts[m.senderKey])}${titleTagHtml(m.senderKey)}
             <span>• ${esc(m.time)}</span>${m.c ? '' : '<span title="Ancien message non chiffré">🔓</span>'}${m.edited ? '<span class="italic">(modifié)</span>' : ''}
           </div>
           <div class="msg-bubble max-w-[85%] sm:max-w-md p-3 rounded-2xl text-xs sm:text-sm ${mine ? 'bg-brand-600 text-white rounded-tr-none shadow-md shadow-brand-600/10' : 'bg-gray-800 text-gray-100 rounded-tl-none border border-gray-700/60'} ${mentioned ? 'ring-2 ring-amber-400/70' : ''}">${content}</div>
