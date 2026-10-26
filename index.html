@@ -57,6 +57,27 @@
     @keyframes rainbowBorder { 0%,100% { border-color: #ff3b3b; box-shadow: 0 0 14px rgba(255,59,59,.6); } 17% { border-color: #ffb000; box-shadow: 0 0 14px rgba(255,176,0,.6); } 33% { border-color: #f5e400; box-shadow: 0 0 14px rgba(245,228,0,.55); } 50% { border-color: #19d24a; box-shadow: 0 0 14px rgba(25,210,74,.6); } 67% { border-color: #1ec8ff; box-shadow: 0 0 14px rgba(30,200,255,.6); } 83% { border-color: #8a4dff; box-shadow: 0 0 14px rgba(138,77,255,.6); } }
     @keyframes rainbowRing { 0%,100% { box-shadow: 0 0 9px #ff3b3b; } 17% { box-shadow: 0 0 9px #ffb000; } 33% { box-shadow: 0 0 9px #f5e400; } 50% { box-shadow: 0 0 9px #19d24a; } 67% { box-shadow: 0 0 9px #1ec8ff; } 83% { box-shadow: 0 0 9px #8a4dff; } }
     @media (prefers-reduced-motion: reduce) { .deco-flame, .deco-404, .deco-founder, .deco-founder .av, .deco-founder p { animation: none; } .deco-founder { border-color: #ff3b3b !important; } }
+    /* ===== Thème Halloween (secret) ===== */
+    body.theme-halloween { background-color:#140a05 !important; }
+    body.theme-halloween::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0; background: radial-gradient(ellipse at 15% 0%, rgba(234,88,12,.22), transparent 55%), radial-gradient(ellipse at 90% 100%, rgba(124,58,237,.18), transparent 55%); }
+    body.theme-halloween::after { content:'🎃  🦇  🕸️  👻  🦇  🎃'; position:fixed; left:0; right:0; bottom:calc(env(safe-area-inset-bottom,0px) + 2px); text-align:center; font-size:12px; letter-spacing:.35em; opacity:.35; pointer-events:none; z-index:60; animation: hwFloat 4s ease-in-out infinite; }
+    @keyframes hwFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+    body.theme-halloween .bg-darkbg, body.theme-halloween .bg-darkpanel { background-color:#140a05 !important; }
+    body.theme-halloween .bg-gray-950, body.theme-halloween .bg-gray-900 { background-color:#1d0f07 !important; }
+    body.theme-halloween .bg-gray-800 { background-color:#2a1609 !important; }
+    body.theme-halloween .hover\:bg-gray-800:hover, body.theme-halloween .hover\:bg-gray-700:hover { background-color:#3a1d0b !important; }
+    body.theme-halloween .bg-gray-700 { background-color:#4a2410 !important; }
+    body.theme-halloween .border-gray-800, body.theme-halloween .border-gray-700, body.theme-halloween .border-gray-800\/60 { border-color: rgba(251,146,60,.22) !important; }
+    body.theme-halloween .glass-panel { background: rgba(29,15,7,.9); border-color: rgba(251,146,60,.28); }
+    body.theme-halloween .bg-brand-500, body.theme-halloween .bg-brand-600 { background-color:#ea580c !important; }
+    body.theme-halloween .hover\:bg-brand-500:hover, body.theme-halloween .hover\:bg-brand-600:hover { background-color:#f97316 !important; }
+    body.theme-halloween .text-brand-400, body.theme-halloween .text-brand-500 { color:#fb923c !important; }
+    body.theme-halloween [class*="bg-brand-500/"], body.theme-halloween [class*="bg-brand-600/"] { background-color: rgba(234,88,12,.2) !important; }
+    body.theme-halloween [class*="border-brand-500"] { border-color: rgba(251,146,60,.45) !important; }
+    body.theme-halloween .app-header { border-bottom: 1px solid rgba(251,146,60,.35); }
+    body.theme-halloween ::-webkit-scrollbar-thumb { background: rgba(234,88,12,.6); }
+    body.theme-halloween input:focus, body.theme-halloween textarea:focus { --tw-ring-color:#f97316 !important; border-color:#f97316 !important; }
+    @media (prefers-reduced-motion: reduce) { body.theme-halloween::after { animation: none; } }
   </style>
 </head>
 <body class="h-screen h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-hidden">
@@ -114,7 +135,7 @@
               <span class="hidden sm:inline">Securechat</span>
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v3.7.0</span>
+                <span>v3.8.0</span>
               </button>
             </h2>
           </div>
@@ -335,8 +356,18 @@
       <div class="space-y-4 text-gray-300">
         <div class="border-l-2 border-amber-500 pl-3 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.7.0</span>
+            <span class="font-bold text-white text-sm">v3.8.0</span>
             <span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
+          </div>
+          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
+            <li>Thèmes d'application, à choisir dans le menu « Décorations &amp; titres »</li>
+            <li>Un premier thème secret à découvrir</li>
+            <li>Les secrets (décorations, titres, thèmes) sont regroupés en bas du menu</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white text-sm">v3.7.0</span>
           </div>
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>Deuxième jeu : Memory (3 niveaux), qui rapporte des points</li>
@@ -464,15 +495,14 @@
   </div>
 
   <script>
-    const CURRENT_VERSION = "v3.7.0";
+    const CURRENT_VERSION = "v3.8.0";
     const DEV_MODE = false; // true = aucune annonce automatique
     const VERSION_CHANGELOG =
-      "🧠 Securechat v3.7 : un deuxième jeu et des titres !\n\n" +
+      "🎨 Securechat v3.8 : les thèmes d'application !\n\n" +
       "Voici les nouveautés :\n" +
-      "🧠 Memory : retrouve les paires avec le moins de coups possible, en 3 niveaux. Clique sur « Memory » dans le menu de gauche\n" +
-      "🏷️ Tes points Memory débloquent des titres affichés à côté de ton nom, dans la liste des membres et dans les messages\n" +
-      "🎨 Le menu « Décorations & titres » te permet de choisir ta décoration et ton titre quand tu veux\n" +
-      "💙 Et la décoration secrète a changé de look… toujours à toi de la trouver\n\n" +
+      "🎨 Tu peux maintenant changer l'ambiance de toute l'application avec un thème, depuis le menu « Décorations & titres »\n" +
+      "🕵️ Tous les secrets (décorations, titres et thèmes) sont regroupés tout en bas de ce menu\n" +
+      "🤫 Il y a un premier thème caché… à toi de le trouver, un mot dans le Général pourrait suffire\n\n" +
       "Bon chat !";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
@@ -935,7 +965,53 @@
       { id: 'royal',    name: 'Royal',     icon: '👑', cls: 'deco-royal',   kind: 'stars', at: 2500 },
       { id: 'error404', name: 'Écran bleu', icon: ':(', cls: 'deco-404', kind: 'secret' }
     ];
+    // Thèmes d'application. kind 'secret' : débloqué par le drapeau gameData[k][flag]
+    const THEMES = [
+      { id: 'halloween', name: 'Halloween', icon: '🎃', kind: 'secret', flag: 'sHalloween', bg: 'linear-gradient(120deg,#7c2d12,#ea580c,#4c1d95)' }
+    ];
+    const SECRET_WORDS = [{ word: 'halloween', theme: 'halloween' }];
     let gameData = {}, grantsData = {}, gameTimers = [], gameRunning = false, lastGain = null;
+    function ownsTheme(k, t) { return !!t && (gameData[k] || {})[t.flag] === true; }
+    function themeFor(k) {
+      const g = gameData[k];
+      if (!k || !g || !g.theme) return null;
+      const t = THEMES.find(x => x.id === g.theme);
+      return t && ownsTheme(k, t) ? t : null;
+    }
+    function applyTheme() {
+      const t = currentUser ? themeFor(meKey) : null;
+      THEMES.forEach(x => document.body.classList.toggle('theme-' + x.id, !!t && t.id === x.id));
+      const m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.setAttribute('content', t && t.id === 'halloween' ? '#140a05' : '#0b0f17');
+    }
+    async function equipTheme(id) {
+      const t = THEMES.find(x => x.id === id);
+      if (!meKey || !t || !ownsTheme(meKey, t)) return;
+      const g = gameData[meKey];
+      const upd = { theme: (g && g.theme === id) ? null : id };
+      if (!g || g.stars === undefined) upd.stars = 0;
+      try { await db.ref('game/' + meKey).update(upd); }
+      catch (e) { alert("Impossible : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)"); }
+    }
+    // Mot secret écrit dans le Général : débloque et active un thème (une seule fois)
+    async function checkSecretWord(text) {
+      if (!meKey || currentChannel !== 'general') return;
+      const norm = String(text).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      for (const sw of SECRET_WORDS) {
+        if (!new RegExp('(^|[^a-z0-9])' + sw.word + '([^a-z0-9]|$)').test(norm)) continue;
+        const t = THEMES.find(x => x.id === sw.theme);
+        if (!t || ownsTheme(meKey, t)) continue;
+        const g = gameData[meKey];
+        const upd = { [t.flag]: true, theme: t.id };
+        if (!g || g.stars === undefined) upd.stars = 0;
+        try {
+          await db.ref('game/' + meKey).update(upd);
+          alert(t.icon + " Thème secret « " + t.name + " » débloqué et activé !\nTu peux le changer ou le retirer dans 🎨 Décorations & titres, tout en bas.");
+        } catch (e) {
+          alert("Impossible d'enregistrer le secret : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)");
+        }
+      }
+    }
 
     function eventEnded() { return !!EVENT.endsAt && Date.now() > new Date(EVENT.endsAt).getTime(); }
     function myStars() { return Number((gameData[meKey] || {}).stars) || 0; }
@@ -1110,13 +1186,24 @@
       };
       const sec = (title, list) => list.length ? `<div class="space-y-2"><p class="font-semibold text-white">${title}</p>${list.map(row).join('')}</div>` : '';
       const pts = myPts(), curT = titleFor(meKey);
-      const titlesHtml = `<div class="space-y-2"><p class="font-semibold text-white">Titres (Memory 🧠)</p>${TITLES.map(t => {
+      const titlesHtml = `<div class="space-y-2"><p class="font-semibold text-white">Titres (Memory 🧠)</p>${TITLES.filter(t => !t.secret).map(t => {
         const owned = pts >= t.at, eq = !!curT && curT.id === t.id;
         return `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800 ${owned ? '' : 'opacity-60'}">
           <div class="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-sm shrink-0">${owned ? t.icon : '🔒'}</div>
           <div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100 truncate">${esc(t.name)}</p><p class="text-[10px] text-gray-400">${owned ? (eq ? 'Équipé ✓' : 'Débloqué') : 'À ' + t.at + ' pts · tu en as ' + pts}</p></div>
           ${owned ? `<button type="button" data-title="${t.id}" class="px-2.5 py-1 rounded-lg text-[11px] ${eq ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${eq ? 'Retirer' : 'Équiper'}</button>` : ''}</div>`;
       }).join('')}</div>`;
+      const curTh = themeFor(meKey);
+      const secRow = (o) => `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800 ${o.owned ? (o.cls || '') : 'opacity-60'}">
+          <div class="av w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-sm shrink-0" ${o.owned && o.bg ? `style="background:${o.bg}"` : ''}>${o.owned ? o.icon : '❓'}</div>
+          <div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100 truncate">${o.owned ? esc(o.name) : '???'} <span class="text-[10px] font-normal text-gray-400">${esc(o.kind)}</span></p><p class="text-[10px] text-gray-400">${o.owned ? (o.eq ? 'Équipé ✓' : 'Débloqué') : 'Secret : à toi de le trouver'}</p></div>
+          ${o.owned ? `<button type="button" ${o.attr} class="px-2.5 py-1 rounded-lg text-[11px] ${o.eq ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${o.eq ? 'Retirer' : 'Équiper'}</button>` : ''}</div>`;
+      const secrets = [
+        ...DECOS.filter(d => d.kind === 'secret').map(d => ({ kind: 'Décoration', owned: ownsDeco(meKey, d), eq: !!cur && cur.id === d.id, icon: d.icon, name: d.name, cls: d.cls, attr: `data-equip="${d.id}"` })),
+        ...TITLES.filter(t => t.secret).map(t => ({ kind: 'Titre', owned: ((memData[meKey] || {})[t.flag] === true), eq: !!curT && curT.id === t.id, icon: t.icon, name: t.name, attr: `data-title="${t.id}"` })),
+        ...THEMES.filter(t => t.kind === 'secret').map(t => ({ kind: "Thème d'application", owned: ownsTheme(meKey, t), eq: !!curTh && curTh.id === t.id, icon: t.icon, name: t.name, bg: t.bg, attr: `data-theme="${t.id}"` }))
+      ];
+      const secretsHtml = `<div class="space-y-2"><p class="font-semibold text-white">🤫 Secrets <span class="text-[10px] font-normal text-gray-400">${secrets.filter(x => x.owned).length}/${secrets.length} trouvés</span></p>${secrets.map(secRow).join('')}</div>`;
       body.innerHTML = `
         <p>Choisis la décoration de ton bouton dans la liste des membres, là où les autres cliquent pour t'écrire en privé. Tout le monde la voit.</p>
         <div>
@@ -1128,11 +1215,12 @@
         </div>
         ${sec('Exclusives', DECOS.filter(d => d.kind === 'exclusive' && ownsDeco(meKey, d)))}
         ${sec('Étoiles ⭐', DECOS.filter(d => d.kind === 'stars'))}
-        ${sec('Secrète', DECOS.filter(d => d.kind === 'secret'))}
         ${titlesHtml}
+        ${secretsHtml}
         <p class="text-[11px] text-gray-500">Gagne des étoiles dans l'event « ${esc(EVENT.name)} » pour débloquer les autres.</p>`;
       body.querySelectorAll('[data-equip]').forEach(b => { b.onclick = () => equipDeco(b.dataset.equip); });
       body.querySelectorAll('[data-title]').forEach(b => { b.onclick = () => equipTitle(b.dataset.title); });
+      body.querySelectorAll('[data-theme]').forEach(b => { b.onclick = () => equipTheme(b.dataset.theme); });
     }
     async function equipDeco(id) {
       const d = DECOS.find(x => x.id === id);
@@ -1616,7 +1704,7 @@
       const soft = (ref, cb) => { ref.on('value', cb, () => {}); listeners.push(ref); };
       soft(db.ref('roles'), (r) => { rolesData = r.val() || {}; renderUsersList(); updateAdminUsersList(); renderRolesList(); renderMessages(); if (currentUser) document.getElementById('userRoleDisplay').textContent = roleLabel(currentUser); });
       soft(db.ref('lastPublishedVersion'), (v) => { const pub = v.val(); document.getElementById('updateBanner').classList.toggle('hidden', !(pub && isNewer(pub, CURRENT_VERSION))); });
-      soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; renderUsersList(); renderGamePanel(); renderGameModal(); renderDecoButton(); renderDecoModal(); });
+      soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; applyTheme(); renderUsersList(); renderGamePanel(); renderGameModal(); renderDecoButton(); renderDecoModal(); });
       soft(db.ref('memory'), (ms) => { memData = ms.val() || {}; renderUsersList(); renderMemPanel(); renderMemModal(); renderDecoButton(); renderDecoModal(); renderMessages(); });
       soft(db.ref('grants'), (gr) => { grantsData = gr.val() || {}; renderUsersList(); renderDecoButton(); renderDecoModal(); });
       soft(db.ref('notes/' + key), onNotes);
@@ -1631,7 +1719,7 @@
 
     async function logout() {
       if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline' }); } catch (e) {} }
-      abortRound(); stopListeners(); wipeKeys();
+      abortRound(); stopListeners(); wipeKeys(); gameData = {}; applyTheme();
       currentUser = null; meKey = ''; starting = false;
       accounts = {}; rolesData = {}; gameData = {}; grantsData = {}; memData = {}; memGame = null; notesList = []; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
@@ -2166,8 +2254,10 @@
 
       const ok = await sendEncrypted({ t: text, ...(replyingTo ? { r: replyingTo } : {}) });
       if (!ok) return;
+      const sentChan = currentChannel;
       cancelReply(); clearTyping();
       input.value = '';
+      if (sentChan === 'general') checkSecretWord(text);
     }
 
     function renderMessages() {
