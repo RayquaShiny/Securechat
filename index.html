@@ -49,10 +49,13 @@
     .deco-404 .av { background: #005a9e !important; color: #fff !important; border: 1px solid rgba(255,255,255,.8); }
     .deco-404::after { content: ''; position: absolute; left: 0; bottom: 0; height: 3px; width: 20%; background: #fff; animation: bsodProgress 8s steps(20) infinite; }
     .deco-hack { position: relative; overflow: hidden; background: #020a04 !important; border-color: #22c55e !important; box-shadow: 0 0 12px rgba(34,197,94,.45), inset 0 0 14px rgba(34,197,94,.12); }
-    .deco-hack p { color: #4ade80 !important; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; text-shadow: 0 0 6px rgba(74,222,128,.7); }
+    .deco-hack p { position: relative; color: #86efac !important; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; text-shadow: 0 0 6px rgba(74,222,128,.7); }
     .deco-hack .nm::after { content: '_'; animation: hackBlink 1s steps(1) infinite; }
     .deco-hack .av { background: #03140a !important; color: #4ade80 !important; border: 1px solid #22c55e; box-shadow: 0 0 8px rgba(34,197,94,.7); }
-    .deco-hack::after { content: ''; position: absolute; top: 0; bottom: 0; width: 22px; left: -22px; background: linear-gradient(90deg, transparent, rgba(74,222,128,.35), transparent); animation: hackScan 3.2s linear infinite; pointer-events: none; }
+    .deco-hack::after { content: ''; position: absolute; top: 0; bottom: 0; width: 22px; left: -22px; background: linear-gradient(90deg, transparent, rgba(74,222,128,.18), transparent); animation: hackScan 3.2s linear infinite; pointer-events: none; }
+    .deco-hack { isolation: isolate; }
+    .deco-hack::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .75; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='132' height='84'%3E%3Cg font-family='monospace' font-size='10' fill='%234ade80'%3E%3Ctext x='2' y='34' fill-opacity='0.36'%3E1%3C/text%3E%3Ctext x='2' y='46' fill-opacity='0.57'%3E0%3C/text%3E%3Ctext x='2' y='58' fill-opacity='0.79'%3E0%3C/text%3E%3Ctext x='2' y='70' fill-opacity='1.00'%3E0%3C/text%3E%3Ctext x='13' y='34' fill-opacity='0.27'%3E0%3C/text%3E%3Ctext x='13' y='46' fill-opacity='0.39'%3E0%3C/text%3E%3Ctext x='13' y='58' fill-opacity='0.51'%3E0%3C/text%3E%3Ctext x='13' y='70' fill-opacity='0.64'%3E0%3C/text%3E%3Ctext x='13' y='82' fill-opacity='0.76'%3E1%3C/text%3E%3Ctext x='13' y='10' fill-opacity='0.88'%3E1%3C/text%3E%3Ctext x='13' y='22' fill-opacity='1.00'%3E0%3C/text%3E%3Ctext x='24' y='22' fill-opacity='0.43'%3E1%3C/text%3E%3Ctext x='24' y='34' fill-opacity='0.72'%3E0%3C/text%3E%3Ctext x='24' y='46' fill-opacity='1.00'%3E0%3C/text%3E%3Ctext x='35' y='22' fill-opacity='0.27'%3E0%3C/text%3E%3Ctext x='35' y='34' fill-opacity='0.39'%3E1%3C/text%3E%3Ctext x='35' y='46' fill-opacity='0.51'%3E0%3C/text%3E%3Ctext x='35' y='58' fill-opacity='0.64'%3E0%3C/text%3E%3Ctext x='35' y='70' fill-opacity='0.76'%3E0%3C/text%3E%3Ctext x='35' y='82' fill-opacity='0.88'%3E0%3C/text%3E%3Ctext x='35' y='10' fill-opacity='1.00'%3E1%3C/text%3E%3Ctext x='46' y='46' fill-opacity='0.36'%3E0%3C/text%3E%3Ctext x='46' y='58' fill-opacity='0.57'%3E1%3C/text%3E%3Ctext x='46' y='70' fill-opacity='0.79'%3E0%3C/text%3E%3Ctext x='46' y='82' fill-opacity='1.00'%3E0%3C/text%3E%3Ctext x='57' y='58' fill-opacity='0.27'%3E0%3C/text%3E%3Ctext x='57' y='70' fill-opacity='0.39'%3E1%3C/text%3E%3Ctext x='57' y='82' fill-opacity='0.51'%3E0%3C/text%3E%3Ctext x='57' y='10' fill-opacity='0.64'%3E0%3C/text%3E%3Ctext x='57' y='22' fill-opacity='0.76'%3E0%3C/text%3E%3Ctext x='57' y='34' fill-opacity='0.88'%3E0%3C/text%3E%3Ctext x='57' y='46' fill-opacity='1.00'%3E1%3C/text%3E%3Ctext x='68' y='70' fill-opacity='0.27'%3E1%3C/text%3E%3Ctext x='68' y='82' fill-opacity='0.39'%3E1%3C/text%3E%3Ctext x='68' y='10' fill-opacity='0.51'%3E1%3C/text%3E%3Ctext x='68' y='22' fill-opacity='0.64'%3E1%3C/text%3E%3Ctext x='68' y='34' fill-opacity='0.76'%3E1%3C/text%3E%3Ctext x='68' y='46' fill-opacity='0.88'%3E1%3C/text%3E%3Ctext x='68' y='58' fill-opacity='1.00'%3E0%3C/text%3E%3Ctext x='79' y='82' fill-opacity='0.36'%3E0%3C/text%3E%3Ctext x='79' y='10' fill-opacity='0.57'%3E0%3C/text%3E%3Ctext x='79' y='22' fill-opacity='0.79'%3E1%3C/text%3E%3Ctext x='79' y='34' fill-opacity='1.00'%3E1%3C/text%3E%3Ctext x='90' y='34' fill-opacity='0.29'%3E1%3C/text%3E%3Ctext x='90' y='46' fill-opacity='0.43'%3E0%3C/text%3E%3Ctext x='90' y='58' fill-opacity='0.57'%3E0%3C/text%3E%3Ctext x='90' y='70' fill-opacity='0.72'%3E1%3C/text%3E%3Ctext x='90' y='82' fill-opacity='0.86'%3E0%3C/text%3E%3Ctext x='90' y='10' fill-opacity='1.00'%3E1%3C/text%3E%3Ctext x='101' y='22' fill-opacity='0.29'%3E1%3C/text%3E%3Ctext x='101' y='34' fill-opacity='0.43'%3E0%3C/text%3E%3Ctext x='101' y='46' fill-opacity='0.57'%3E0%3C/text%3E%3Ctext x='101' y='58' fill-opacity='0.72'%3E1%3C/text%3E%3Ctext x='101' y='70' fill-opacity='0.86'%3E1%3C/text%3E%3Ctext x='101' y='82' fill-opacity='1.00'%3E1%3C/text%3E%3Ctext x='112' y='58' fill-opacity='0.29'%3E1%3C/text%3E%3Ctext x='112' y='70' fill-opacity='0.43'%3E0%3C/text%3E%3Ctext x='112' y='82' fill-opacity='0.57'%3E0%3C/text%3E%3Ctext x='112' y='10' fill-opacity='0.72'%3E1%3C/text%3E%3Ctext x='112' y='22' fill-opacity='0.86'%3E1%3C/text%3E%3Ctext x='112' y='34' fill-opacity='1.00'%3E0%3C/text%3E%3Ctext x='123' y='10' fill-opacity='0.32'%3E1%3C/text%3E%3Ctext x='123' y='22' fill-opacity='0.49'%3E1%3C/text%3E%3Ctext x='123' y='34' fill-opacity='0.66'%3E1%3C/text%3E%3Ctext x='123' y='46' fill-opacity='0.83'%3E1%3C/text%3E%3Ctext x='123' y='58' fill-opacity='1.00'%3E0%3C/text%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='132' height='120'%3E%3Cg font-family='monospace' font-size='9' fill='%234ade80'%3E%3Ctext x='2' y='34' fill-opacity='0.24'%3E1%3C/text%3E%3Ctext x='2' y='46' fill-opacity='0.34'%3E1%3C/text%3E%3Ctext x='2' y='58' fill-opacity='0.43'%3E1%3C/text%3E%3Ctext x='2' y='70' fill-opacity='0.53'%3E0%3C/text%3E%3Ctext x='2' y='82' fill-opacity='0.62'%3E1%3C/text%3E%3Ctext x='2' y='94' fill-opacity='0.72'%3E0%3C/text%3E%3Ctext x='2' y='106' fill-opacity='0.81'%3E0%3C/text%3E%3Ctext x='2' y='118' fill-opacity='0.91'%3E0%3C/text%3E%3Ctext x='2' y='10' fill-opacity='1.00'%3E0%3C/text%3E%3Ctext x='13' y='70' fill-opacity='0.24'%3E0%3C/text%3E%3Ctext x='13' y='82' fill-opacity='0.34'%3E0%3C/text%3E%3Ctext x='13' y='94' fill-opacity='0.43'%3E0%3C/text%3E%3Ctext x='13' y='106' fill-opacity='0.53'%3E0%3C/text%3E%3Ctext x='13' y='118' fill-opacity='0.62'%3E0%3C/text%3E%3Ctext x='13' y='10' fill-opacity='0.72'%3E1%3C/text%3E%3Ctext x='13' y='22' fill-opacity='0.81'%3E1%3C/text%3E%3Ctext x='13' y='34' fill-opacity='0.91'%3E1%3C/text%3E%3Ctext x='13' y='46' fill-opacity='1.00'%3E0%3C/text%3E%3Ctext x='24' y='70' fill-opacity='0.23'%3E0%3C/text%3E%3Ctext x='24' y='82' fill-opacity='0.32'%3E1%3C/text%3E%3Ctext x='24' y='94' fill-opacity='0.41'%3E0%3C/text%3E%3Ctext x='24' y='106' fill-opacity='0.49'%3E0%3C/text%3E%3Ctext x='24' y='118' fill-opacity='0.57'%3E0%3C/text%3E%3Ctext x='24' y='10' fill-opacity='0.66'%3E0%3C/text%3E%3Ctext x='24' y='22' fill-opacity='0.74'%3E0%3C/text%3E%3Ctext x='24' y='34' fill-opacity='0.83'%3E1%3C/text%3E%3Ctext x='24' y='46' fill-opacity='0.91'%3E0%3C/text%3E%3Ctext x='24' y='58' fill-opacity='1.00'%3E1%3C/text%3E%3Ctext x='35' y='82' fill-opacity='0.23'%3E0%3C/text%3E%3Ctext x='35' y='94' fill-opacity='0.32'%3E0%3C/text%3E%3Ctext x='35' y='106' fill-opacity='0.41'%3E0%3C/text%3E%3Ctext x='35' y='118' fill-opacity='0.49'%3E1%3C/text%3E%3Ctext x='35' y='10' fill-opacity='0.57'%3E0%3C/text%3E%3Ctext x='35' y='22' fill-opacity='0.66'%3E0%3C/text%3E%3Ctext x='35' y='34' fill-opacity='0.74'%3E0%3C/text%3E%3Ctext x='35' y='46' fill-opacity='0.83'%3E0%3C/text%3E%3Ctext x='35' y='58' fill-opacity='0.91'%3E0%3C/text%3E%3Ctext x='35' y='70' fill-opacity='1.00'%3E0%3C/text%3E%3Ctext x='46' y='106' fill-opacity='0.23'%3E1%3C/text%3E%3Ctext x='46' y='118' fill-opacity='0.32'%3E0%3C/text%3E%3Ctext x='46' y='10' fill-opacity='0.41'%3E1%3C/text%3E%3Ctext x='46' y='22' fill-opacity='0.49'%3E0%3C/text%3E%3Ctext x='46' y='34' fill-opacity='0.57'%3E1%3C/text%3E%3Ctext x='46' y='46' fill-opacity='0.66'%3E1%3C/text%3E%3Ctext x='46' y='58' fill-opacity='0.74'%3E1%3C/text%3E%3Ctext x='46' y='70' fill-opacity='0.83'%3E1%3C/text%3E%3Ctext x='46' y='82' fill-opacity='0.91'%3E1%3C/text%3E%3Ctext x='46' y='94' fill-opacity='1.00'%3E1%3C/text%3E%3Ctext x='57' y='94' fill-opacity='0.24'%3E1%3C/text%3E%3Ctext x='57' y='106' fill-opacity='0.34'%3E0%3C/text%3E%3Ctext x='57' y='118' fill-opacity='0.43'%3E0%3C/text%3E%3Ctext x='57' y='10' fill-opacity='0.53'%3E0%3C/text%3E%3Ctext x='57' y='22' fill-opacity='0.62'%3E1%3C/text%3E%3Ctext x='57' y='34' fill-opacity='0.72'%3E0%3C/text%3E%3Ctext x='57' y='46' fill-opacity='0.81'%3E1%3C/text%3E%3Ctext x='57' y='58' fill-opacity='0.91'%3E0%3C/text%3E%3Ctext x='57' y='70' fill-opacity='1.00'%3E0%3C/text%3E%3Ctext x='68' y='118' fill-opacity='0.26'%3E0%3C/text%3E%3Ctext x='68' y='10' fill-opacity='0.36'%3E0%3C/text%3E%3Ctext x='68' y='22' fill-opacity='0.47'%3E0%3C/text%3E%3Ctext x='68' y='34' fill-opacity='0.57'%3E1%3C/text%3E%3Ctext x='68' y='46' fill-opacity='0.68'%3E1%3C/text%3E%3Ctext x='68' y='58' fill-opacity='0.79'%3E1%3C/text%3E%3Ctext x='68' y='70' fill-opacity='0.89'%3E1%3C/text%3E%3Ctext x='68' y='82' fill-opacity='1.00'%3E0%3C/text%3E%3Ctext x='79' y='22' fill-opacity='0.32'%3E0%3C/text%3E%3Ctext x='79' y='34' fill-opacity='0.49'%3E0%3C/text%3E%3Ctext x='79' y='46' fill-opacity='0.66'%3E1%3C/text%3E%3Ctext x='79' y='58' fill-opacity='0.83'%3E1%3C/text%3E%3Ctext x='79' y='70' fill-opacity='1.00'%3E0%3C/text%3E%3Ctext x='90' y='10' fill-opacity='0.29'%3E1%3C/text%3E%3Ctext x='90' y='22' fill-opacity='0.43'%3E0%3C/text%3E%3Ctext x='90' y='34' fill-opacity='0.57'%3E0%3C/text%3E%3Ctext x='90' y='46' fill-opacity='0.72'%3E1%3C/text%3E%3Ctext x='90' y='58' fill-opacity='0.86'%3E1%3C/text%3E%3Ctext x='90' y='70' fill-opacity='1.00'%3E1%3C/text%3E%3Ctext x='101' y='46' fill-opacity='0.29'%3E0%3C/text%3E%3Ctext x='101' y='58' fill-opacity='0.43'%3E0%3C/text%3E%3Ctext x='101' y='70' fill-opacity='0.57'%3E1%3C/text%3E%3Ctext x='101' y='82' fill-opacity='0.72'%3E1%3C/text%3E%3Ctext x='101' y='94' fill-opacity='0.86'%3E1%3C/text%3E%3Ctext x='101' y='106' fill-opacity='1.00'%3E0%3C/text%3E%3Ctext x='112' y='58' fill-opacity='0.43'%3E1%3C/text%3E%3Ctext x='112' y='70' fill-opacity='0.72'%3E1%3C/text%3E%3Ctext x='112' y='82' fill-opacity='1.00'%3E0%3C/text%3E%3Ctext x='123' y='82' fill-opacity='0.29'%3E0%3C/text%3E%3Ctext x='123' y='94' fill-opacity='0.43'%3E1%3C/text%3E%3Ctext x='123' y='106' fill-opacity='0.57'%3E0%3C/text%3E%3Ctext x='123' y='118' fill-opacity='0.72'%3E1%3C/text%3E%3Ctext x='123' y='10' fill-opacity='0.86'%3E0%3C/text%3E%3Ctext x='123' y='22' fill-opacity='1.00'%3E0%3C/text%3E%3C/g%3E%3C/svg%3E"); background-size: 132px 84px, 132px 120px; background-repeat: repeat; animation: hackRain 2.4s linear infinite; }
+    @keyframes hackRain { from { background-position: 0 0, 40px 0; } to { background-position: 0 84px, 40px 120px; } }
     @keyframes hackBlink { 50% { opacity: 0; } }
     @keyframes hackScan { from { left: -22px; } to { left: 100%; } }
     .deco-founder { background-image: linear-gradient(90deg, rgba(255,0,0,.32), rgba(255,160,0,.32), rgba(255,235,0,.28), rgba(0,200,60,.32), rgba(0,200,255,.32), rgba(80,90,255,.34), rgba(200,0,255,.32), rgba(255,0,0,.32)); background-size: 200% 100%; animation: rainbowShift 5s linear infinite, rainbowBorder 5s linear infinite; }
@@ -63,7 +66,7 @@
     @keyframes rainbowShift { from { background-position: 0% 50%; } to { background-position: 200% 50%; } }
     @keyframes rainbowBorder { 0%,100% { border-color: #ff3b3b; box-shadow: 0 0 14px rgba(255,59,59,.6); } 17% { border-color: #ffb000; box-shadow: 0 0 14px rgba(255,176,0,.6); } 33% { border-color: #f5e400; box-shadow: 0 0 14px rgba(245,228,0,.55); } 50% { border-color: #19d24a; box-shadow: 0 0 14px rgba(25,210,74,.6); } 67% { border-color: #1ec8ff; box-shadow: 0 0 14px rgba(30,200,255,.6); } 83% { border-color: #8a4dff; box-shadow: 0 0 14px rgba(138,77,255,.6); } }
     @keyframes rainbowRing { 0%,100% { box-shadow: 0 0 9px #ff3b3b; } 17% { box-shadow: 0 0 9px #ffb000; } 33% { box-shadow: 0 0 9px #f5e400; } 50% { box-shadow: 0 0 9px #19d24a; } 67% { box-shadow: 0 0 9px #1ec8ff; } 83% { box-shadow: 0 0 9px #8a4dff; } }
-    @media (prefers-reduced-motion: reduce) { .deco-hack::after, .deco-hack .nm::after { animation: none; } .deco-flame, .deco-404, .deco-founder, .deco-founder .av, .deco-founder p { animation: none; } .deco-founder { border-color: #ff3b3b !important; } }
+    @media (prefers-reduced-motion: reduce) { .deco-hack::before, .deco-hack::after, .deco-hack .nm::after { animation: none; } .deco-flame, .deco-404, .deco-founder, .deco-founder .av, .deco-founder p { animation: none; } .deco-founder { border-color: #ff3b3b !important; } }
     /* ===== Thème Halloween (secret) ===== */
     body.theme-halloween { background-color:#0f0805 !important; }
     body.theme-halloween::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
@@ -154,7 +157,7 @@
               <span class="hidden sm:inline">Securechat</span>
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v3.9.1</span>
+                <span>v3.9.2</span>
               </button>
             </h2>
           </div>
@@ -362,8 +365,17 @@
       <div class="space-y-4 text-gray-300">
         <div class="border-l-2 border-amber-500 pl-3 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.9.1</span>
+            <span class="font-bold text-white text-sm">v3.9.2</span>
             <span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
+          </div>
+          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
+            <li>Une décoration secrète a changé de look</li>
+            <li>De nouvelles façons de fouiller…</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white text-sm">v3.9.1</span>
           </div>
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>Dernière déconnexion plus lisible sur téléphone</li>
@@ -522,13 +534,13 @@
   </div>
 
   <script>
-    const CURRENT_VERSION = "v3.9.1";
+    const CURRENT_VERSION = "v3.9.2";
     const DEV_MODE = false; // true = aucune annonce automatique
     const VERSION_CHANGELOG =
-      "🕒 Securechat v3.9.1 : petits ajustements\n\n" +
+      "🕒 Securechat v3.9.2 : retouches\n\n" +
       "Voici les nouveautés :\n" +
-      "📱 La date de dernière déconnexion est plus lisible sur téléphone\n" +
-      "🕵️ Une nouvelle décoration secrète est cachée quelque part… bonne chance aux curieux\n\n" +
+      "🎨 Une décoration secrète a changé de look\n" +
+      "🕵️ Et les curieux ont de nouvelles façons de fouiller… bonne chance\n\n" +
       "Bon chat !";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
@@ -1157,15 +1169,17 @@
     }
     // Secret « Hacker » : ouvrir la console du navigateur (Ctrl+Maj+C) et envoyer  hack
     async function unlockHack() {
-      if (!meKey || (gameData[meKey] || {}).sHack === true) return;
+      if (!meKey || (gameData[meKey] || {}).sHack === true) return false;
       const g = gameData[meKey];
       const upd = { sHack: true };
       if (!g || g.stars === undefined) upd.stars = 0;
       try {
         await db.ref('game/' + meKey).update(upd);
         showHackScreen();
+        return true;
       } catch (e) {
         alert("Impossible d'enregistrer le secret : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)");
+        return false;
       }
     }
     function showHackScreen() {
@@ -1201,6 +1215,63 @@
           }
         });
       } catch (e) {}
+    })();
+    // ===== Terminal secret (utile sur iPhone, où il n'y a pas de console) =====
+    // Ouverture : alterner Général / Annonce au moins 8 fois en moins de 8 secondes.
+    // Pour ajouter un secret plus tard : ajouter une commande dans TERM_COMMANDS.
+    const TERM_COMMANDS = {
+      hack: async () => {
+        if (!meKey) return "Connecte-toi d'abord.";
+        if ((gameData[meKey] || {}).sHack === true) return 'Déjà débloqué.';
+        const ok = await unlockHack();
+        return ok ? 'Accès autorisé.' : 'Échec.';
+      },
+      help: async () => "Commandes : help, clear, exit.\nD'autres existent, cachées.",
+      clear: async () => '\u0000CLEAR',
+      exit: async () => '\u0000EXIT'
+    };
+    function openTerminal() {
+      if (!meKey || document.getElementById('termOverlay')) return;
+      const o = document.createElement('div');
+      o.id = 'termOverlay';
+      o.style.cssText = 'position:fixed;left:0;right:0;top:0;height:100dvh;z-index:9000;background:rgba(0,6,2,.96);color:#4ade80;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px calc(env(safe-area-inset-bottom,0px) + 12px);box-sizing:border-box;text-shadow:0 0 6px rgba(74,222,128,.5)';
+      o.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(74,222,128,.35);padding-bottom:8px;margin-bottom:8px"><span>securechat@terminal ~ </span><button id="termClose" style="color:#4ade80;font-size:18px;line-height:1;background:none;border:0;padding:4px 8px">✕</button></div>'
+        + '<div id="termLog" style="flex:1;overflow-y:auto;white-space:pre-wrap;word-break:break-word;-webkit-overflow-scrolling:touch"></div>'
+        + '<div style="display:flex;align-items:center;gap:6px;border-top:1px solid rgba(74,222,128,.35);padding-top:8px;margin-top:8px"><span>&gt;</span><input id="termInput" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="send" style="flex:1;background:transparent;border:0;outline:0;color:#86efac;font:inherit;font-size:16px;min-width:0"></div>';
+      document.body.appendChild(o);
+      const log = o.querySelector('#termLog'), inp = o.querySelector('#termInput');
+      const print = (t) => { const d = document.createElement('div'); d.textContent = t; log.appendChild(d); log.scrollTop = log.scrollHeight; };
+      const close = () => o.remove();
+      o.querySelector('#termClose').onclick = close;
+      print('SECURECHAT TERMINAL v1.0');
+      print("Tape une commande. 'help' pour de l'aide.");
+      inp.addEventListener('keydown', async (e) => {
+        if (e.key !== 'Enter') return;
+        const cmd = inp.value.trim().toLowerCase(); inp.value = '';
+        if (!cmd) return;
+        print('> ' + cmd);
+        const fn = Object.prototype.hasOwnProperty.call(TERM_COMMANDS, cmd) ? TERM_COMMANDS[cmd] : null;
+        if (!fn) { print('commande introuvable : ' + cmd); return; }
+        let out; try { out = await fn(); } catch (err) { out = 'Erreur : ' + (err.message || err); }
+        if (out === '\u0000CLEAR') { log.innerHTML = ''; return; }
+        if (out === '\u0000EXIT') { close(); return; }
+        print(out);
+      });
+      setTimeout(() => inp.focus(), 50);
+    }
+    (function () {
+      const seq = [];
+      const hit = (tag) => {
+        const now = Date.now();
+        seq.push({ tag, t: now });
+        while (seq.length > 8) seq.shift();
+        if (seq.length < 8) return;
+        const alternating = seq.every((x, i) => i === 0 || x.tag !== seq[i - 1].tag);
+        if (alternating && now - seq[0].t < 8000) { seq.length = 0; openTerminal(); }
+      };
+      const g = document.getElementById('chan-general'), a = document.getElementById('chan-annonce-update');
+      if (g) g.addEventListener('click', () => hit('g'));
+      if (a) a.addEventListener('click', () => hit('a'));
     })();
     // Écran bleu plein écran (look Windows) affiché au déblocage du secret
     function showBsod() {
