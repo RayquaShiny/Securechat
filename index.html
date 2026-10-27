@@ -58,23 +58,38 @@
     @keyframes rainbowRing { 0%,100% { box-shadow: 0 0 9px #ff3b3b; } 17% { box-shadow: 0 0 9px #ffb000; } 33% { box-shadow: 0 0 9px #f5e400; } 50% { box-shadow: 0 0 9px #19d24a; } 67% { box-shadow: 0 0 9px #1ec8ff; } 83% { box-shadow: 0 0 9px #8a4dff; } }
     @media (prefers-reduced-motion: reduce) { .deco-flame, .deco-404, .deco-founder, .deco-founder .av, .deco-founder p { animation: none; } .deco-founder { border-color: #ff3b3b !important; } }
     /* ===== Thème Halloween (secret) ===== */
-    body.theme-halloween { background-color:#140a05 !important; }
-    body.theme-halloween::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0; background: radial-gradient(ellipse at 15% 0%, rgba(234,88,12,.22), transparent 55%), radial-gradient(ellipse at 90% 100%, rgba(124,58,237,.18), transparent 55%); }
-    body.theme-halloween .bg-darkbg, body.theme-halloween .bg-darkpanel { background-color:#140a05 !important; }
-    body.theme-halloween .bg-gray-950, body.theme-halloween .bg-gray-900 { background-color:#1d0f07 !important; }
-    body.theme-halloween .bg-gray-800 { background-color:#2a1609 !important; }
+    body.theme-halloween { background-color:#0f0805 !important; }
+    body.theme-halloween::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+      background: radial-gradient(circle at 88% 6%, rgba(254,215,170,.16) 0, rgba(254,215,170,.07) 7%, transparent 16%),
+                  radial-gradient(ellipse at 12% 0%, rgba(234,88,12,.24), transparent 52%),
+                  radial-gradient(ellipse at 92% 100%, rgba(124,58,237,.22), transparent 55%),
+                  radial-gradient(ellipse at 5% 100%, rgba(234,88,12,.10), transparent 45%); }
+    body.theme-halloween::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:60; opacity:.55;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg stroke='%23fb923c' stroke-opacity='.6' fill='none' stroke-width='1'%3E%3Cpath d='M0 0L100 0M0 0L100 38M0 0L100 80M0 0L78 100M0 0L38 100M0 0L0 100'/%3E%3Cpath d='M0 18Q16 16 18 0M0 36Q28 32 36 0M0 56Q40 46 56 0M0 78Q54 60 78 0'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(100 0) scale(-1 1)' stroke='%23fb923c' stroke-opacity='.6' fill='none' stroke-width='1'%3E%3Cpath d='M0 0L100 0M0 0L100 38M0 0L100 80M0 0L78 100M0 0L38 100M0 0L0 100'/%3E%3Cpath d='M0 18Q16 16 18 0M0 36Q28 32 36 0M0 56Q40 46 56 0M0 78Q54 60 78 0'/%3E%3C/g%3E%3C/svg%3E"); background-repeat:no-repeat; background-position: left top, right top; background-size: 84px 84px, 84px 84px; }
+    body.theme-halloween .bg-darkbg, body.theme-halloween .bg-darkpanel { background-color:#0f0805 !important; }
+    body.theme-halloween .bg-gray-950, body.theme-halloween .bg-gray-900 { background-color:#1a0d07 !important; }
+    body.theme-halloween .bg-gray-800 { background-color:#291409 !important; }
+    body.theme-halloween .bg-gray-700 { background-color:#43210f !important; }
     body.theme-halloween .hover\:bg-gray-800:hover, body.theme-halloween .hover\:bg-gray-700:hover { background-color:#3a1d0b !important; }
-    body.theme-halloween .bg-gray-700 { background-color:#4a2410 !important; }
     body.theme-halloween .border-gray-800, body.theme-halloween .border-gray-700, body.theme-halloween .border-gray-800\/60 { border-color: rgba(251,146,60,.22) !important; }
-    body.theme-halloween .glass-panel { background: rgba(29,15,7,.9); border-color: rgba(251,146,60,.28); }
-    body.theme-halloween .bg-brand-500, body.theme-halloween .bg-brand-600 { background-color:#ea580c !important; }
+    body.theme-halloween .glass-panel { background: rgba(26,13,7,.92); border-color: rgba(251,146,60,.3); box-shadow: 0 0 22px rgba(234,88,12,.12); }
+    body.theme-halloween .bg-brand-500, body.theme-halloween .bg-brand-600, body.theme-halloween .bg-brand-700 { background-color:#ea580c !important; }
     body.theme-halloween .hover\:bg-brand-500:hover, body.theme-halloween .hover\:bg-brand-600:hover { background-color:#f97316 !important; }
-    body.theme-halloween .text-brand-400, body.theme-halloween .text-brand-500 { color:#fb923c !important; }
+    body.theme-halloween .text-brand-300, body.theme-halloween .text-brand-400, body.theme-halloween .text-brand-500 { color:#fdba74 !important; }
     body.theme-halloween [class*="bg-brand-500/"], body.theme-halloween [class*="bg-brand-600/"] { background-color: rgba(234,88,12,.2) !important; }
-    body.theme-halloween [class*="border-brand-500"] { border-color: rgba(251,146,60,.45) !important; }
-    body.theme-halloween .app-header { border-bottom: 1px solid rgba(251,146,60,.35); }
-    body.theme-halloween ::-webkit-scrollbar-thumb { background: rgba(234,88,12,.6); }
-    body.theme-halloween input:focus, body.theme-halloween textarea:focus { --tw-ring-color:#f97316 !important; border-color:#f97316 !important; }
+    body.theme-halloween [class*="border-brand-500"] { border-color: rgba(251,146,60,.5) !important; }
+    body.theme-halloween header { border-bottom: 1px solid rgba(251,146,60,.4) !important; box-shadow: 0 1px 18px rgba(234,88,12,.22); }
+    body.theme-halloween h1, body.theme-halloween h3 { text-shadow: 0 0 12px rgba(251,146,60,.6); }
+    body.theme-halloween .msg-bubble.bg-brand-600 { background: linear-gradient(135deg,#c2410c,#f97316) !important; box-shadow: 0 0 16px rgba(234,88,12,.4) !important; }
+    body.theme-halloween .msg-bubble.bg-gray-800 { background: linear-gradient(135deg,#2e1740,#1c0f28) !important; border-color: rgba(167,139,250,.35) !important; }
+    body.theme-halloween ::selection { background: rgba(249,115,22,.55); color:#fff; }
+    body.theme-halloween ::-webkit-scrollbar-thumb { background: rgba(234,88,12,.65); }
+    body.theme-halloween input:focus, body.theme-halloween textarea:focus { border-color:#f97316 !important; box-shadow: 0 0 0 2px rgba(249,115,22,.35) !important; outline:none; }
+    /* Points de connexion : couleurs conservées (vert = en ligne, rouge = hors ligne, bleu = muet) */
+    body.theme-halloween .status-dot { box-shadow: 0 0 0 1px #1a0d07; }
+    body.theme-halloween .status-dot.bg-brand-500 { background-color:#4ade80 !important; box-shadow: 0 0 6px #4ade80; }
+    body.theme-halloween .status-dot.bg-red-500 { background-color:#ef4444 !important; }
+    body.theme-halloween .status-dot.bg-blue-500 { background-color:#3b82f6 !important; }
   </style>
 </head>
 <body class="h-screen h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-hidden">
@@ -132,7 +147,7 @@
               <span class="hidden sm:inline">Securechat</span>
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v3.8.0</span>
+                <span>v3.9.0</span>
               </button>
             </h2>
           </div>
@@ -195,12 +210,8 @@
             <div class="h-1.5 rounded-full bg-gray-800 overflow-hidden"><div id="eventBar" class="h-full bg-gradient-to-r from-fuchsia-400 to-indigo-400" style="width:0%"></div></div>
             <p id="eventNext" class="text-[10px] text-gray-400"></p>
           </button>
-          <button onclick="openMemModal()" class="mt-2 w-full text-left px-3 py-2.5 rounded-xl border border-sky-500/30 bg-gradient-to-br from-sky-500/10 to-teal-500/10 hover:from-sky-500/20 transition flex items-center justify-between gap-2">
-            <span class="text-xs font-bold text-white truncate">🧠 Memory</span>
-            <span id="memPts" class="text-[10px] font-mono text-sky-300 shrink-0">0 pts</span>
-          </button>
           <button onclick="openDecoModal()" class="mt-2 w-full text-left px-3 py-2 rounded-xl border border-gray-800 bg-gray-900/50 hover:bg-gray-800/80 transition flex items-center justify-between gap-2">
-            <span class="text-xs font-semibold text-gray-200">🎨 Décorations &amp; titres</span>
+            <span class="text-xs font-semibold text-gray-200">🎨 Décorations &amp; thèmes</span>
             <span id="decoBtnSub" class="text-[10px] text-gray-400 truncate">Aucune</span>
           </button>
         </div>
@@ -287,24 +298,13 @@
     </div>
   </div>
 
-  <!-- MODAL MEMORY -->
-  <div id="memModal" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-    <div class="w-full max-w-md glass-panel p-5 rounded-2xl border border-sky-500/30 space-y-4 max-h-[88vh] overflow-y-auto text-xs sm:text-sm">
-      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-        <h3 class="text-sm font-bold text-white">🧠 Memory</h3>
-        <button onclick="closeMemModal()" class="text-gray-400 hover:text-white text-base leading-none">✕</button>
-      </div>
-      <div id="memBody" class="space-y-4 text-gray-300"></div>
-    </div>
-  </div>
-
   <input type="file" id="avatarInput" accept="image/*" class="hidden">
 
   <!-- MODAL DÉCORATIONS -->
   <div id="decoModal" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
     <div class="w-full max-w-md glass-panel p-5 rounded-2xl border border-fuchsia-500/30 space-y-4 max-h-[88vh] overflow-y-auto text-xs sm:text-sm">
       <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-        <h3 class="text-sm font-bold text-white">🎨 Profil, décorations &amp; titres</h3>
+        <h3 class="text-sm font-bold text-white">🎨 Profil, décorations &amp; thèmes</h3>
         <button onclick="closeDecoModal()" class="text-gray-400 hover:text-white text-base leading-none">✕</button>
       </div>
       <div id="decoBody" class="space-y-4 text-gray-300"></div>
@@ -355,12 +355,23 @@
       <div class="space-y-4 text-gray-300">
         <div class="border-l-2 border-amber-500 pl-3 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.8.0</span>
+            <span class="font-bold text-white text-sm">v3.9.0</span>
             <span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
           </div>
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
+            <li>Date et heure de dernière déconnexion dans la liste des membres</li>
+            <li>Date affichée sur chaque message</li>
+            <li>Thème secret refait, points de connexion corrigés</li>
+            <li>Memory et titres retirés</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white text-sm">v3.8.0</span>
+          </div>
+          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>Photo de profil : visible dans la liste des membres et les messages</li>
-            <li>Thèmes d'application, à choisir dans le menu « Décorations &amp; titres »</li>
+            <li>Thèmes d'application, à choisir dans le menu « Décorations &amp; thèmes »</li>
             <li>Un premier thème secret à découvrir</li>
             <li>Les secrets (décorations, titres, thèmes) sont regroupés en bas du menu</li>
           </ul>
@@ -372,7 +383,7 @@
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>Deuxième jeu : Memory (3 niveaux), qui rapporte des points</li>
             <li>Titres à débloquer, affichés à côté du nom</li>
-            <li>Menu « Décorations &amp; titres »</li>
+            <li>Menu « Décorations &amp; thèmes »</li>
             <li>Nouveau look pour la décoration secrète</li>
           </ul>
         </div>
@@ -495,15 +506,15 @@
   </div>
 
   <script>
-    const CURRENT_VERSION = "v3.8.0";
+    const CURRENT_VERSION = "v3.9.0";
     const DEV_MODE = false; // true = aucune annonce automatique
     const VERSION_CHANGELOG =
-      "🎨 Securechat v3.8 : les thèmes d'application !\n\n" +
+      "🎃 Securechat v3.9 : ménage et nouveautés !\n\n" +
       "Voici les nouveautés :\n" +
-      "📷 Tu peux maintenant mettre une photo de profil : clique sur ton rond en haut à droite\n" +
-      "🎨 Tu peux maintenant changer l'ambiance de toute l'application avec un thème, depuis le menu « Décorations & titres »\n" +
-      "🕵️ Tous les secrets (décorations, titres et thèmes) sont regroupés tout en bas de ce menu\n" +
-      "🤫 Il y a un premier thème caché… à toi de le trouver, un mot dans le Général pourrait suffire\n\n" +
+      "🕒 La date et l'heure de dernière déconnexion de chaque membre sont affichées dans la liste\n" +
+      "📅 Chaque message affiche maintenant sa date en plus de l'heure\n" +
+      "🎨 Le thème secret a été refait, et les points de connexion gardent leurs couleurs\n" +
+      "🧹 Memory et les titres ont été retirés\n\n" +
       "Bon chat !";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
@@ -760,6 +771,16 @@
     function esc(s) {
       return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
     }
+    function msgStamp(m) {
+      const id = Number(m && m.id);
+      if (!(id > 1e12)) return (m && m.time) || '';
+      const d = new Date(id), p2 = n => String(n).padStart(2, '0');
+      return p2(d.getDate()) + '/' + p2(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + ((m && m.time) || p2(d.getHours()) + ':' + p2(d.getMinutes()));
+    }
+    function fmtDateTime(ts) {
+      const d = new Date(Number(ts)), p2 = n => String(n).padStart(2, '0');
+      return p2(d.getDate()) + '/' + p2(d.getMonth() + 1) + '/' + d.getFullYear() + ' à ' + p2(d.getHours()) + ':' + p2(d.getMinutes());
+    }
     function nowTime() {
       const d = new Date();
       return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
@@ -855,7 +876,6 @@
       upd['notifTopics/' + k] = null;
       upd['status/' + k] = null;
       upd['game/' + k] = null;
-      upd['memory/' + k] = null;
       upd['avatars/' + k] = null;
       upd['notes/' + k] = null;
       upd['banned/' + k] = true;
@@ -1052,7 +1072,7 @@
         if (!g || g.stars === undefined) upd.stars = 0;
         try {
           await db.ref('game/' + meKey).update(upd);
-          alert(t.icon + " Thème secret « " + t.name + " » débloqué et activé !\nTu peux le changer ou le retirer dans 🎨 Décorations & titres, tout en bas.");
+          alert(t.icon + " Thème secret « " + t.name + " » débloqué et activé !\nTu peux le changer ou le retirer dans 🎨 Décorations & thèmes, tout en bas.");
         } catch (e) {
           alert("Impossible d'enregistrer le secret : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)");
         }
@@ -1092,7 +1112,7 @@
       const sub = document.getElementById('decoBtnSub');
       if (!sub) return;
       const d = decoFor(meKey);
-      sub.textContent = (d ? d.icon + ' ' + d.name : 'Aucune') + titleIcon(meKey);
+      sub.textContent = d ? d.icon + ' ' + d.name : 'Aucune';
     }
 
     // ----- Fenêtre du jeu
@@ -1129,7 +1149,7 @@
       o.innerHTML = '<div style="font-size:min(22vw,150px);line-height:1;margin-bottom:4vh">:(</div>'
         + '<p style="font-size:min(5vw,26px);line-height:1.35;margin:0 0 3vh;max-width:640px">Ton PC a rencontré un problème et doit redémarrer. Nous collectons simplement des informations sur l\'erreur, puis nous allons redémarrer pour toi.</p>'
         + '<p style="font-size:min(5vw,26px);margin:0 0 3vh"><span id="bsodPct">0</span>% terminé</p>'
-        + '<p id="bsodMsg" style="font-size:min(3.4vw,15px);line-height:1.5;margin:0;max-width:560px;opacity:.9">Code d\'arrêt : PARTIE_INTROUVABLE<br>Décoration secrète « Écran bleu » débloquée ! Tu la trouveras dans 🎨 Décorations &amp; titres.</p>'
+        + '<p id="bsodMsg" style="font-size:min(3.4vw,15px);line-height:1.5;margin:0;max-width:560px;opacity:.9">Code d\'arrêt : PARTIE_INTROUVABLE<br>Décoration secrète « Écran bleu » débloquée ! Tu la trouveras dans 🎨 Décorations &amp; thèmes.</p>'
         + '<p id="bsodHint" style="font-size:12px;margin-top:4vh;opacity:0">Touche l\'écran pour fermer</p>';
       document.body.appendChild(o);
       let n = 0;
@@ -1160,15 +1180,13 @@
         .map((k, i) => `<div class="flex items-center justify-between text-xs"><span>${medals[i]} ${esc(accounts[k].name)}</span><span class="font-mono text-fuchsia-300">${Number(gameData[k].stars) || 0} ⭐</span></div>`).join('')
         || `<p class="text-xs text-gray-500">Personne n'a encore joué.</p>`;
       body.innerHTML = `
-        <p>Attrape un maximum d'étoiles en 30 secondes (🌟 = 3 points). Tes étoiles débloquent des décorations pour ton bouton de message privé.${endTxt}</p>
+        <p>Attrape un maximum d'étoiles en 30 secondes (🌟 = 3 points). Tes étoiles débloquent des décorations pour ton bouton de message privé (à équiper depuis le menu 🎨 de la barre de gauche).${endTxt}</p>
         <div class="flex items-center justify-between"><span class="text-sm font-bold text-white">${stars} ⭐</span><span id="gameHud" class="text-xs text-fuchsia-300 font-mono">${lastGain !== null ? 'Dernière partie : +' + lastGain + ' ⭐' : ''}</span></div>
         <div id="gameArea" class="relative h-56 rounded-xl bg-gray-900 border border-gray-800 overflow-hidden"></div>
         <button id="gameStart" class="w-full py-2.5 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-semibold text-xs rounded-xl transition ${ended ? 'opacity-50' : ''}">${ended ? 'Event terminé' : 'Jouer (30 s)'}</button>
-        <button id="gameToDecos" class="w-full py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs rounded-xl transition">🎨 Choisir ma décoration</button>
         <div class="space-y-1.5"><p class="font-semibold text-white">Paliers</p>${miles}</div>
         <div class="space-y-1.5"><p class="font-semibold text-white">Classement</p>${board}</div>`;
       document.getElementById('gameStart').onclick = startRound;
-      document.getElementById('gameToDecos').onclick = openDecoModal;
     }
 
     function startRound() {
@@ -1209,8 +1227,6 @@
     // ----- Menu Décorations (séparé du jeu)
     function openDecoModal() {
       abortRound(); // quitter le jeu par ce chemin ne débloque PAS le secret
-      memGame = null;
-      document.getElementById('memModal').classList.add('hidden');
       document.getElementById('gameModal').classList.add('hidden');
       document.getElementById('decoModal').classList.remove('hidden');
       renderDecoModal();
@@ -1231,14 +1247,6 @@
           <div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100 truncate">${hidden ? '???' : esc(d.name)}</p><p class="text-[10px] text-gray-400">${sub}</p></div>${btn}</div>`;
       };
       const sec = (title, list) => list.length ? `<div class="space-y-2"><p class="font-semibold text-white">${title}</p>${list.map(row).join('')}</div>` : '';
-      const pts = myPts(), curT = titleFor(meKey);
-      const titlesHtml = `<div class="space-y-2"><p class="font-semibold text-white">Titres (Memory 🧠)</p>${TITLES.filter(t => !t.secret).map(t => {
-        const owned = pts >= t.at, eq = !!curT && curT.id === t.id;
-        return `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800 ${owned ? '' : 'opacity-60'}">
-          <div class="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-sm shrink-0">${owned ? t.icon : '🔒'}</div>
-          <div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100 truncate">${esc(t.name)}</p><p class="text-[10px] text-gray-400">${owned ? (eq ? 'Équipé ✓' : 'Débloqué') : 'À ' + t.at + ' pts · tu en as ' + pts}</p></div>
-          ${owned ? `<button type="button" data-title="${t.id}" class="px-2.5 py-1 rounded-lg text-[11px] ${eq ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${eq ? 'Retirer' : 'Équiper'}</button>` : ''}</div>`;
-      }).join('')}</div>`;
       const curTh = themeFor(meKey);
       const secRow = (o) => `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800 ${o.owned ? (o.cls || '') : 'opacity-60'}">
           <div class="av w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-sm shrink-0" ${o.owned && o.bg ? `style="background:${o.bg}"` : ''}>${o.owned ? o.icon : '❓'}</div>
@@ -1246,7 +1254,6 @@
           ${o.owned ? `<button type="button" ${o.attr} class="px-2.5 py-1 rounded-lg text-[11px] ${o.eq ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${o.eq ? 'Retirer' : 'Équiper'}</button>` : ''}</div>`;
       const secrets = [
         ...DECOS.filter(d => d.kind === 'secret').map(d => ({ kind: 'Décoration', owned: ownsDeco(meKey, d), eq: !!cur && cur.id === d.id, icon: d.icon, name: d.name, cls: d.cls, attr: `data-equip="${d.id}"` })),
-        ...TITLES.filter(t => t.secret).map(t => ({ kind: 'Titre', owned: ((memData[meKey] || {})[t.flag] === true), eq: !!curT && curT.id === t.id, icon: t.icon, name: t.name, attr: `data-title="${t.id}"` })),
         ...THEMES.filter(t => t.kind === 'secret').map(t => ({ kind: "Thème d'application", owned: ownsTheme(meKey, t), eq: !!curTh && curTh.id === t.id, icon: t.icon, name: t.name, bg: t.bg, attr: `data-theme="${t.id}"` }))
       ];
       const secretsHtml = `<div class="space-y-2"><p class="font-semibold text-white">🤫 Secrets <span class="text-[10px] font-normal text-gray-400">${secrets.filter(x => x.owned).length}/${secrets.length} trouvés</span></p>${secrets.map(secRow).join('')}</div>`;
@@ -1267,16 +1274,14 @@
           <p class="text-[11px] text-gray-500 mb-1">Aperçu</p>
           <div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800/60 ${cur ? cur.cls : ''}">
             ${avatarHtml(meKey, 'w-7 h-7', 'text-xs')}
-            <p class="text-xs font-medium text-gray-200 truncate">${esc(u.name || '')}${cur ? ' ' + cur.icon : ''}${titleIcon(meKey)}</p>
+            <p class="text-xs font-medium text-gray-200 truncate">${esc(u.name || '')}${cur ? ' ' + cur.icon : ''}</p>
           </div>
         </div>
         ${sec('Exclusives', DECOS.filter(d => d.kind === 'exclusive' && ownsDeco(meKey, d)))}
         ${sec('Étoiles ⭐', DECOS.filter(d => d.kind === 'stars'))}
-        ${titlesHtml}
         ${secretsHtml}
         <p class="text-[11px] text-gray-500">Gagne des étoiles dans l'event « ${esc(EVENT.name)} » pour débloquer les autres.</p>`;
       body.querySelectorAll('[data-equip]').forEach(b => { b.onclick = () => equipDeco(b.dataset.equip); });
-      body.querySelectorAll('[data-title]').forEach(b => { b.onclick = () => equipTitle(b.dataset.title); });
       body.querySelectorAll('[data-avatar-pick]').forEach(b => { b.onclick = pickAvatar; });
       body.querySelectorAll('[data-avatar-clear]').forEach(b => { b.onclick = clearAvatar; });
       body.querySelectorAll('[data-theme]').forEach(b => { b.onclick = () => equipTheme(b.dataset.theme); });
@@ -1290,135 +1295,6 @@
       try { await db.ref('game/' + meKey).update(upd); }
       catch (e) { alert("Impossible : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)"); }
     }
-    // ================= JEU 2 : MEMORY + TITRES =================
-    const MEMORY_LEVELS = [
-      { id: 'easy', name: 'Facile',    cols: 4, pairs: 6 },
-      { id: 'mid',  name: 'Moyen',     cols: 4, pairs: 8 },
-      { id: 'hard', name: 'Difficile', cols: 6, pairs: 12 }
-    ];
-    const MEMORY_EMOJIS = ['🍕', '🐙', '🚀', '🎸', '🌵', '🦊', '🍩', '⚽', '🎲', '🌈', '🐳', '🍀'];
-    const TITLES = [
-      { id: 'curieux',  name: 'Curieux',            icon: '🧩', at: 60 },
-      { id: 'vive',     name: 'Mémoire vive',       icon: '🧠', at: 180 },
-      { id: 'elephant', name: "Mémoire d'éléphant", icon: '🐘', at: 400 },
-      { id: 'oracle',   name: 'Oracle',             icon: '🔮', at: 900 },
-      { id: 'lynx',     name: 'Œil de lynx',        icon: '👁️', at: 2000 }
-    ];
-    let memData = {}, memGame = null;
-
-    function myPts() { return Number((memData[meKey] || {}).pts) || 0; }
-    function titleFor(k) {
-      const m = memData[k];
-      if (!k || !m || !m.title) return null;
-      const t = TITLES.find(x => x.id === m.title);
-      return t && (Number(m.pts) || 0) >= t.at ? t : null;
-    }
-    function titleIcon(k) { const t = titleFor(k); return t ? ' ' + t.icon : ''; }
-    function titleTagHtml(k) {
-      const t = titleFor(k);
-      return t ? `<span class="text-[9px] px-1.5 py-0.5 rounded border border-fuchsia-500/30 bg-fuchsia-500/10 text-fuchsia-200 truncate">${t.icon} ${esc(t.name)}</span>` : '';
-    }
-    function renderMemPanel() { const el = document.getElementById('memPts'); if (el) el.textContent = myPts() + ' pts'; }
-    function openMemModal() {
-      memGame = null;
-      document.getElementById('memModal').classList.remove('hidden');
-      renderMemModal();
-      toggleSidebar(false);
-    }
-    function closeMemModal() { memGame = null; document.getElementById('memModal').classList.add('hidden'); }
-
-    function memStart(levelId) {
-      const lv = MEMORY_LEVELS.find(l => l.id === levelId);
-      if (!lv) return;
-      const pool = MEMORY_EMOJIS.slice(0, lv.pairs);
-      const cards = [...pool, ...pool].map(e => ({ e, flipped: false, matched: false }));
-      for (let i = cards.length - 1; i > 0; i--) { const j = rand(i + 1); [cards[i], cards[j]] = [cards[j], cards[i]]; }
-      memGame = { lv, cards, first: null, lock: false, moves: 0, matched: 0, done: false, result: null };
-      renderMemModal();
-    }
-    function memFlip(i) {
-      const g = memGame;
-      if (!g || g.lock || g.done) return;
-      const c = g.cards[i];
-      if (!c || c.flipped || c.matched) return;
-      c.flipped = true;
-      if (g.first === null) { g.first = i; renderMemModal(); return; }
-      const a = g.cards[g.first];
-      g.moves++;
-      g.lock = true;
-      if (a.e === c.e) {
-        a.matched = c.matched = true; g.matched++; g.first = null; g.lock = false;
-        renderMemModal();
-        if (g.matched === g.lv.pairs) memWin();
-      } else {
-        renderMemModal();
-        setTimeout(() => {
-          if (memGame !== g) return;
-          a.flipped = false; c.flipped = false; g.first = null; g.lock = false;
-          renderMemModal();
-        }, 700);
-      }
-    }
-    async function memWin() {
-      const g = memGame;
-      g.done = true;
-      const n = g.lv.pairs, mult = g.moves <= n + 2 ? 3 : (g.moves <= 2 * n ? 2 : 1), gain = n * mult;
-      g.result = { gain, mult };
-      renderMemModal();
-      try { await db.ref('memory/' + meKey).update({ pts: myPts() + gain, t: firebase.database.ServerValue.TIMESTAMP }); }
-      catch (e) { alert("Points non enregistrés : " + (e.code || e.message) + "\n(Les règles Firebase pour « memory » sont-elles ajoutées ?)"); }
-    }
-    async function equipTitle(id) {
-      const t = TITLES.find(x => x.id === id);
-      if (!meKey || !t || myPts() < t.at) return;
-      const m = memData[meKey];
-      const upd = { title: (m && m.title === id) ? null : id };
-      if (!m || m.pts === undefined) upd.pts = 0;
-      try { await db.ref('memory/' + meKey).update(upd); }
-      catch (e) { alert("Impossible : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)"); }
-    }
-
-    function renderMemModal() {
-      const body = document.getElementById('memBody'), modal = document.getElementById('memModal');
-      if (!body || !modal || modal.classList.contains('hidden') || !meKey) return;
-      const g = memGame, pts = myPts();
-      if (!g) {
-        const nextT = TITLES.find(t => t.at > pts);
-        const lv = MEMORY_LEVELS.map(l => `<button type="button" data-lv="${l.id}" class="py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-100 text-xs font-semibold transition">${l.name}<span class="block text-[10px] font-normal text-gray-400">${l.pairs} paires · jusqu'à ${l.pairs * 3} pts</span></button>`).join('');
-        const medals = ['🥇', '🥈', '🥉', '4.', '5.'];
-        const board = Object.keys(memData).filter(k => accounts[k] && (Number(memData[k].pts) || 0) > 0)
-          .sort((a, b) => (Number(memData[b].pts) || 0) - (Number(memData[a].pts) || 0)).slice(0, 5)
-          .map((k, i) => `<div class="flex items-center justify-between text-xs"><span>${medals[i]} ${esc(accounts[k].name)}${titleIcon(k)}</span><span class="font-mono text-sky-300">${Number(memData[k].pts) || 0} pts</span></div>`).join('')
-          || `<p class="text-xs text-gray-500">Personne n'a encore joué.</p>`;
-        body.innerHTML = `
-          <p>Retrouve toutes les paires avec le moins de coups possible. Plus tu es efficace, plus tu gagnes de points. Les points débloquent des <b class="text-white">titres</b> affichés à côté de ton nom.</p>
-          <div class="flex items-center justify-between gap-2"><span class="text-sm font-bold text-white">${pts} pts</span><span class="text-[11px] text-sky-300 text-right">${nextT ? 'Prochain titre : ' + nextT.icon + ' ' + esc(nextT.name) + ' à ' + nextT.at + ' pts' : 'Tous les titres débloqués 🎉'}</span></div>
-          <div class="grid grid-cols-3 gap-2">${lv}</div>
-          <p class="text-[11px] text-gray-500">Points : nombre de paires × 3 (très bien joué), × 2 (bien joué) ou × 1.</p>
-          <button id="memToTitles" class="w-full py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs rounded-xl transition">🎨 Choisir mon titre</button>
-          <div class="space-y-1.5"><p class="font-semibold text-white">Classement</p>${board}</div>`;
-        body.querySelectorAll('[data-lv]').forEach(b => { b.onclick = () => memStart(b.dataset.lv); });
-        document.getElementById('memToTitles').onclick = openDecoModal;
-        return;
-      }
-      const cells = g.cards.map((c, i) => `<button type="button" data-card="${i}" class="aspect-square rounded-lg text-xl sm:text-2xl flex items-center justify-center border ${c.matched ? 'bg-emerald-500/20 border-emerald-400/40' : (c.flipped ? 'bg-gray-700 border-gray-500' : 'bg-gray-800 border-gray-700 hover:bg-gray-700')}">${(c.flipped || c.matched) ? c.e : '❓'}</button>`).join('');
-      const res = g.done && g.result ? `<div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-center"><p class="text-sm font-bold text-white">Bravo ! +${g.result.gain} pts</p><p class="text-[11px] text-gray-300">${g.moves} coups · ×${g.result.mult}</p></div>` : '';
-      body.innerHTML = `
-        <div class="flex items-center justify-between text-xs"><span class="font-semibold text-white">${g.lv.name}</span><span class="text-gray-300">Coups : ${g.moves} · Paires : ${g.matched}/${g.lv.pairs}</span></div>
-        <div class="grid gap-2" style="grid-template-columns: repeat(${g.lv.cols}, minmax(0, 1fr))">${cells}</div>
-        ${res}
-        <div class="flex gap-2">
-          ${g.done ? '<button id="memAgain" class="flex-1 py-2 bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs rounded-xl transition">Rejouer</button>' : ''}
-          <button id="memMenu" class="flex-1 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs rounded-xl transition">${g.done ? 'Menu' : 'Abandonner'}</button>
-        </div>`;
-      body.querySelectorAll('[data-card]').forEach(b => { b.onclick = () => memFlip(parseInt(b.dataset.card, 10)); });
-      const again = document.getElementById('memAgain');
-      if (again) again.onclick = () => memStart(g.lv.id);
-      document.getElementById('memMenu').onclick = () => { memGame = null; renderMemModal(); };
-    }
-
-    // =======================================================================
-
     const BADGE_RESERVED = ['owner', 'admin', 'testeur', 'ami', 'membre'];
     const isStaffRole = r => r === 'Owner' || r === 'Admin' || r === 'Testeur';
     function safeColor(c) { return /^#[0-9a-fA-F]{6}$/.test(c || '') ? c : '#9ca3af'; }
@@ -1753,7 +1629,7 @@
       const connRef = db.ref('.info/connected');
       connRef.on('value', (c) => {
         if (c.val() !== true) return;
-        statusRef.onDisconnect().set({ state: 'offline' }).then(() => statusRef.set({ state: 'online' })).catch(() => {});
+        statusRef.onDisconnect().set({ state: 'offline', at: firebase.database.ServerValue.TIMESTAMP }).then(() => statusRef.set({ state: 'online' })).catch(() => {});
       });
       listeners.push(connRef);
 
@@ -1765,7 +1641,6 @@
       soft(db.ref('lastPublishedVersion'), (v) => { const pub = v.val(); document.getElementById('updateBanner').classList.toggle('hidden', !(pub && isNewer(pub, CURRENT_VERSION))); });
       soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; applyTheme(); renderUsersList(); renderGamePanel(); renderGameModal(); renderDecoButton(); renderDecoModal(); });
       soft(db.ref('avatars'), (as) => { avatarsData = as.val() || {}; renderMyAvatar(); renderUsersList(); renderDecoModal(); renderMessages(); });
-      soft(db.ref('memory'), (ms) => { memData = ms.val() || {}; renderUsersList(); renderMemPanel(); renderMemModal(); renderDecoButton(); renderDecoModal(); renderMessages(); });
       soft(db.ref('grants'), (gr) => { grantsData = gr.val() || {}; renderUsersList(); renderDecoButton(); renderDecoModal(); });
       soft(db.ref('notes/' + key), onNotes);
       listen(db.ref('status'), (snap2) => { userStatuses = snap2.val() || {}; renderUsersList(); });
@@ -1778,10 +1653,10 @@
     }
 
     async function logout() {
-      if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline' }); } catch (e) {} }
+      if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline', at: firebase.database.ServerValue.TIMESTAMP }); } catch (e) {} }
       abortRound(); stopListeners(); wipeKeys(); gameData = {}; avatarsData = {}; applyTheme();
       currentUser = null; meKey = ''; starting = false;
-      accounts = {}; rolesData = {}; gameData = {}; grantsData = {}; memData = {}; memGame = null; notesList = []; messagesList = []; unreadChannels = {};
+      accounts = {}; rolesData = {}; gameData = {}; grantsData = {}; notesList = []; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
       document.getElementById('appContainer').classList.add('hidden');
       document.getElementById('authScreen').classList.remove('hidden');
@@ -2031,7 +1906,6 @@
         item.addEventListener('click', () => openDm(k));
         const dc = decoFor(k);
         if (dc) item.classList.add(dc.cls);
-        const tt = titleFor(k);
 
         const isMuted = u.mutedUntil && u.mutedUntil > Date.now();
         const isOnline = userStatuses[k] && userStatuses[k].state === 'online';
@@ -2052,13 +1926,15 @@
           roleBadgeHtml = `<span class="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 font-semibold border border-blue-500/30 truncate">${esc(roleLabel(u))} • Muet (${remainingSec}s)</span>`;
         }
 
+        const st = userStatuses[k];
+        const seenHtml = (!isOnline && st && st.at) ? `<p class="text-[10px] text-gray-400 truncate">Déconnecté le ${fmtDateTime(st.at)}</p>` : (isOnline ? '<p class="text-[10px] text-emerald-400/80">En ligne</p>' : '');
         item.innerHTML = `
           <div class="relative">
             ${avatarHtml(k, 'w-7 h-7', 'text-xs')}
-            <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full ${dotColorClass} border border-gray-900"></span>
+            <span class="status-dot absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full ${dotColorClass} border border-gray-900"></span>
           </div>
           <div class="overflow-hidden flex-1 flex items-center justify-between gap-1">
-            <p class="text-xs font-medium text-gray-200 truncate">${esc(u.name)}${dc ? ' ' + dc.icon : ''}${tt ? ' ' + tt.icon : ''}</p>
+            <div class="min-w-0"><p class="text-xs font-medium text-gray-200 truncate">${esc(u.name)}${dc ? ' ' + dc.icon : ''}</p>${seenHtml}</div>
             <div class="flex items-center gap-1.5">${unreadDotHtml}${roleBadgeHtml}</div>
           </div>
         `;
@@ -2346,7 +2222,7 @@
             <div class="w-full max-w-xl px-5 py-3.5 bg-gradient-to-r from-amber-500/20 via-brand-500/20 to-blue-500/20 border border-amber-500/40 text-gray-100 rounded-2xl shadow-xl space-y-1">
               <div class="flex items-center justify-between text-[10px] uppercase font-bold tracking-wider text-amber-400">
                 <span class="flex items-center gap-1.5"><i data-lucide="megaphone" class="w-3.5 h-3.5"></i> Annonce Officielle (${esc(m.sender)})</span>
-                <span>${esc(m.time)}</span>
+                <span>${esc(msgStamp(m))}</span>
               </div>
               <p class="text-xs sm:text-sm font-medium text-white whitespace-pre-line">${esc(m.text)}</p>
             </div>`;
@@ -2361,12 +2237,12 @@
             ? `<div class="px-4 py-2.5 bg-red-950/80 border border-red-600/50 text-red-300 text-xs sm:text-sm rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-red-900/30">
                 <i data-lucide="ban" class="w-4 h-4 text-red-500 shrink-0"></i>
                 <span>${esc(m.text)}</span>
-                <span class="text-[10px] text-red-400 font-normal ml-2">${esc(m.time)}</span>
+                <span class="text-[10px] text-red-400 font-normal ml-2">${esc(msgStamp(m))}</span>
               </div>`
             : `<div class="px-4 py-2 bg-gray-900/90 border border-gray-700 text-gray-300 text-xs rounded-xl font-medium flex items-center gap-2">
                 <i data-lucide="info" class="w-4 h-4 text-brand-400 shrink-0"></i>
                 <span>${esc(m.text)}</span>
-                <span class="text-[10px] text-gray-500 ml-2">${esc(m.time)}</span>
+                <span class="text-[10px] text-gray-500 ml-2">${esc(msgStamp(m))}</span>
               </div>`;
           container.appendChild(sysDiv);
           return;
@@ -2407,8 +2283,8 @@
 
         wrap.innerHTML = `
           <div class="flex items-center gap-2 text-[10px] text-gray-400 px-1">
-            ${avatarHtml(m.senderKey, 'w-5 h-5', 'text-[9px]')}<span class="font-semibold text-gray-300">${esc(m.sender)}</span>${msgBadgeHtml(accounts[m.senderKey])}${titleTagHtml(m.senderKey)}
-            <span>• ${esc(m.time)}</span>${m.c ? '' : '<span title="Ancien message non chiffré">🔓</span>'}${m.edited ? '<span class="italic">(modifié)</span>' : ''}
+            ${avatarHtml(m.senderKey, 'w-5 h-5', 'text-[9px]')}<span class="font-semibold text-gray-300">${esc(m.sender)}</span>${msgBadgeHtml(accounts[m.senderKey])}
+            <span>• ${esc(msgStamp(m))}</span>${m.c ? '' : '<span title="Ancien message non chiffré">🔓</span>'}${m.edited ? '<span class="italic">(modifié)</span>' : ''}
           </div>
           <div class="msg-bubble max-w-[85%] sm:max-w-md p-3 rounded-2xl text-xs sm:text-sm ${mine ? 'bg-brand-600 text-white rounded-tr-none shadow-md shadow-brand-600/10' : 'bg-gray-800 text-gray-100 rounded-tl-none border border-gray-700/60'} ${mentioned ? 'ring-2 ring-amber-400/70' : ''}">${content}</div>
           ${chips ? `<div class="flex flex-wrap gap-1 px-1 ${mine ? 'justify-end' : ''}">${chips}</div>` : ''}
