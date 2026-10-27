@@ -48,6 +48,13 @@
     .deco-404 p { color: #fff !important; }
     .deco-404 .av { background: #005a9e !important; color: #fff !important; border: 1px solid rgba(255,255,255,.8); }
     .deco-404::after { content: ''; position: absolute; left: 0; bottom: 0; height: 3px; width: 20%; background: #fff; animation: bsodProgress 8s steps(20) infinite; }
+    .deco-hack { position: relative; overflow: hidden; background: #020a04 !important; border-color: #22c55e !important; box-shadow: 0 0 12px rgba(34,197,94,.45), inset 0 0 14px rgba(34,197,94,.12); }
+    .deco-hack p { color: #4ade80 !important; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; text-shadow: 0 0 6px rgba(74,222,128,.7); }
+    .deco-hack .nm::after { content: '_'; animation: hackBlink 1s steps(1) infinite; }
+    .deco-hack .av { background: #03140a !important; color: #4ade80 !important; border: 1px solid #22c55e; box-shadow: 0 0 8px rgba(34,197,94,.7); }
+    .deco-hack::after { content: ''; position: absolute; top: 0; bottom: 0; width: 22px; left: -22px; background: linear-gradient(90deg, transparent, rgba(74,222,128,.35), transparent); animation: hackScan 3.2s linear infinite; pointer-events: none; }
+    @keyframes hackBlink { 50% { opacity: 0; } }
+    @keyframes hackScan { from { left: -22px; } to { left: 100%; } }
     .deco-founder { background-image: linear-gradient(90deg, rgba(255,0,0,.32), rgba(255,160,0,.32), rgba(255,235,0,.28), rgba(0,200,60,.32), rgba(0,200,255,.32), rgba(80,90,255,.34), rgba(200,0,255,.32), rgba(255,0,0,.32)); background-size: 200% 100%; animation: rainbowShift 5s linear infinite, rainbowBorder 5s linear infinite; }
     .deco-founder .av { animation: rainbowRing 5s linear infinite; }
     .deco-founder p { animation: rainbowText 5s linear infinite; }
@@ -56,7 +63,7 @@
     @keyframes rainbowShift { from { background-position: 0% 50%; } to { background-position: 200% 50%; } }
     @keyframes rainbowBorder { 0%,100% { border-color: #ff3b3b; box-shadow: 0 0 14px rgba(255,59,59,.6); } 17% { border-color: #ffb000; box-shadow: 0 0 14px rgba(255,176,0,.6); } 33% { border-color: #f5e400; box-shadow: 0 0 14px rgba(245,228,0,.55); } 50% { border-color: #19d24a; box-shadow: 0 0 14px rgba(25,210,74,.6); } 67% { border-color: #1ec8ff; box-shadow: 0 0 14px rgba(30,200,255,.6); } 83% { border-color: #8a4dff; box-shadow: 0 0 14px rgba(138,77,255,.6); } }
     @keyframes rainbowRing { 0%,100% { box-shadow: 0 0 9px #ff3b3b; } 17% { box-shadow: 0 0 9px #ffb000; } 33% { box-shadow: 0 0 9px #f5e400; } 50% { box-shadow: 0 0 9px #19d24a; } 67% { box-shadow: 0 0 9px #1ec8ff; } 83% { box-shadow: 0 0 9px #8a4dff; } }
-    @media (prefers-reduced-motion: reduce) { .deco-flame, .deco-404, .deco-founder, .deco-founder .av, .deco-founder p { animation: none; } .deco-founder { border-color: #ff3b3b !important; } }
+    @media (prefers-reduced-motion: reduce) { .deco-hack::after, .deco-hack .nm::after { animation: none; } .deco-flame, .deco-404, .deco-founder, .deco-founder .av, .deco-founder p { animation: none; } .deco-founder { border-color: #ff3b3b !important; } }
     /* ===== Thème Halloween (secret) ===== */
     body.theme-halloween { background-color:#0f0805 !important; }
     body.theme-halloween::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
@@ -147,7 +154,7 @@
               <span class="hidden sm:inline">Securechat</span>
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v3.9.0</span>
+                <span>v3.9.1</span>
               </button>
             </h2>
           </div>
@@ -355,8 +362,17 @@
       <div class="space-y-4 text-gray-300">
         <div class="border-l-2 border-amber-500 pl-3 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.9.0</span>
+            <span class="font-bold text-white text-sm">v3.9.1</span>
             <span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
+          </div>
+          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
+            <li>Dernière déconnexion plus lisible sur téléphone</li>
+            <li>Une nouvelle décoration secrète</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white text-sm">v3.9.0</span>
           </div>
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>Date et heure de dernière déconnexion dans la liste des membres</li>
@@ -506,15 +522,13 @@
   </div>
 
   <script>
-    const CURRENT_VERSION = "v3.9.0";
+    const CURRENT_VERSION = "v3.9.1";
     const DEV_MODE = false; // true = aucune annonce automatique
     const VERSION_CHANGELOG =
-      "🎃 Securechat v3.9 : ménage et nouveautés !\n\n" +
+      "🕒 Securechat v3.9.1 : petits ajustements\n\n" +
       "Voici les nouveautés :\n" +
-      "🕒 La date et l'heure de dernière déconnexion de chaque membre sont affichées dans la liste\n" +
-      "📅 Chaque message affiche maintenant sa date en plus de l'heure\n" +
-      "🎨 Le thème secret a été refait, et les points de connexion gardent leurs couleurs\n" +
-      "🧹 Memory et les titres ont été retirés\n\n" +
+      "📱 La date de dernière déconnexion est plus lisible sur téléphone\n" +
+      "🕵️ Une nouvelle décoration secrète est cachée quelque part… bonne chance aux curieux\n\n" +
       "Bon chat !";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
@@ -985,7 +999,8 @@
       { id: 'galaxy',   name: 'Galaxie',   icon: '🌌', cls: 'deco-galaxy',  kind: 'stars', at: 400 },
       { id: 'flame',    name: 'Flamme',    icon: '🔥', cls: 'deco-flame',   kind: 'stars', at: 1000 },
       { id: 'royal',    name: 'Royal',     icon: '👑', cls: 'deco-royal',   kind: 'stars', at: 2500 },
-      { id: 'error404', name: 'Écran bleu', icon: ':(', cls: 'deco-404', kind: 'secret' }
+      { id: 'error404', name: 'Écran bleu', icon: ':(', cls: 'deco-404', kind: 'secret', flag: 's404' },
+      { id: 'hacker', name: 'Hacker', icon: '💻', cls: 'deco-hack', kind: 'secret', flag: 'sHack' }
     ];
     // ----- Photos de profil (avatars/<clé> : petite image JPEG en data URL)
     let avatarsData = {};
@@ -1084,7 +1099,7 @@
     function ownsDeco(k, d) {
       const g = gameData[k] || {};
       if (d.kind === 'stars') return (Number(g.stars) || 0) >= d.at;
-      if (d.kind === 'secret') return g.s404 === true;
+      if (d.kind === 'secret') return g[d.flag] === true;
       if (d.kind === 'exclusive') return (d.who || []).includes(k) || !!((grantsData[k] || {})[d.id]);
       return false;
     }
@@ -1140,6 +1155,53 @@
         alert("Impossible d'enregistrer le secret : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)");
       }
     }
+    // Secret « Hacker » : ouvrir la console du navigateur (Ctrl+Maj+C) et envoyer  hack
+    async function unlockHack() {
+      if (!meKey || (gameData[meKey] || {}).sHack === true) return;
+      const g = gameData[meKey];
+      const upd = { sHack: true };
+      if (!g || g.stars === undefined) upd.stars = 0;
+      try {
+        await db.ref('game/' + meKey).update(upd);
+        showHackScreen();
+      } catch (e) {
+        alert("Impossible d'enregistrer le secret : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)");
+      }
+    }
+    function showHackScreen() {
+      const old = document.getElementById('hackOverlay'); if (old) old.remove();
+      const o = document.createElement('div');
+      o.id = 'hackOverlay';
+      o.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#000;color:#4ade80;font-family:ui-monospace,Menlo,Consolas,monospace;padding:8vw;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;font-size:min(4vw,16px);line-height:1.7;text-shadow:0 0 8px rgba(74,222,128,.8)';
+      document.body.appendChild(o);
+      const lines = ['> hack', '> contournement du pare-feu... OK', '> déchiffrement des paquets... OK', '> accès root obtenu', '', 'ACCÈS AUTORISÉ', 'Décoration secrète « Hacker » 💻 débloquée !', 'Équipe-la dans 🎨 Décorations & thèmes, tout en bas.'];
+      let n = 0;
+      const t = setInterval(() => {
+        if (!o.isConnected) { clearInterval(t); return; }
+        const d = document.createElement('div'); d.textContent = lines[n]; if (lines[n] === 'ACCÈS AUTORISÉ') d.style.cssText = 'font-weight:700;font-size:1.4em;margin:.4em 0';
+        o.appendChild(d); n++;
+        if (n >= lines.length) {
+          clearInterval(t);
+          const h = document.createElement('div'); h.textContent = '[ touche pour fermer ]'; h.style.cssText = 'opacity:.6;margin-top:3vh;font-size:.8em'; o.appendChild(h);
+          o.onclick = () => o.remove();
+          setTimeout(() => { if (o.isConnected) o.remove(); }, 7000);
+        }
+      }, 450);
+    }
+    (function () {
+      let busy = false;
+      try {
+        Object.defineProperty(window, 'hack', {
+          configurable: true,
+          get() {
+            if (!meKey) return "Connecte-toi d'abord.";
+            if ((gameData[meKey] || {}).sHack === true) return 'Déjà débloqué.';
+            if (!busy) { busy = true; setTimeout(() => { unlockHack().finally(() => { busy = false; }); }, 0); }
+            return 'Accès en cours...';
+          }
+        });
+      } catch (e) {}
+    })();
     // Écran bleu plein écran (look Windows) affiché au déblocage du secret
     function showBsod() {
       const old = document.getElementById('bsodOverlay'); if (old) old.remove();
@@ -1902,7 +1964,7 @@
       keys.forEach(k => {
         const u = accounts[k];
         const item = document.createElement('div');
-        item.className = "flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800/60 hover:bg-gray-800/80 cursor-pointer transition";
+        item.className = "flex flex-col gap-1 p-2 rounded-xl bg-gray-900/50 border border-gray-800/60 hover:bg-gray-800/80 cursor-pointer transition";
         item.addEventListener('click', () => openDm(k));
         const dc = decoFor(k);
         if (dc) item.classList.add(dc.cls);
@@ -1927,16 +1989,21 @@
         }
 
         const st = userStatuses[k];
-        const seenHtml = (!isOnline && st && st.at) ? `<p class="text-[10px] text-gray-400 truncate">Déconnecté le ${fmtDateTime(st.at)}</p>` : (isOnline ? '<p class="text-[10px] text-emerald-400/80">En ligne</p>' : '');
+        const seenHtml = (!isOnline && st && st.at)
+          ? `<p class="pl-[38px] text-[11px] leading-snug text-gray-300">🕒 Déconnecté le ${fmtDateTime(st.at)}</p>`
+          : (isOnline ? '<p class="pl-[38px] text-[11px] leading-snug text-emerald-300">● En ligne</p>' : '');
         item.innerHTML = `
-          <div class="relative">
-            ${avatarHtml(k, 'w-7 h-7', 'text-xs')}
-            <span class="status-dot absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full ${dotColorClass} border border-gray-900"></span>
+          <div class="flex items-center gap-2.5 w-full min-w-0">
+            <div class="relative">
+              ${avatarHtml(k, 'w-7 h-7', 'text-xs')}
+              <span class="status-dot absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full ${dotColorClass} border border-gray-900"></span>
+            </div>
+            <div class="overflow-hidden flex-1 flex items-center justify-between gap-1">
+              <p class="nm text-xs font-medium text-gray-200 truncate">${esc(u.name)}${dc ? ' ' + dc.icon : ''}</p>
+              <div class="flex items-center gap-1.5 shrink-0">${unreadDotHtml}${roleBadgeHtml}</div>
+            </div>
           </div>
-          <div class="overflow-hidden flex-1 flex items-center justify-between gap-1">
-            <div class="min-w-0"><p class="text-xs font-medium text-gray-200 truncate">${esc(u.name)}${dc ? ' ' + dc.icon : ''}</p>${seenHtml}</div>
-            <div class="flex items-center gap-1.5">${unreadDotHtml}${roleBadgeHtml}</div>
-          </div>
+          ${seenHtml}
         `;
         container.appendChild(item);
       });
