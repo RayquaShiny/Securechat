@@ -11,6 +11,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Securechat">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://chat-1e417-default-rtdb.europe-west1.firebasedatabase.app">
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com">
+  <link rel="preconnect" href="https://securetoken.googleapis.com">
+  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -135,9 +141,18 @@
     body.theme-arcade .status-dot.bg-brand-500 { background-color:#4ade80 !important; box-shadow: 0 0 6px #4ade80; }
     body.theme-arcade .status-dot.bg-red-500 { background-color:#ef4444 !important; }
     body.theme-arcade .status-dot.bg-blue-500 { background-color:#3b82f6 !important; }
+    .booting #authScreen { display: none !important; }
+    #bootSplash { display: none; }
+    .booting #bootSplash { display: flex; }
+    @keyframes bootSpin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body class="h-screen h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-hidden">
+  <script>try { if (localStorage.getItem('sc_session') === '1') document.documentElement.classList.add('booting'); } catch (e) {}</script>
+  <div id="bootSplash" class="fixed inset-0 z-50 items-center justify-center flex-col gap-3 bg-darkbg text-gray-300">
+    <div style="width:30px;height:30px;border:3px solid rgba(255,255,255,.15);border-top-color:#fff;border-radius:50%;animation:bootSpin .7s linear infinite"></div>
+    <p class="text-xs text-gray-400">Connexion…</p>
+  </div>
 
   <!-- ECRAN DE CONNEXION -->
   <div id="authScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-darkbg overflow-y-auto">
@@ -1801,32 +1816,45 @@
       }
     }
 
+    function endBoot(clearFlag) {
+      document.documentElement.classList.remove('booting');
+      if (clearFlag) { try { localStorage.removeItem('sc_session'); } catch (e) {} }
+    }
+    setTimeout(() => endBoot(false), 10000); // sécurité : on ne bloque jamais sur l'écran de démarrage
+
     auth.onAuthStateChanged(async (user) => {
-      if (migrating || !user || currentUser || starting) return;
+      if (!user) { if (!currentUser && !starting && !migrating) endBoot(true); return; }
+      if (migrating || currentUser || starting) return;
       let key = null, ok = false;
       try { key = (await db.ref('uidMap/' + user.uid + '/key').once('value')).val(); ok = true; } catch (e) {}
       if (!key) {
+        endBoot(true);
         if (ok) { try { await user.delete(); } catch (e) {} showLoginError("Ce compte a été supprimé."); }
         await auth.signOut(); return;
       }
+      // Lectures en parallèle (avant : l'une après l'autre) pour gagner plusieurs allers-retours réseau
+      const accountP = db.ref('accounts/' + key).once('value').catch(() => null);
+      const allAccP = db.ref('accounts').once('value').then(x => x.val() || {}).catch(() => ({}));
       let banned = false;
       try { banned = !!(await db.ref('banned/' + key).once('value')).val(); } catch (e) {}
       if (banned) {
+        endBoot(true);
         try { await db.ref('uidMap/' + user.uid).remove(); } catch (e) {}
         try { await user.delete(); } catch (e) {}
         showLoginError("Ce compte a été supprimé.");
         await auth.signOut(); return;
       }
-      startApp(key);
+      startApp(key, accountP, allAccP);
     });
 
-    async function startApp(key) {
+    async function startApp(key, accountP, allAccP) {
       if (starting || currentUser) return;
       starting = true;
       let snap = null;
-      try { snap = await db.ref('accounts/' + key).once('value'); } catch (e) {}
+      try { snap = await (accountP || db.ref('accounts/' + key).once('value')); } catch (e) {}
       if (!snap || !snap.exists()) {
         starting = false;
+        endBoot(true);
         await auth.signOut();
         showLoginError("Compte introuvable ou supprimé.");
         return;
@@ -1837,6 +1865,8 @@
 
       document.getElementById('loginError').classList.add('hidden');
       document.getElementById('authScreen').classList.add('hidden');
+      endBoot(false);
+      try { localStorage.setItem('sc_session', '1'); } catch (e) {}
       document.getElementById('appContainer').classList.remove('hidden');
       document.getElementById('userNameDisplay').textContent = currentUser.name;
       document.getElementById('userRoleDisplay').textContent = roleLabel(currentUser);
@@ -1857,8 +1887,9 @@
       });
       listeners.push(connRef);
 
-      try { accounts = (await db.ref('accounts').once('value')).val() || {}; } catch (e) {}
-      try { await initCrypto(); } catch (e) { console.error(e); alert("Erreur de chiffrement : " + (e.code || e.message || e) + "\n(Les règles Firebase pour pubkeys, privkeys et crypto sont-elles ajoutées ?)"); }
+      // Le chiffrement (lecture des clés) démarre en parallèle de la liste des comptes
+      const cryptoP = initCrypto().then(() => null, e => e);
+      try { accounts = await (allAccP || db.ref('accounts').once('value').then(x => x.val() || {})); } catch (e) { accounts = {}; }
       listen(db.ref('accounts'), onAccounts);
       const soft = (ref, cb) => { ref.on('value', cb, () => {}); listeners.push(ref); };
       soft(db.ref('roles'), (r) => { rolesData = r.val() || {}; renderUsersList(); updateAdminUsersList(); renderRolesList(); renderMessages(); if (currentUser) document.getElementById('userRoleDisplay').textContent = roleLabel(currentUser); });
@@ -1866,14 +1897,16 @@
       soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; applyTheme(); renderUsersList(); renderGamePanel(); renderGameModal(); renderDecoButton(); renderDecoModal(); });
       soft(db.ref('avatars'), (as) => { avatarsData = as.val() || {}; renderMyAvatar(); renderUsersList(); renderDecoModal(); renderMessages(); });
       soft(db.ref('grants'), (gr) => { grantsData = gr.val() || {}; renderUsersList(); renderDecoButton(); renderDecoModal(); });
-      soft(db.ref('notes/' + key), onNotes);
       listen(db.ref('status'), (snap2) => { userStatuses = snap2.val() || {}; renderUsersList(); });
-      listen(db.ref('messages').limitToLast(500), onMessages);
       listen(db.ref('typing'), (t) => { typingData = t.val() || {}; updateTypingLabel(); });
-
       renderNotifBtn();
-      checkAndPublishAutoUpdate();
       selectChannel('general');
+      // Les messages et les notes ont besoin des clés : on attend la fin du chiffrement (déjà bien avancé)
+      const cerr = await cryptoP;
+      if (cerr) { console.error(cerr); alert("Erreur de chiffrement : " + (cerr.code || cerr.message || cerr) + "\n(Les règles Firebase pour pubkeys, privkeys et crypto sont-elles ajoutées ?)"); }
+      soft(db.ref('notes/' + key), onNotes);
+      listen(db.ref('messages').limitToLast(500), onMessages);
+      checkAndPublishAutoUpdate();
     }
 
     async function logout() {
@@ -1882,6 +1915,7 @@
       currentUser = null; meKey = ''; starting = false;
       accounts = {}; rolesData = {}; gameData = {}; grantsData = {}; notesList = []; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
+      endBoot(true);
       document.getElementById('appContainer').classList.add('hidden');
       document.getElementById('authScreen').classList.remove('hidden');
       document.getElementById('loginUsername').value = '';
