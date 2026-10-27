@@ -147,6 +147,10 @@
     #bootSplash { display: none; }
     .booting #bootSplash { display: flex; }
     @keyframes bootSpin { to { transform: rotate(360deg); } }
+    /* Menus ouverts : le flou d'arrière-plan est retiré (fond déjà quasi opaque) pour éviter les saccades */
+    body.theme-arcade .glass-panel, body.theme-arcade .backdrop-blur-sm { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+    /* Menus ouverts : le flou d'arrière-plan est retiré (fond déjà quasi opaque) pour éviter les saccades */
+    body.theme-halloween .glass-panel, body.theme-halloween .backdrop-blur-sm { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
   </style>
 </head>
 <body class="h-screen h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-hidden">
