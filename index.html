@@ -75,12 +75,12 @@
     @media (prefers-reduced-motion: reduce) { .deco-hack::before, .deco-hack::after, .deco-hack .nm::after { animation: none; } .deco-flame, .deco-404, .deco-founder, .deco-founder .av, .deco-founder p { animation: none; } .deco-founder { border-color: #ff3b3b !important; } }
     /* ===== Thème Halloween (secret) ===== */
     body.theme-halloween { background-color:#0f0805 !important; }
-    body.theme-halloween::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+    body.theme-halloween::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0; transform: translateZ(0); will-change: transform; contain: strict;
       background: radial-gradient(circle at 88% 6%, rgba(254,215,170,.16) 0, rgba(254,215,170,.07) 7%, transparent 16%),
                   radial-gradient(ellipse at 12% 0%, rgba(234,88,12,.24), transparent 52%),
                   radial-gradient(ellipse at 92% 100%, rgba(124,58,237,.22), transparent 55%),
                   radial-gradient(ellipse at 5% 100%, rgba(234,88,12,.10), transparent 45%); }
-    body.theme-halloween::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:60; opacity:.55;
+    body.theme-halloween::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:60; opacity:.55; transform: translateZ(0); will-change: transform; contain: strict;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg stroke='%23fb923c' stroke-opacity='.6' fill='none' stroke-width='1'%3E%3Cpath d='M0 0L100 0M0 0L100 38M0 0L100 80M0 0L78 100M0 0L38 100M0 0L0 100'/%3E%3Cpath d='M0 18Q16 16 18 0M0 36Q28 32 36 0M0 56Q40 46 56 0M0 78Q54 60 78 0'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(100 0) scale(-1 1)' stroke='%23fb923c' stroke-opacity='.6' fill='none' stroke-width='1'%3E%3Cpath d='M0 0L100 0M0 0L100 38M0 0L100 80M0 0L78 100M0 0L38 100M0 0L0 100'/%3E%3Cpath d='M0 18Q16 16 18 0M0 36Q28 32 36 0M0 56Q40 46 56 0M0 78Q54 60 78 0'/%3E%3C/g%3E%3C/svg%3E"); background-repeat:no-repeat; background-position: left top, right top; background-size: 84px 84px, 84px 84px; }
     body.theme-halloween .bg-darkbg, body.theme-halloween .bg-darkpanel { background-color:#0f0805 !important; }
     body.theme-halloween .bg-gray-950, body.theme-halloween .bg-gray-900 { background-color:#1a0d07 !important; }
@@ -92,8 +92,8 @@
     body.theme-halloween .bg-brand-500, body.theme-halloween .bg-brand-600, body.theme-halloween .bg-brand-700 { background-color:#ea580c !important; }
     body.theme-halloween .hover\:bg-brand-500:hover, body.theme-halloween .hover\:bg-brand-600:hover { background-color:#f97316 !important; }
     body.theme-halloween .text-brand-300, body.theme-halloween .text-brand-400, body.theme-halloween .text-brand-500 { color:#fdba74 !important; }
-    body.theme-halloween [class*="bg-brand-500/"], body.theme-halloween [class*="bg-brand-600/"] { background-color: rgba(234,88,12,.2) !important; }
-    body.theme-halloween [class*="border-brand-500"] { border-color: rgba(251,146,60,.5) !important; }
+    body.theme-halloween .bg-brand-500\/10, body.theme-halloween .bg-brand-500\/20, body.theme-halloween .hover\:bg-brand-500\/20, body.theme-halloween .bg-brand-600\/30 { background-color: rgba(234,88,12,.2) !important; }
+    body.theme-halloween .border-brand-500, body.theme-halloween .border-brand-500\/20, body.theme-halloween .border-brand-500\/30, body.theme-halloween .border-brand-500\/50, body.theme-halloween .focus\:border-brand-500 { border-color: rgba(251,146,60,.5) !important; }
     body.theme-halloween header { border-bottom: 1px solid rgba(251,146,60,.4) !important; box-shadow: 0 1px 18px rgba(234,88,12,.22); }
     body.theme-halloween h1, body.theme-halloween h3 { text-shadow: 0 0 12px rgba(251,146,60,.6); }
     body.theme-halloween .msg-bubble.bg-brand-600 { background: linear-gradient(135deg,#c2410c,#f97316) !important; box-shadow: 0 0 16px rgba(234,88,12,.4) !important; }
@@ -114,9 +114,11 @@
                   radial-gradient(ellipse at 95% 100%, rgba(34,211,238,.24), transparent 52%),
                   linear-gradient(rgba(34,211,238,.10) 1px, transparent 1px) 0 100% / 100% 36px repeat-x,
                   linear-gradient(90deg, rgba(217,70,239,.10) 1px, transparent 1px) 0 100% / 36px 100% repeat-y;
-      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, rgba(0,0,0,.45) 100%); mask-image: linear-gradient(to bottom, #000 0%, #000 55%, rgba(0,0,0,.45) 100%); }
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, rgba(0,0,0,.45) 100%); mask-image: linear-gradient(to bottom, #000 0%, #000 55%, rgba(0,0,0,.45) 100%);
+      transform: translateZ(0); will-change: transform; contain: strict; }
     body.theme-arcade::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:60;
-      background: repeating-linear-gradient(0deg, rgba(0,0,0,.20) 0, rgba(0,0,0,.20) 1px, transparent 1px, transparent 3px), radial-gradient(ellipse at center, transparent 62%, rgba(0,0,0,.45) 100%); }
+      background: linear-gradient(rgba(0,0,0,.20) 1px, transparent 1px) 0 0 / 100% 3px, radial-gradient(ellipse at center, transparent 62%, rgba(0,0,0,.45) 100%);
+      transform: translateZ(0); will-change: transform; contain: strict; }
     body.theme-arcade .bg-darkbg, body.theme-arcade .bg-darkpanel { background-color:#07031a !important; }
     body.theme-arcade .bg-gray-950, body.theme-arcade .bg-gray-900 { background-color:#0d0626 !important; }
     body.theme-arcade .bg-gray-800 { background-color:#170b3b !important; }
@@ -127,8 +129,8 @@
     body.theme-arcade .bg-brand-500, body.theme-arcade .bg-brand-600, body.theme-arcade .bg-brand-700 { background-color:#c026d3 !important; }
     body.theme-arcade .hover\:bg-brand-500:hover, body.theme-arcade .hover\:bg-brand-600:hover { background-color:#d946ef !important; }
     body.theme-arcade .text-brand-300, body.theme-arcade .text-brand-400, body.theme-arcade .text-brand-500 { color:#67e8f9 !important; }
-    body.theme-arcade [class*="bg-brand-500/"], body.theme-arcade [class*="bg-brand-600/"] { background-color: rgba(217,70,239,.2) !important; }
-    body.theme-arcade [class*="border-brand-500"] { border-color: rgba(34,211,238,.55) !important; }
+    body.theme-arcade .bg-brand-500\/10, body.theme-arcade .bg-brand-500\/20, body.theme-arcade .hover\:bg-brand-500\/20, body.theme-arcade .bg-brand-600\/30 { background-color: rgba(217,70,239,.2) !important; }
+    body.theme-arcade .border-brand-500, body.theme-arcade .border-brand-500\/20, body.theme-arcade .border-brand-500\/30, body.theme-arcade .border-brand-500\/50, body.theme-arcade .focus\:border-brand-500 { border-color: rgba(34,211,238,.55) !important; }
     body.theme-arcade header { border-bottom: 1px solid rgba(34,211,238,.55) !important; box-shadow: 0 1px 16px rgba(34,211,238,.28); }
     body.theme-arcade h1, body.theme-arcade h3 { letter-spacing: .06em; text-shadow: 0 0 10px rgba(34,211,238,.8), 2px 2px 0 rgba(217,70,239,.7); }
     body.theme-arcade .msg-bubble { border-radius: 6px !important; }
@@ -1860,6 +1862,7 @@
         return;
       }
       meKey = key;
+      const lastChan = readLastChan(key);
       currentUser = snap.val();
       currentUser.username = currentUser.username || key;
 
@@ -1900,7 +1903,10 @@
       listen(db.ref('status'), (snap2) => { userStatuses = snap2.val() || {}; renderUsersList(); });
       listen(db.ref('typing'), (t) => { typingData = t.val() || {}; updateTypingLabel(); });
       renderNotifBtn();
-      selectChannel('general');
+      // On revient là où on était : salon, notes perso ou message privé (si le contact existe toujours)
+      if (lastChan.startsWith('dm_') && partnerOf(lastChan)) openDm(partnerOf(lastChan));
+      else if (CHANNELS.includes(lastChan)) selectChannel(lastChan);
+      else selectChannel('general');
       // Les messages et les notes ont besoin des clés : on attend la fin du chiffrement (déjà bien avancé)
       const cerr = await cryptoP;
       if (cerr) { console.error(cerr); alert("Erreur de chiffrement : " + (cerr.code || cerr.message || cerr) + "\n(Les règles Firebase pour pubkeys, privkeys et crypto sont-elles ajoutées ?)"); }
@@ -2222,8 +2228,11 @@
       });
     }
 
+    // Dernière discussion ouverte, mémorisée par compte (elle survit à la déconnexion)
+    function saveLastChan(c) { try { if (meKey) localStorage.setItem('sc_last_chan:' + meKey, c); } catch (e) {} }
+    function readLastChan(k) { try { return localStorage.getItem('sc_last_chan:' + k) || ''; } catch (e) { return ''; } }
     function selectChannel(chan) {
-      currentChannel = chan;
+      currentChannel = chan; saveLastChan(chan);
       clearTyping(); cancelReply(); clearSearch(); unreadChannels[chan] = 0;
 
       const titleEl = document.getElementById('currentChannelTitle');
@@ -2268,7 +2277,7 @@
         return;
       }
 
-      currentChannel = dmName(me, keyClean);
+      currentChannel = dmName(me, keyClean); saveLastChan(currentChannel);
       clearTyping(); cancelReply(); clearSearch(); unreadChannels[currentChannel] = 0;
 
       document.getElementById('currentChannelTitle').textContent = `DM : ${targetUser.name}`;
