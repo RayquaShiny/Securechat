@@ -2617,14 +2617,14 @@
     }
     async function claimEventFlag(flag) {
       const g = gameData[meKey]; if (g && g[flag] === true) return;
-      const upd = {}; if (flag !== '_init') upd[flag] = true; if (!g || g.stars === undefined) upd.stars = 0;
+      const upd = {}; if (flag !== '_init' && flag !== 'miss') upd[flag] = true; if (!g || g.stars === undefined) upd.stars = 0;
       if (!Object.keys(upd).length) return;
       try { await db.ref('game/' + meKey).update(upd); } catch (e) {}
     }
     const GIFTS = [
-      { rar: 'rare', w: 60, icon: '🎂', name: 'Décoration « 1 semaine »', flag: 'eParty' },
-      { rar: 'epic', w: 30, icon: '⭐', name: '500 étoiles', flag: 'eStars500' },
-      { rar: 'legendary', w: 10, icon: '🎉', name: 'Thème Anniversaire', flag: 'eBdayTheme' }
+      { rar: 'rare', w: 50, icon: '🎂', name: 'Décoration « 1 semaine »', flag: 'eParty' },
+      { rar: 'legendary', w: 15, icon: '🎉', name: 'Thème Anniversaire', flag: 'eBdayTheme' },
+      { rar: 'common', w: 35, icon: '❌', name: 'Perdu !', flag: 'miss' }
     ];
     const ROLL_COST = 100;
     let rollBusy = false, rollMsg = '';
@@ -2634,9 +2634,11 @@
     async function rollNow() {
       if (rollBusy || evtState() !== 'live') return;
       const g = gameData[meKey] || {}, stars = Number(g.stars) || 0;
-      const pool = GIFTS.filter(x => g[x.flag] !== true);
+      // On filtre les éléments déjà gagnés (sauf 'miss' qui peut retomber)
+      const pool = GIFTS.filter(x => x.flag === 'miss' || g[x.flag] !== true);
       
-      if (!pool.length) { 
+      const unownedDeals = GIFTS.filter(x => x.flag !== 'miss' && g[x.flag] !== true);
+      if (!unownedDeals.length) { 
         rollMsg = 'Tout est débloqué ! 🎉'; 
         renderGifts(); 
         return; 
@@ -2651,20 +2653,22 @@
       rollMsg = '';
       const x = pickGift(pool);
       
-      const netChange = (x.flag === 'eStars500') ? (500 - ROLL_COST) : (-ROLL_COST);
-      const newStars = Math.max(0, stars + netChange);
+      const newStars = Math.max(0, stars - ROLL_COST);
       const currentBest = Number(g.best) || 0;
       const newBest = Math.max(currentBest, stars);
 
       const upd = { 
-        [x.flag]: true, 
         best: newBest, 
         stars: newStars 
       };
 
+      if (x.flag !== 'miss') {
+        upd[x.flag] = true;
+      }
+
       try { 
         await db.ref('game/' + meKey).update(upd); 
-        rollMsg = '✨ ' + x.icon + ' ' + x.name + ' !'; 
+        rollMsg = x.flag === 'miss' ? '❌ Dommage, c\'est perdu ! (-100 ⭐)' : '✨ ' + x.icon + ' ' + x.name + ' !'; 
       } catch (e) { 
         rollMsg = 'Roll refusé : ' + (e.code || e.message); 
       }
