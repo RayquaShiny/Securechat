@@ -266,6 +266,35 @@
     .deco-king { background: linear-gradient(120deg,#5b0f0f,#9a6a0a,#5b0f0f) !important; border-color: #fbbf24 !important; box-shadow: 0 0 14px rgba(251,191,36,.6); }
     .deco-king p { color: #fff3c4 !important; text-shadow: 0 0 6px rgba(251,191,36,.8); }
     @media (prefers-reduced-motion: reduce) { .deco-jackpot::after { animation: none; } }
+    .deco-confetti { background: radial-gradient(circle at 15% 35%, #f472b6 0 2px, transparent 3px), radial-gradient(circle at 45% 72%, #fde047 0 2px, transparent 3px), radial-gradient(circle at 78% 30%, #67e8f9 0 2px, transparent 3px), #1b1530 !important; border-color: #c4b5fd !important; box-shadow: 0 0 6px rgba(196,181,253,.35); }
+    .deco-confetti p { color: #f5f3ff !important; }
+    .deco-candy { background: repeating-linear-gradient(45deg, rgba(244,114,182,.28) 0, rgba(244,114,182,.28) 8px, rgba(255,255,255,.10) 8px, rgba(255,255,255,.10) 16px), #2a1020 !important; border-color: #f9a8d4 !important; box-shadow: 0 0 6px rgba(249,168,212,.35); }
+    .deco-candy p { color: #ffe4f1 !important; }
+    .deco-ice { background: linear-gradient(135deg, rgba(103,232,249,.28), rgba(186,230,253,.12)), #0b1c2a !important; border-color: #7dd3fc !important; box-shadow: 0 0 6px rgba(125,211,252,.4); }
+    .deco-ice p { color: #e0f7ff !important; }
+    .deco-leaf { background: linear-gradient(135deg, rgba(74,222,128,.25), rgba(21,128,61,.18)), #08170d !important; border-color: #4ade80 !important; box-shadow: 0 0 6px rgba(74,222,128,.35); }
+    .deco-leaf p { color: #dcfce7 !important; }
+    .deco-sunset { background: linear-gradient(120deg, rgba(249,115,22,.40), rgba(236,72,153,.34), rgba(124,58,237,.30)), #1a0d1c !important; border-color: #fb923c !important; box-shadow: 0 0 9px rgba(251,146,60,.5); }
+    .deco-sunset p { color: #fff1e6 !important; }
+    .deco-ocean { background: linear-gradient(180deg, rgba(34,211,238,.28), rgba(30,64,175,.34)), #04122a !important; border-color: #38bdf8 !important; box-shadow: 0 0 9px rgba(56,189,248,.5); }
+    .deco-ocean p { color: #e0f2fe !important; }
+    .deco-sakura { background: radial-gradient(circle at 20% 40%, rgba(251,207,232,.45) 0 3px, transparent 4px), radial-gradient(circle at 60% 70%, rgba(251,207,232,.40) 0 3px, transparent 4px), radial-gradient(circle at 85% 30%, rgba(251,207,232,.40) 0 3px, transparent 4px), linear-gradient(120deg, rgba(244,114,182,.22), rgba(190,24,93,.20)), #200a16 !important; border-color: #f9a8d4 !important; box-shadow: 0 0 9px rgba(249,168,212,.5); }
+    .deco-sakura p { color: #ffe4f1 !important; }
+    .deco-lightning { background: linear-gradient(120deg, rgba(250,204,21,.22), rgba(30,27,75,.5)), #0d0b1f !important; border-color: #facc15 !important; box-shadow: 0 0 10px rgba(250,204,21,.6); }
+    .deco-lightning p { color: #fef9c3 !important; }
+    .deco-toxic { background: repeating-linear-gradient(-45deg, rgba(163,230,53,.22) 0, rgba(163,230,53,.22) 7px, rgba(0,0,0,0) 7px, rgba(0,0,0,0) 14px), #08140a !important; border-color: #84cc16 !important; box-shadow: 0 0 11px rgba(132,204,22,.6); }
+    .deco-toxic p { color: #ecfccb !important; }
+    .deco-dragon { background: linear-gradient(120deg, rgba(220,38,38,.50), rgba(251,146,60,.34), rgba(127,29,29,.55)), #1a0505 !important; border-color: #f97316 !important; box-shadow: 0 0 14px rgba(249,115,22,.7); }
+    .deco-dragon p { color: #ffedd5 !important; }
+    .deco-aurora { background: linear-gradient(120deg, rgba(34,197,94,.40), rgba(56,189,248,.40), rgba(168,85,247,.40), rgba(34,197,94,.40)), #07111f !important; border-color: #67e8f9 !important; box-shadow: 0 0 14px rgba(103,232,249,.6); }
+    .deco-aurora p { color: #ecfeff !important; }
+    .deco-void { background: radial-gradient(circle at 50% 50%, rgba(124,58,237,.40), rgba(0,0,0,0) 70%), #000 !important; border-color: #7c3aed !important; box-shadow: 0 0 18px rgba(124,58,237,.8), inset 0 0 14px rgba(0,0,0,.9); }
+    .deco-void p { color: #ddd6fe !important; }
+    .deco-aurora { background-size: 300% 100% !important; animation: auroraMove 9s linear infinite; }
+    @keyframes auroraMove { from { background-position: 0 0; } to { background-position: 300% 0; } }
+    .deco-lightning { animation: zapPulse 1.6s ease-in-out infinite; }
+    @keyframes zapPulse { 0%,100% { box-shadow: 0 0 8px rgba(250,204,21,.45); } 50% { box-shadow: 0 0 16px rgba(253,224,71,.9); } }
+    @media (prefers-reduced-motion: reduce) { .deco-aurora, .deco-lightning { animation: none; } }
   </style>
 </head>
 <body class="h-screen h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-hidden">
@@ -559,8 +588,8 @@
             <span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
           </div>
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Événement anniversaire : casino (slots, pile ou face, roue)</li>
-            <li>Boutique d'édition limitée et cosmétiques exclusifs</li>
+            <li>Événement anniversaire : le Roll, 15 cosmétiques de Commun à Mythique</li>
+            <li>Casino : machine à sous, pile ou face, roue de la fortune</li>
             <li>Décoration « 1 semaine » pour tous les participants</li>
           </ul>
         </div>
@@ -759,11 +788,11 @@
     const VERSION_CHANGELOG =
       "🎂 Securechat fête sa première semaine : GROS ÉVÉNEMENT !\n\n" +
       "À partir de ce soir 20h00 et jusqu'à demain minuit :\n" +
-      "🎰 Le casino de l'anniversaire ouvre : machine à sous, pile ou face et roue de la fortune, avec tes étoiles en mise\n" +
-      "🛍️ Une boutique d'édition limitée avec des cosmétiques exclusifs (décorations et thème)\n" +
+      "🎲 Le ROLL : dépense tes étoiles pour tirer des cosmétiques exclusifs, du Commun au Mythique (15 à collectionner, légendaire garanti avec la pitié)\n" +
+      "🎰 Le casino : machine à sous, pile ou face et roue de la fortune pour gagner plus d'étoiles\n" +
       "🎂 La décoration « 1 semaine » est offerte à tous ceux qui se connectent pendant l'événement\n" +
       "🏆 Le n°1 du classement peut gagner la décoration « Roi du casino »\n\n" +
-      "Tes paliers de décorations ne baissent jamais, même si tu perds des étoiles. Bonne chance !";
+      "Tes paliers de décorations ne baissent jamais, même si tu dépenses des étoiles. Bonne chance !";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
 
@@ -1242,6 +1271,32 @@
     // ================= EVENT : CHASSE AUX ÉTOILES + DÉCORATIONS =================
     const EVENT = { name: 'Chasse aux étoiles', endsAt: null }; // pour limiter dans le temps : endsAt: '2026-12-31T23:59:59'
     // kind : 'stars' (palier d'étoiles), 'secret' (à découvrir), 'exclusive' (réservée : who = comptes d'office, ou attribuée par l'Owner avec /deco give)
+    // ----- Roll du casino : cosmétiques par rareté (comme les fruits de Blox Fruits)
+    const RARITIES = {
+      common:    { name: 'Commun',     w: 55, color: '#9ca3af', refund: 20 },
+      rare:      { name: 'Rare',       w: 28, color: '#38bdf8', refund: 35 },
+      epic:      { name: 'Épique',     w: 12, color: '#a855f7', refund: 50 },
+      legendary: { name: 'Légendaire', w: 4,  color: '#f59e0b', refund: 70 },
+      mythic:    { name: 'Mythique',   w: 1,  color: '#ef4444', refund: 100 }
+    };
+    const ROLL_ITEMS = [
+      { id: 'confetti',  name: 'Confettis',  icon: '🎊', r: 'common' },
+      { id: 'candy',     name: 'Bonbon',     icon: '🍬', r: 'common' },
+      { id: 'ice',       name: 'Glaçon',     icon: '🧊', r: 'common' },
+      { id: 'leaf',      name: 'Feuille',    icon: '🍃', r: 'common' },
+      { id: 'sunset',    name: 'Crépuscule', icon: '🌇', r: 'rare' },
+      { id: 'ocean',     name: 'Océan',      icon: '🌊', r: 'rare' },
+      { id: 'sakura',    name: 'Sakura',     icon: '🌸', r: 'rare' },
+      { id: 'roller',    name: 'High Roller', icon: '💎', r: 'epic' },
+      { id: 'lightning', name: 'Éclair',     icon: '⚡', r: 'epic' },
+      { id: 'toxic',     name: 'Toxique',    icon: '☣️', r: 'epic' },
+      { id: 'jackpot',   name: 'Jackpot',    icon: '🎰', r: 'legendary' },
+      { id: 'dragon',    name: 'Dragon',     icon: '🐉', r: 'legendary' },
+      { id: 'aurora',    name: 'Aurore',     icon: '🌌', r: 'legendary' },
+      { id: 'void',      name: 'Néant',      icon: '🕳️', r: 'mythic' },
+      { id: 'casino',    name: 'Thème Casino', icon: '🎰', r: 'mythic', type: 'theme', flag: 'eCasinoTheme' }
+    ];
+    const ROLL_COST = 100, ROLL_PITY = 40;
     const DECOS = [
       { id: 'founder',  name: 'Fondateur', icon: '🌈', cls: 'deco-founder', kind: 'exclusive', who: ['rayqua'], only: true },
       { id: 'aura',     name: 'Étincelle', icon: '✨', cls: 'deco-aura',    kind: 'stars', at: 50 },
@@ -1253,10 +1308,9 @@
       { id: 'hacker', name: 'Hacker', icon: '💻', cls: 'deco-hack', kind: 'secret', flag: 'sHack' },
       // Événement anniversaire (édition limitée) : kind 'event' = débloqué par un drapeau eXxx
       { id: 'bday',    name: '1 semaine',  icon: '🎂', cls: 'deco-bday',    kind: 'event', flag: 'eParty',   how: "Se connecter pendant l'événement" },
-      { id: 'roller',  name: 'High Roller', icon: '💎', cls: 'deco-roller', kind: 'event', flag: 'eRoller',  how: 'Boutique du casino : 800 ⭐' },
-      { id: 'jackpot', name: 'Jackpot',    icon: '🎰', cls: 'deco-jackpot', kind: 'event', flag: 'eJackpot', how: 'Gros gain au casino, ou boutique : 2500 ⭐' },
       { id: 'casinoking', name: 'Roi du casino', icon: '👑', cls: 'deco-king', kind: 'exclusive', who: [] }
     ];
+    ROLL_ITEMS.filter(i => i.type !== 'theme').forEach(i => DECOS.push({ id: i.id, name: i.name, icon: i.icon, cls: 'deco-' + i.id, kind: 'roll', rarity: i.r }));
     // ----- Photos de profil (avatars/<clé> : petite image JPEG en data URL)
     let avatarsData = {};
     let offlineMode = false;
@@ -1421,6 +1475,7 @@
       const g = gameData[k] || {};
       if (d.kind === 'stars') return (Number(g.stars) || 0) >= d.at;
       if (d.kind === 'secret' || d.kind === 'event') return g[d.flag] === true;
+      if (d.kind === 'roll') return !!(g.roll && g.roll[d.id] === true);
       if (d.kind === 'exclusive') return (d.who || []).includes(k) || !!((grantsData[k] || {})[d.id]);
       return false;
     }
@@ -1730,7 +1785,7 @@
       const initial = esc(String(u.name || '?').charAt(0).toUpperCase());
       const row = (d) => {
         const owned = ownsDeco(meKey, d), equipped = !!cur && cur.id === d.id, hidden = d.kind === 'secret' && !owned;
-        const sub = owned ? (equipped ? 'Équipée ✓' : 'Débloquée') : (d.kind === 'stars' ? `À ${d.at} ⭐ · tu en as ${stars}` : (d.kind === 'event' ? d.how + (evtState() === 'after' ? ' · terminé' : '') : 'Secrète : à toi de la trouver'));
+        const sub = owned ? (equipped ? 'Équipée ✓' : 'Débloquée') : (d.kind === 'stars' ? `À ${d.at} ⭐ · tu en as ${stars}` : (d.kind === 'event' ? d.how + (evtState() === 'after' ? ' · terminé' : '') : (d.kind === 'roll' ? `Roll du casino · <span style="color:${RARITIES[d.rarity].color}">${RARITIES[d.rarity].name}</span>` : 'Secrète : à toi de la trouver')));
         const btn = owned ? `<button type="button" data-equip="${d.id}" class="px-2.5 py-1 rounded-lg text-[11px] ${equipped ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${equipped ? 'Retirer' : 'Équiper'}</button>` : '';
         return `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800 ${owned ? d.cls : 'opacity-60'}">
           <div class="av w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-sm shrink-0">${owned ? d.icon : (hidden ? '❓' : '🔒')}</div>
@@ -1775,6 +1830,7 @@
         ${sec('Exclusives', DECOS.filter(d => d.kind === 'exclusive' && ownsDeco(meKey, d)))}
         ${sec('Étoiles ⭐', DECOS.filter(d => d.kind === 'stars'))}
         ${sec('Événement anniversaire 🎂', DECOS.filter(d => d.kind === 'event'))}
+        ${sec('Roll du casino 🎲', DECOS.filter(d => d.kind === 'roll').sort((a, b) => RARITIES[b.rarity].w - RARITIES[a.rarity].w).reverse())}
         ${themeChoiceHtml}
         ${secretsHtml}
         <p class="text-[11px] text-gray-500">Gagne des étoiles dans l'event « ${esc(EVENT.name)} » pour débloquer les autres.</p>`;
@@ -2605,7 +2661,7 @@
     // Le solde du casino = tes étoiles + 100 de bienvenue + gains - mises. Tes paliers de décorations (étoiles gagnées au jeu) ne baissent JAMAIS.
     const EVT = { start: 1793214000000, end: 1793314800000 }; // 28/10/2026 20h00 -> 30/10/2026 00h00 (heure de Paris)
     const EVT_BONUS = 100, MAX_BET = 500;
-    let serverOffset = 0, casinoData = {}, casinoTab = 'slots', casinoBet = 50, casinoBusy = false, casinoMsg = '', gameLoaded = false, evtPrev = '', evtTimer = null, lastClaim = 0;
+    let serverOffset = 0, casinoData = {}, casinoTab = 'roll', casinoBet = 50, casinoBusy = false, casinoMsg = '', gameLoaded = false, evtPrev = '', evtTimer = null, lastClaim = 0, lastRollHtml = '';
     const nowS = () => Date.now() + serverOffset;
     function evtState() { const n = nowS(); return n < EVT.start ? 'before' : (n <= EVT.end ? 'live' : 'after'); }
     function fmtCount(ms) {
@@ -2621,11 +2677,6 @@
     const WHEEL = [
       { m: 0, w: 48, l: 'Perdu ×0' }, { m: 0.5, w: 26, l: '×0,5' }, { m: 1, w: 11, l: '×1' }, { m: 2, w: 9, l: '×2' },
       { m: 5, w: 4, l: '×5' }, { m: 10, w: 1.5, l: '×10' }, { m: 25, w: 0.45, l: '×25 !' }, { m: 50, w: 0.05, l: '×50 !!' }
-    ];
-    const SHOP = [
-      { id: 'roller', type: 'deco', icon: '💎', name: 'Décoration « High Roller »', price: 800, flag: 'eRoller' },
-      { id: 'jackpot', type: 'deco', icon: '🎰', name: 'Décoration « Jackpot »', price: 2500, flag: 'eJackpot' },
-      { id: 'casino', type: 'theme', icon: '🎰', name: "Thème d'application « Casino »", price: 2000, flag: 'eCasinoTheme' }
     ];
     function casinoBalance(k) {
       const c = casinoData[k] || {};
@@ -2703,28 +2754,72 @@
       else if (payout === bet) casinoMsg = `${label} : mise remboursée.`;
       else if (payout > 0) casinoMsg = `${label} : ${payout} ⭐ récupérés (net ${payout - bet}).`;
       else casinoMsg = `${label} : perdu (${bet} ⭐).`;
-      if (ok && big) { claimEventFlag('eJackpot'); casinoMsg += ' 🎰 JACKPOT ! Décoration « Jackpot » débloquée !'; }
+      if (ok && big) { claimRollItem('jackpot'); casinoMsg += ' 🎰 JACKPOT ! Décoration « Jackpot » débloquée !'; }
       renderCasino();
     }
-    async function casinoBuy(id) {
-      const it = SHOP.find(x => x.id === id); if (!it || casinoBusy) return;
-      if (evtState() !== 'live') { casinoMsg = 'La boutique est fermée.'; renderCasino(); return; }
-      if ((gameData[meKey] || {})[it.flag] === true) return;
-      if (it.price > casinoBalance(meKey)) { casinoMsg = "Pas assez d'étoiles."; renderCasino(); return; }
-      if (!confirm('Acheter « ' + it.name + ' » pour ' + it.price + ' ⭐ ?')) return;
-      casinoBusy = true;
+    // ----- Roll
+    const rarityList = () => Object.keys(RARITIES).map(k => ({ k, w: RARITIES[k].w }));
+    const itemOwned = (it) => { const g = gameData[meKey] || {}; return it.type === 'theme' ? g[it.flag] === true : !!(g.roll && g.roll[it.id] === true); };
+    function rollOnce(owned, pity) {
+      let rar;
+      if (pity >= ROLL_PITY - 1) rar = pickW([{ k: 'legendary', w: 4 }, { k: 'mythic', w: 1 }]).k; // pitié : légendaire garanti
+      else rar = pickW(rarityList()).k;
+      const pool = ROLL_ITEMS.filter(i => i.r === rar);
+      const item = pool[Math.floor(rnd() * pool.length)];
+      const dup = !!owned[item.id];
+      return { item, rar, dup, refund: dup ? RARITIES[rar].refund : 0, pity: (rar === 'legendary' || rar === 'mythic') ? 0 : pity + 1 };
+    }
+    const rollCardHtml = (r) => `<div class="rounded-xl p-2 text-center" style="border:1px solid ${RARITIES[r.rar].color};box-shadow:0 0 12px ${RARITIES[r.rar].color}55;background:rgba(0,0,0,.35)"><div class="text-2xl">${r.item.icon}</div><div class="text-[11px] font-semibold text-white">${esc(r.item.name)}</div><div class="text-[10px]" style="color:${RARITIES[r.rar].color}">${RARITIES[r.rar].name}</div><div class="text-[10px] ${r.dup ? 'text-gray-400' : 'text-emerald-400 font-bold'}">${r.dup ? 'Doublon +' + r.refund + ' ⭐' : 'NOUVEAU !'}</div></div>`;
+    async function claimRollItem(id) {
+      const g = gameData[meKey]; if (g && g.roll && g.roll[id] === true) return;
+      const upd = { ['roll/' + id]: true }; if (!g || g.stars === undefined) upd.stars = 0;
+      try { await db.ref('game/' + meKey).update(upd); } catch (e) {}
+    }
+    async function rollNow(n) {
+      if (casinoBusy) return;
+      if (evtState() !== 'live') { casinoMsg = 'Le roll est fermé.'; renderCasino(); return; }
+      const cost = n === 10 ? ROLL_COST * 9 : ROLL_COST; // ×10 = 10 rolls pour le prix de 9
+      if (cost > casinoBalance(meKey)) { casinoMsg = "Pas assez d'étoiles pour ce roll."; renderCasino(); return; }
+      if (!gameData[meKey]) await claimEventFlag('_init').catch(() => {});
+      casinoBusy = true; casinoMsg = '';
+      document.querySelectorAll('#casinoBody button').forEach(b => { b.disabled = true; });
+      const owned = { ...((gameData[meKey] || {}).roll || {}) };
+      if (((gameData[meKey] || {}).eCasinoTheme) === true) owned.casino = true;
+      let pity = Number((casinoData[meKey] || {}).pity) || 0;
+      const results = [];
+      for (let i = 0; i < n; i++) { const r = rollOnce(owned, pity); pity = r.pity; owned[r.item.id] = true; results.push(r); }
+      const refund = results.reduce((a, r) => a + r.refund, 0);
+      const best = results.reduce((a, r) => (RARITIES[r.rar].w < RARITIES[a.rar].w ? r : a), results[0]);
+      // suspense : les raretés défilent, puis la plus belle se révèle
+      const stage = () => document.getElementById('rollStage');
+      const t0 = Date.now();
+      await new Promise(res => {
+        const iv = setInterval(() => {
+          const el = stage(); const k = Object.keys(RARITIES)[Math.floor(rnd() * 5)];
+          if (el) el.innerHTML = `<div class="text-4xl">🎲</div><div class="text-sm font-bold" style="color:${RARITIES[k].color}">${RARITIES[k].name}</div>`;
+          if (Date.now() - t0 > 1300) { clearInterval(iv); res(); }
+        }, 90);
+      });
+      let ok = false;
       try {
-        const stars = Number((gameData[meKey] || {}).stars) || 0;
+        const stars = Number((gameData[meKey] || {}).stars) || 0, finalPity = pity;
         const res = await db.ref('casino/' + meKey).transaction((cur) => {
           cur = cur || {};
           const bonus = cur.bonus !== undefined ? cur.bonus : EVT_BONUS;
           const spent = Number(cur.spent) || 0, won = Number(cur.won) || 0;
-          if (stars + bonus + won - spent < it.price) return;
-          return { ...cur, bonus, spent: spent + it.price, won, shop: { ...(cur.shop || {}), [it.id]: true } };
+          if (stars + bonus + won - spent < cost) return;
+          return { ...cur, bonus, spent: spent + cost, won: won + refund, rolls: (Number(cur.rolls) || 0) + n, pity: finalPity };
         });
-        if (res.committed) { await claimEventFlag(it.flag); casinoMsg = '✅ Acheté : ' + it.name + ' ! Tu la retrouves dans le menu 🎨.'; }
-        else casinoMsg = 'Achat refusé.';
-      } catch (e) { casinoMsg = 'Achat impossible : ' + (e.code || e.message); }
+        ok = !!res.committed;
+      } catch (e) { console.error(e); }
+      if (ok) {
+        const g = gameData[meKey], upd = {};
+        results.forEach(r => { if (!r.dup) { if (r.item.type === 'theme') upd[r.item.flag] = true; else upd['roll/' + r.item.id] = true; } });
+        if (!g || g.stars === undefined) upd.stars = 0;
+        if (Object.keys(upd).length) { try { await db.ref('game/' + meKey).update(upd); } catch (e) { casinoMsg = "Cosmétique non enregistré : " + (e.code || e.message); } }
+        lastRollHtml = n === 1 ? rollCardHtml(results[0]) : `<div class="grid grid-cols-5 gap-1.5">${results.map(r => `<div class="rounded-lg p-1 text-center" style="border:1px solid ${RARITIES[r.rar].color}" title="${esc(r.item.name)} · ${RARITIES[r.rar].name}"><div class="text-lg">${r.item.icon}</div><div class="text-[8px] ${r.dup ? 'text-gray-500' : 'text-emerald-400 font-bold'}">${r.dup ? '+' + r.refund : 'NEW'}</div></div>`).join('')}</div><p class="text-[10px] text-gray-300 mt-2">Meilleur : ${best.item.icon} ${esc(best.item.name)} (<span style="color:${RARITIES[best.rar].color}">${RARITIES[best.rar].name}</span>)${refund ? ' · doublons : +' + refund + ' ⭐' : ''}</p>`;
+        if (best.rar === 'legendary' || best.rar === 'mythic') casinoMsg = '✨ ' + RARITIES[best.rar].name.toUpperCase() + ' ! ✨';
+      } else { lastRollHtml = ''; casinoMsg = 'Roll refusé (solde insuffisant ou événement terminé).'; }
       casinoBusy = false; renderCasino();
     }
     function casinoRanking() {
@@ -2743,13 +2838,19 @@
       if (!modal || !body || modal.classList.contains('hidden') || !meKey || casinoBusy) return;
       const st = evtState(), bal = casinoBalance(meKey), g = gameData[meKey] || {};
       if (st === 'before') {
-        body.innerHTML = `<div class="text-center space-y-2 py-6"><div class="text-4xl">🎰</div><p class="text-sm text-white font-semibold">Ouverture à 20h00</p><p id="casinoCountdown" class="text-2xl font-mono text-amber-300">${fmtCount(EVT.start - nowS())}</p><p class="text-[11px] text-gray-400">Mise tes étoiles, gagne des cosmétiques exclusifs.</p></div>`;
+        body.innerHTML = `<div class="text-center space-y-2 py-6"><div class="text-4xl">🎰</div><p class="text-sm text-white font-semibold">Ouverture à 20h00</p><p id="casinoCountdown" class="text-2xl font-mono text-amber-300">${fmtCount(EVT.start - nowS())}</p><p class="text-[11px] text-gray-400">Roule pour des cosmétiques exclusifs, mise tes étoiles pour en gagner plus.</p></div>`;
         return;
       }
       const chips = [10, 50, 100, 250, 500].map(v => `<button type="button" data-bet="${v}" class="px-2.5 py-1 rounded-lg text-[11px] ${casinoBet === v ? 'bg-amber-500 text-black font-bold' : 'bg-gray-800 text-gray-200 hover:bg-gray-700'}">${v}</button>`).join('');
-      const tabs = [['slots', '🎰 Slots'], ['coin', '🪙 Pile/Face'], ['wheel', '🎡 Roue'], ['shop', '🛍️ Boutique'], ['rank', '🏆 Top']].map(([id, l]) => `<button type="button" data-tab="${id}" class="px-2 py-1 rounded-lg text-[11px] ${casinoTab === id ? 'bg-brand-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}">${l}</button>`).join('');
+      const tabs = [['roll', '🎲 Roll'], ['slots', '🎰 Slots'], ['coin', '🪙 Pile/Face'], ['wheel', '🎡 Roue'], ['coll', '📖 Collection'], ['rank', '🏆 Top']].map(([id, l]) => `<button type="button" data-tab="${id}" class="px-2 py-1 rounded-lg text-[11px] ${casinoTab === id ? 'bg-brand-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}">${l}</button>`).join('');
       let tab = '';
-      if (casinoTab === 'slots') {
+      if (casinoTab === 'roll') {
+        const pity = Number((casinoData[meKey] || {}).pity) || 0;
+        tab = `<div id="rollStage" class="min-h-[110px] flex flex-col items-center justify-center rounded-xl bg-gray-900/60 border border-gray-800 p-3 text-center">${lastRollHtml || '<div class="text-4xl">🎲</div><p class="text-[11px] text-gray-400 mt-1">Lance un roll pour gagner un cosmétique exclusif</p>'}</div>
+          <div class="grid grid-cols-2 gap-2"><button type="button" data-roll="1" class="py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm">Roll ×1<br><span class="text-[11px] font-semibold">${ROLL_COST} ⭐</span></button><button type="button" data-roll="10" class="py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-bold text-sm">Roll ×10<br><span class="text-[11px] font-semibold">${ROLL_COST * 9} ⭐ (1 offert)</span></button></div>
+          <p class="text-[10px] text-gray-400">Légendaire garanti dans <b>${Math.max(1, ROLL_PITY - pity)}</b> roll(s) maximum.</p>
+          <div class="grid grid-cols-5 gap-1 text-center text-[10px]">${Object.keys(RARITIES).map(k => `<div class="rounded-lg py-1" style="border:1px solid ${RARITIES[k].color}"><div style="color:${RARITIES[k].color}" class="font-semibold">${RARITIES[k].name}</div><div class="text-gray-300">${RARITIES[k].w} %</div></div>`).join('')}</div>`;
+      } else if (casinoTab === 'slots') {
         tab = `<div class="flex justify-center gap-2 text-4xl py-2"><span id="reel0">🎰</span><span id="reel1">🎰</span><span id="reel2">🎰</span></div>
           <button type="button" data-play="slots" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm">Lancer (${casinoBet} ⭐)</button>
           <p class="text-[10px] text-gray-400 leading-relaxed">3 identiques : 🍒×5 🍋×8 🔔×15 ⭐×30 💎×80 7️⃣×250 · 2 🍒 = ×1 · 2 identiques = ×0,5. Trois ⭐, 💎 ou 7️⃣ = décoration Jackpot offerte !</p>`;
@@ -2761,9 +2862,10 @@
         tab = `<div id="wheelOut" class="text-center text-3xl font-bold py-3 text-amber-300">🎡</div>
           <button type="button" data-play="wheel" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm">Tourner (${casinoBet} ⭐)</button>
           <p class="text-[10px] text-gray-400">Gains possibles : ×0, ×0,5, ×1, ×2, ×5, ×10, ×25 (Jackpot !) et ×50.</p>`;
-      } else if (casinoTab === 'shop') {
-        tab = SHOP.map(it => { const own = g[it.flag] === true; return `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800"><div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-base shrink-0">${it.icon}</div><div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100">${esc(it.name)}</p><p class="text-[10px] text-gray-400">${it.price} ⭐</p></div>${own ? '<span class="text-[11px] text-emerald-400">Possédé ✓</span>' : `<button type="button" data-buy="${it.id}" class="px-2.5 py-1 rounded-lg text-[11px] bg-brand-600 hover:bg-brand-500 text-white">Acheter</button>`}</div>`; }).join('')
-          + `<p class="text-[10px] text-gray-400">Édition limitée : la boutique ferme à la fin de l'événement. La décoration « 1 semaine 🎂 » est offerte à tous ceux qui se connectent pendant l'événement.</p>`;
+      } else if (casinoTab === 'coll') {
+        const have = ROLL_ITEMS.filter(itemOwned).length;
+        tab = `<p class="text-[11px] text-gray-300">Collection : <b>${have}/${ROLL_ITEMS.length}</b></p>` + Object.keys(RARITIES).reverse().map(rk => `<div class="space-y-1"><p class="text-[11px] font-semibold" style="color:${RARITIES[rk].color}">${RARITIES[rk].name} · ${RARITIES[rk].w} %</p><div class="grid grid-cols-4 gap-1.5">${ROLL_ITEMS.filter(i => i.r === rk).map(i => { const o = itemOwned(i); return `<div class="rounded-lg p-1.5 text-center ${o ? '' : 'opacity-40'}" style="border:1px solid ${RARITIES[rk].color}"><div class="text-lg">${o ? i.icon : '❓'}</div><div class="text-[9px] text-gray-200 truncate">${o ? esc(i.name) : '???'}</div></div>`; }).join('')}</div></div>`).join('')
+          + `<p class="text-[10px] text-gray-400">Tes décorations se choisissent dans le menu 🎨. Les doublons te remboursent une partie de la mise.</p>`;
       } else {
         const top = casinoRanking();
         tab = (top.length ? top.map((x, i) => `<div class="flex items-center gap-2 p-2 rounded-xl ${x.k === meKey ? 'bg-amber-500/15 border border-amber-500/30' : 'bg-gray-900/50 border border-gray-800'}"><span class="w-6 text-center">${['🥇', '🥈', '🥉'][i] || (i + 1)}</span><span class="flex-1 truncate text-gray-100">${esc(accounts[x.k].name)}</span><span class="${x.net >= 0 ? 'text-emerald-400' : 'text-rose-400'} font-mono">${x.net >= 0 ? '+' : ''}${x.net} ⭐</span></div>`).join('') : '<p class="text-gray-400">Personne n\'a encore joué.</p>')
@@ -2778,8 +2880,8 @@
       body.querySelectorAll('[data-tab]').forEach(b => { b.onclick = () => { casinoTab = b.dataset.tab; casinoMsg = ''; renderCasino(); }; });
       body.querySelectorAll('[data-bet]').forEach(b => { b.onclick = () => { casinoBet = Math.min(MAX_BET, Number(b.dataset.bet)); renderCasino(); }; });
       body.querySelectorAll('[data-play]').forEach(b => { b.onclick = () => casinoRound(b.dataset.play, b.dataset.pick); });
-      body.querySelectorAll('[data-buy]').forEach(b => { b.onclick = () => casinoBuy(b.dataset.buy); });
-      if (st === 'after') body.querySelectorAll('[data-play],[data-buy]').forEach(b => { b.disabled = true; b.classList.add('opacity-50'); });
+      body.querySelectorAll('[data-roll]').forEach(b => { b.onclick = () => rollNow(Number(b.dataset.roll)); });
+      if (st === 'after') body.querySelectorAll('[data-play],[data-roll]').forEach(b => { b.disabled = true; b.classList.add('opacity-50'); });
     }
     function renderCasinoPanel() {
       const box = document.getElementById('casinoPanel'); if (!box) return;
@@ -2801,9 +2903,6 @@
         if (gameLoaded && Date.now() - lastClaim > 15000) {
           lastClaim = Date.now();
           if (st === 'live' && (gameData[meKey] || {}).eParty !== true) claimEventFlag('eParty');
-          // réparation : achat payé mais drapeau pas encore posé
-          const shop = (casinoData[meKey] || {}).shop || {};
-          SHOP.forEach(it => { if (shop[it.id] && (gameData[meKey] || {})[it.flag] !== true) claimEventFlag(it.flag); });
         }
       }
       if (meKey) evtPrev = st;
