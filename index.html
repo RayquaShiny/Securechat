@@ -2605,7 +2605,7 @@
       showOfflineBar();
       return true;
     }
-    // ===== Événement anniversaire : 3 cadeaux =====
+// ===== Événement anniversaire : 3 cadeaux =====
     const EVT = { start: 1793214000000, end: 1793314800000 }; // 28/10/2026 20h00 -> 30/10/2026 00h00 (heure de Paris)
     let serverOffset = 0, gameLoaded = false, evtPrev = '', evtTimer = null, lastClaim = 0;
     const nowS = () => Date.now() + serverOffset;
@@ -2630,19 +2630,73 @@
     let rollBusy = false, rollMsg = '';
     const rollBal = k => Number((gameData[k] || {}).stars) || 0;
     function pickGift(pool) { const a = new Uint32Array(1); crypto.getRandomValues(a); let r = a[0] / 4294967296 * pool.reduce((s, x) => s + x.w, 0); for (const x of pool) { if ((r -= x.w) < 0) return x; } return pool[0]; }
+    
     async function rollNow() {
       if (rollBusy || evtState() !== 'live') return;
       const g = gameData[meKey] || {}, stars = Number(g.stars) || 0;
       const pool = GIFTS.filter(x => g[x.flag] !== true);
-      if (!pool.length) { rollMsg = 'Tout est débloqué ! 🎉'; renderGifts(); return; }
-      if (stars < ROLL_COST) { rollMsg = "Pas assez d'étoiles : joue au mini-jeu pour en regagner !"; renderGifts(); return; }
-      rollBusy = true; rollMsg = '';
-      const x = pickGift(pool), upd = { [x.flag]: true, best: Math.max(Number(g.best) || 0, stars), stars: stars - ROLL_COST };
-      if (x.flag === 'eStars500') { upd.stars += 500; upd.t = firebase.database.ServerValue.TIMESTAMP; }
-      try { await db.ref('game/' + meKey).update(upd); rollMsg = '✨ ' + x.icon + ' ' + x.name + ' !'; }
-      catch (e) { rollMsg = 'Roll refusé (réessaie dans 20 s) : ' + (e.code || e.message); }
-      rollBusy = false; renderGifts();
+      
+      if (!pool.length) { 
+        rollMsg = 'Tout est débloqué ! 🎉'; 
+        renderGifts(); 
+        return; 
+      }
+      if (stars < ROLL_COST) { 
+        rollMsg = "Pas assez d'étoiles : joue au mini-jeu pour en regagner !"; 
+        renderGifts(); 
+        return; 
+      }
+      
+      rollBusy = true; 
+      rollMsg = '';
+      const x = pickGift(pool);
+      
+      const netChange = (x.flag === 'eStars500') ? (500 - ROLL_COST) : (-ROLL_COST);
+      const newStars = Math.max(0, stars + netChange);
+      const currentBest = Number(g.best) || 0;
+      const newBest = Math.max(currentBest, stars);
+
+      const upd = { 
+        [x.flag]: true, 
+        best: newBest, 
+        stars: newStars 
+      };
+
+      try { 
+        await db.ref('game/' + meKey).update(upd); 
+        rollMsg = '✨ ' + x.icon + ' ' + x.name + ' !'; 
+      } catch (e) { 
+        rollMsg = 'Roll refusé : ' + (e.code || e.message); 
+      }
+      
+      rollBusy = false; 
+      renderGifts();
     }
+  // On prépare la mise à jour propre en conservant le meilleur score (best) et en déduisant les 100 étoiles
+  const newStars = stars - ROLL_COST + (x.flag === 'eStars500' ? 500 : 0);
+  const currentBest = Number(g.best) || 0;
+  const newBest = Math.max(currentBest, stars); // Maintient ou augmente le best sans jamais baisser
+
+  const upd = { 
+    [x.flag]: true, 
+    best: newBest, 
+    stars: newStars 
+  };
+  
+  if (x.flag === 'eStars500') {
+    upd.t = firebase.database.ServerValue.TIMESTAMP;
+  }
+
+  try { 
+    await db.ref('game/' + meKey).update(upd); 
+    rollMsg = '✨ ' + x.icon + ' ' + x.name + ' !'; 
+  } catch (e) { 
+    rollMsg = 'Roll refusé : ' + (e.code || e.message); 
+  }
+  
+  rollBusy = false; 
+  renderGifts();
+}
     function openGifts() {
       document.getElementById('giftModal').classList.remove('hidden');
       if (typeof toggleSidebar === 'function') toggleSidebar(false);
