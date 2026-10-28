@@ -229,6 +229,43 @@
     body.theme-ete .status-dot.bg-brand-500 { background-color:#4ade80 !important; }
     body.theme-ete .status-dot.bg-red-500 { background-color:#ef4444 !important; }
     body.theme-ete .status-dot.bg-blue-500 { background-color:#3b82f6 !important; }
+    /* ===== Thème : casino ===== */
+    body.theme-casino { background-color:#04150d !important; }
+    body.theme-casino::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0; transform: translateZ(0); contain: strict; background: repeating-linear-gradient(45deg, rgba(255,255,255,.022) 0, rgba(255,255,255,.022) 2px, transparent 2px, transparent 7px), radial-gradient(ellipse at 10% 0%, rgba(34,197,94,.20), transparent 52%), radial-gradient(ellipse at 95% 100%, rgba(234,179,8,.18), transparent 55%); }
+    body.theme-casino .bg-darkbg, body.theme-casino .bg-darkpanel { background-color:#04150d !important; }
+    body.theme-casino .bg-gray-950, body.theme-casino .bg-gray-900 { background-color:#082317 !important; }
+    body.theme-casino .bg-gray-800 { background-color:#0e3322 !important; }
+    body.theme-casino .bg-gray-700 { background-color:#154a31 !important; }
+    body.theme-casino .hover\:bg-gray-800:hover, body.theme-casino .hover\:bg-gray-700:hover { background-color:#154a31 !important; }
+    body.theme-casino .border-gray-800, body.theme-casino .border-gray-700, body.theme-casino .border-gray-800\/60 { border-color: rgba(250,204,21,.30) !important; }
+    body.theme-casino .glass-panel { background: #082317; border-color: rgba(250,204,21,.30); -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+    body.theme-casino .backdrop-blur-sm { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+    body.theme-casino .bg-brand-500, body.theme-casino .bg-brand-600, body.theme-casino .bg-brand-700 { background-color:#a16207 !important; }
+    body.theme-casino .hover\:bg-brand-500:hover, body.theme-casino .hover\:bg-brand-600:hover { background-color:#ca8a04 !important; }
+    body.theme-casino .text-brand-300, body.theme-casino .text-brand-400, body.theme-casino .text-brand-500 { color:#fde047 !important; }
+    body.theme-casino .bg-brand-500\/10, body.theme-casino .bg-brand-500\/20, body.theme-casino .hover\:bg-brand-500\/20, body.theme-casino .bg-brand-600\/30 { background-color: rgba(250,204,21,.30) !important; }
+    body.theme-casino .border-brand-500, body.theme-casino .border-brand-500\/20, body.theme-casino .border-brand-500\/30, body.theme-casino .border-brand-500\/50, body.theme-casino .focus\:border-brand-500 { border-color: #fde047 !important; }
+    body.theme-casino header { border-bottom: 1px solid #fde047 !important; }
+    body.theme-casino h1, body.theme-casino h3 { text-shadow: 0 0 10px rgba(250,204,21,.5); }
+    body.theme-casino .msg-bubble.bg-brand-600 { background: linear-gradient(135deg,#a16207,#ca8a04) !important; }
+    body.theme-casino .msg-bubble.bg-gray-800 { background: #0b2a1b !important; border-color: rgba(250,204,21,.32) !important; }
+    body.theme-casino ::selection { background: #a16207; color:#fff; }
+    body.theme-casino ::-webkit-scrollbar-thumb { background: #a16207; }
+    body.theme-casino input:focus, body.theme-casino textarea:focus { border-color:#fde047 !important; outline:none; }
+    body.theme-casino .status-dot.bg-brand-500 { background-color:#4ade80 !important; }
+    body.theme-casino .status-dot.bg-red-500 { background-color:#ef4444 !important; }
+    body.theme-casino .status-dot.bg-blue-500 { background-color:#3b82f6 !important; }
+    .deco-bday { background-image: radial-gradient(circle at 12% 30%, #f472b6 0 2px, transparent 3px), radial-gradient(circle at 38% 70%, #fde047 0 2px, transparent 3px), radial-gradient(circle at 62% 28%, #67e8f9 0 2px, transparent 3px), radial-gradient(circle at 86% 66%, #a78bfa 0 2px, transparent 3px), linear-gradient(120deg, rgba(249,168,212,.28), rgba(253,230,138,.22), rgba(103,232,249,.26)) !important; background-color: #1a1030 !important; border-color: #f9a8d4 !important; box-shadow: 0 0 10px rgba(249,168,212,.4); }
+    .deco-bday p { color: #ffe4f1 !important; }
+    .deco-jackpot { position: relative; overflow: hidden; isolation: isolate; background: linear-gradient(120deg,#3b2a05,#7a5a07,#3b2a05) !important; border-color: #facc15 !important; box-shadow: 0 0 12px rgba(250,204,21,.55); }
+    .deco-jackpot p { color: #fde68a !important; text-shadow: 0 0 6px rgba(250,204,21,.7); }
+    .deco-jackpot::after { content: ''; position: absolute; top: 0; bottom: 0; width: 26px; left: -26px; background: linear-gradient(90deg, transparent, rgba(255,240,170,.45), transparent); animation: jackpotShine 3.5s linear infinite; pointer-events: none; }
+    @keyframes jackpotShine { from { left: -26px; } to { left: 100%; } }
+    .deco-roller { background: repeating-linear-gradient(45deg, rgba(168,85,247,.22) 0, rgba(168,85,247,.22) 6px, rgba(0,0,0,0) 6px, rgba(0,0,0,0) 12px), #0d0620 !important; border-color: #a855f7 !important; box-shadow: 0 0 10px rgba(168,85,247,.5); }
+    .deco-roller p { color: #e9d5ff !important; }
+    .deco-king { background: linear-gradient(120deg,#5b0f0f,#9a6a0a,#5b0f0f) !important; border-color: #fbbf24 !important; box-shadow: 0 0 14px rgba(251,191,36,.6); }
+    .deco-king p { color: #fff3c4 !important; text-shadow: 0 0 6px rgba(251,191,36,.8); }
+    @media (prefers-reduced-motion: reduce) { .deco-jackpot::after { animation: none; } }
   </style>
 </head>
 <body class="h-screen h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-hidden">
@@ -291,7 +328,7 @@
               <span class="hidden sm:inline">Securechat</span>
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v4.0.0</span>
+                <span>v4.1.0</span>
               </button>
             </h2>
           </div>
@@ -345,6 +382,12 @@
             </button>
             <div id="groupsList" class="space-y-1"></div>
           </nav>
+        </div>
+        <div id="casinoPanel" class="hidden p-4 border-b border-gray-800 shrink-0">
+          <button onclick="openCasino()" class="w-full text-left p-3 rounded-xl border border-amber-500/40 bg-gradient-to-br from-amber-500/15 to-rose-500/10 hover:from-amber-500/25 transition space-y-1">
+            <p class="text-xs font-bold text-amber-300">🎂 Anniversaire · 🎰 Casino</p>
+            <p id="casinoPanelSub" class="text-[11px] text-gray-300"></p>
+          </button>
         </div>
         <div id="eventPanel" class="p-4 border-b border-gray-800 shrink-0">
           <button onclick="openGameModal()" class="w-full text-left p-3 rounded-xl border border-fuchsia-500/30 bg-gradient-to-br from-fuchsia-500/10 to-indigo-500/10 hover:from-fuchsia-500/20 transition space-y-2">
@@ -444,6 +487,17 @@
     </div>
   </div>
 
+  <!-- MODAL CASINO -->
+  <div id="casinoModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md glass-panel p-5 rounded-2xl border border-amber-500/30 space-y-4 max-h-[88vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+        <h3 class="text-sm font-bold text-white">🎰 Casino de l'anniversaire</h3>
+        <button onclick="closeCasino()" class="text-gray-400 hover:text-white text-base leading-none px-2">✕</button>
+      </div>
+      <div id="casinoBody" class="space-y-4 text-gray-300 text-xs"></div>
+    </div>
+  </div>
+
   <input type="file" id="avatarInput" accept="image/*" class="hidden">
 
   <!-- MODAL DÉCORATIONS -->
@@ -501,8 +555,18 @@
       <div class="space-y-4 text-gray-300">
         <div class="border-l-2 border-amber-500 pl-3 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v4.0.0</span>
+            <span class="font-bold text-white text-sm">v4.1.0</span>
             <span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
+          </div>
+          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
+            <li>Événement anniversaire : casino (slots, pile ou face, roue)</li>
+            <li>Boutique d'édition limitée et cosmétiques exclusifs</li>
+            <li>Décoration « 1 semaine » pour tous les participants</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white text-sm">v4.0.0</span>
           </div>
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>Messages épinglés (salons et groupes)</li>
@@ -690,17 +754,16 @@
   </div>
 
   <script>
-    const CURRENT_VERSION = "v4.0.0";
+    const CURRENT_VERSION = "v4.1.0";
     const DEV_MODE = false; // true = aucune annonce automatique
     const VERSION_CHANGELOG =
-      "🚀 Securechat v4.0 : la grosse mise à jour !\n\n" +
-      "Voici les nouveautés :\n" +
-      "📌 Messages épinglés dans les salons et les groupes\n" +
-      "✓ « Vu » discret dans les messages privés\n" +
-      "👥 Groupes privés chiffrés, créés par l'Owner\n" +
-      "🎄 Thèmes de saison (Noël, Saint-Valentin, Été) qui s'activent tout seuls, avec un secret caché dans chacun pour les garder pour toujours\n" +
-      "⚡ Ouverture beaucoup plus rapide, et lecture des derniers messages même sans réseau\n\n" +
-      "Bon chat !";
+      "🎂 Securechat fête sa première semaine : GROS ÉVÉNEMENT !\n\n" +
+      "À partir de ce soir 20h00 et jusqu'à demain minuit :\n" +
+      "🎰 Le casino de l'anniversaire ouvre : machine à sous, pile ou face et roue de la fortune, avec tes étoiles en mise\n" +
+      "🛍️ Une boutique d'édition limitée avec des cosmétiques exclusifs (décorations et thème)\n" +
+      "🎂 La décoration « 1 semaine » est offerte à tous ceux qui se connectent pendant l'événement\n" +
+      "🏆 Le n°1 du classement peut gagner la décoration « Roi du casino »\n\n" +
+      "Tes paliers de décorations ne baissent jamais, même si tu perds des étoiles. Bonne chance !";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
 
@@ -1187,7 +1250,12 @@
       { id: 'flame',    name: 'Flamme',    icon: '🔥', cls: 'deco-flame',   kind: 'stars', at: 1000 },
       { id: 'royal',    name: 'Royal',     icon: '👑', cls: 'deco-royal',   kind: 'stars', at: 2500 },
       { id: 'error404', name: 'Écran bleu', icon: ':(', cls: 'deco-404', kind: 'secret', flag: 's404' },
-      { id: 'hacker', name: 'Hacker', icon: '💻', cls: 'deco-hack', kind: 'secret', flag: 'sHack' }
+      { id: 'hacker', name: 'Hacker', icon: '💻', cls: 'deco-hack', kind: 'secret', flag: 'sHack' },
+      // Événement anniversaire (édition limitée) : kind 'event' = débloqué par un drapeau eXxx
+      { id: 'bday',    name: '1 semaine',  icon: '🎂', cls: 'deco-bday',    kind: 'event', flag: 'eParty',   how: "Se connecter pendant l'événement" },
+      { id: 'roller',  name: 'High Roller', icon: '💎', cls: 'deco-roller', kind: 'event', flag: 'eRoller',  how: 'Boutique du casino : 800 ⭐' },
+      { id: 'jackpot', name: 'Jackpot',    icon: '🎰', cls: 'deco-jackpot', kind: 'event', flag: 'eJackpot', how: 'Gros gain au casino, ou boutique : 2500 ⭐' },
+      { id: 'casinoking', name: 'Roi du casino', icon: '👑', cls: 'deco-king', kind: 'exclusive', who: [] }
     ];
     // ----- Photos de profil (avatars/<clé> : petite image JPEG en data URL)
     let avatarsData = {};
@@ -1241,7 +1309,8 @@
       // Thèmes saisonniers : actifs automatiquement à la bonne date ; le secret caché (hunt) les débloque pour toujours
       { id: 'noel', name: 'Noël', icon: '🎄', kind: 'secret', flag: 'sNoel', bg: 'linear-gradient(120deg,#14532d,#b91c1c,#fde68a)', season: { from: [12, 1], to: [12, 26] }, hunt: { emoji: '🎁', taps: 3, pos: 'left' } },
       { id: 'valentin', name: 'Saint-Valentin', icon: '💘', kind: 'secret', flag: 'sValentin', bg: 'linear-gradient(120deg,#be185d,#f472b6,#7e22ce)', season: { from: [2, 6], to: [2, 15] }, hunt: { emoji: '💌', taps: 3, pos: 'right' } },
-      { id: 'ete', name: 'Été', icon: '☀️', kind: 'secret', flag: 'sEte', bg: 'linear-gradient(120deg,#f97316,#facc15,#06b6d4)', season: { from: [6, 21], to: [8, 31] }, hunt: { emoji: '🐚', taps: 5, pos: 'br' } }
+      { id: 'ete', name: 'Été', icon: '☀️', kind: 'secret', flag: 'sEte', bg: 'linear-gradient(120deg,#f97316,#facc15,#06b6d4)', season: { from: [6, 21], to: [8, 31] }, hunt: { emoji: '🐚', taps: 5, pos: 'br' } },
+      { id: 'casino', name: 'Casino', icon: '🎰', kind: 'secret', flag: 'eCasinoTheme', bg: 'linear-gradient(120deg,#064e3b,#ca8a04,#7f1d1d)' }
     ];
     const SECRET_WORDS = [{ word: 'halloween', theme: 'halloween' }];
     let gameData = {}, grantsData = {}, gameTimers = [], gameRunning = false, lastGain = null;
@@ -1265,7 +1334,7 @@
       if (g.theme === 'classic') return null;
       return themeFor(meKey) || seasonNow();
     }
-    const THEME_COLORS = { halloween: '#0f0805', arcade: '#07031a', noel: '#07140d', valentin: '#1a0710', ete: '#06141f' };
+    const THEME_COLORS = { halloween: '#0f0805', arcade: '#07031a', noel: '#07140d', valentin: '#1a0710', ete: '#06141f', casino: '#04150d' };
     function applyTheme() {
       const t = currentUser ? activeTheme() : null;
       THEMES.forEach(x => document.body.classList.toggle('theme-' + x.id, !!t && t.id === x.id));
@@ -1351,7 +1420,7 @@
     function ownsDeco(k, d) {
       const g = gameData[k] || {};
       if (d.kind === 'stars') return (Number(g.stars) || 0) >= d.at;
-      if (d.kind === 'secret') return g[d.flag] === true;
+      if (d.kind === 'secret' || d.kind === 'event') return g[d.flag] === true;
       if (d.kind === 'exclusive') return (d.who || []).includes(k) || !!((grantsData[k] || {})[d.id]);
       return false;
     }
@@ -1661,7 +1730,7 @@
       const initial = esc(String(u.name || '?').charAt(0).toUpperCase());
       const row = (d) => {
         const owned = ownsDeco(meKey, d), equipped = !!cur && cur.id === d.id, hidden = d.kind === 'secret' && !owned;
-        const sub = owned ? (equipped ? 'Équipée ✓' : 'Débloquée') : (d.kind === 'stars' ? `À ${d.at} ⭐ · tu en as ${stars}` : 'Secrète : à toi de la trouver');
+        const sub = owned ? (equipped ? 'Équipée ✓' : 'Débloquée') : (d.kind === 'stars' ? `À ${d.at} ⭐ · tu en as ${stars}` : (d.kind === 'event' ? d.how + (evtState() === 'after' ? ' · terminé' : '') : 'Secrète : à toi de la trouver'));
         const btn = owned ? `<button type="button" data-equip="${d.id}" class="px-2.5 py-1 rounded-lg text-[11px] ${equipped ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${equipped ? 'Retirer' : 'Équiper'}</button>` : '';
         return `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800 ${owned ? d.cls : 'opacity-60'}">
           <div class="av w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-sm shrink-0">${owned ? d.icon : (hidden ? '❓' : '🔒')}</div>
@@ -1705,6 +1774,7 @@
         </div>
         ${sec('Exclusives', DECOS.filter(d => d.kind === 'exclusive' && ownsDeco(meKey, d)))}
         ${sec('Étoiles ⭐', DECOS.filter(d => d.kind === 'stars'))}
+        ${sec('Événement anniversaire 🎂', DECOS.filter(d => d.kind === 'event'))}
         ${themeChoiceHtml}
         ${secretsHtml}
         <p class="text-[11px] text-gray-500">Gagne des étoiles dans l'event « ${esc(EVENT.name)} » pour débloquer les autres.</p>`;
@@ -2091,7 +2161,10 @@
       const soft = (ref, cb) => { ref.on('value', cb, () => {}); listeners.push(ref); };
       soft(db.ref('roles'), (r) => { rolesData = r.val() || {}; renderUsersList(); updateAdminUsersList(); renderRolesList(); renderMessages(); if (currentUser) document.getElementById('userRoleDisplay').textContent = roleLabel(currentUser); });
       soft(db.ref('lastPublishedVersion'), (v) => { const pub = v.val(); document.getElementById('updateBanner').classList.toggle('hidden', !(pub && isNewer(pub, CURRENT_VERSION))); });
-      soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; applyTheme(); renderUsersList(); renderGamePanel(); renderGameModal(); renderDecoButton(); renderDecoModal(); });
+      db.ref('.info/serverTimeOffset').on('value', (o) => { serverOffset = Number(o.val()) || 0; }); listeners.push(db.ref('.info/serverTimeOffset'));
+      soft(db.ref('casino'), (cs) => { casinoData = cs.val() || {}; renderCasinoPanel(); renderCasino(); renderDecoModal(); });
+      startEventTick();
+      soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; gameLoaded = true; applyTheme(); renderUsersList(); renderGamePanel(); renderGameModal(); renderDecoButton(); renderDecoModal(); });
       soft(db.ref('avatars'), (as) => { avatarsData = as.val() || {}; renderMyAvatar(); renderUsersList(); renderDecoModal(); renderMessages(); });
       startGroupListeners();
       soft(db.ref('pins'), (pn) => { pinsData = pn.val() || {}; renderMessages(); });
@@ -2114,7 +2187,7 @@
 
     async function logout() {
       if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline', at: firebase.database.ServerValue.TIMESTAMP }); } catch (e) {} }
-      abortRound(); stopListeners(); wipeKeys(); gameData = {}; avatarsData = {}; groupsData = {}; userGroupsData = {}; Object.keys(groupWatch).forEach(k => delete groupWatch[k]); Object.keys(groupKeyCache).forEach(k => delete groupKeyCache[k]); pendingChan = ''; lastMsgsSnap = null; applyTheme();
+      abortRound(); stopListeners(); wipeKeys(); gameData = {}; avatarsData = {}; groupsData = {}; userGroupsData = {}; casinoData = {}; gameLoaded = false; closeCasino(); renderCasinoPanel(); Object.keys(groupWatch).forEach(k => delete groupWatch[k]); Object.keys(groupKeyCache).forEach(k => delete groupKeyCache[k]); pendingChan = ''; lastMsgsSnap = null; applyTheme();
       currentUser = null; meKey = ''; starting = false;
       accounts = {}; rolesData = {}; gameData = {}; grantsData = {}; notesList = []; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
@@ -2527,6 +2600,218 @@
       renderUsersList(); renderGroupsList(); renderMessages();
       showOfflineBar();
       return true;
+    }
+    // ===== Événement anniversaire : casino (étoiles) =====
+    // Le solde du casino = tes étoiles + 100 de bienvenue + gains - mises. Tes paliers de décorations (étoiles gagnées au jeu) ne baissent JAMAIS.
+    const EVT = { start: 1793214000000, end: 1793314800000 }; // 28/10/2026 20h00 -> 30/10/2026 00h00 (heure de Paris)
+    const EVT_BONUS = 100, MAX_BET = 500;
+    let serverOffset = 0, casinoData = {}, casinoTab = 'slots', casinoBet = 50, casinoBusy = false, casinoMsg = '', gameLoaded = false, evtPrev = '', evtTimer = null, lastClaim = 0;
+    const nowS = () => Date.now() + serverOffset;
+    function evtState() { const n = nowS(); return n < EVT.start ? 'before' : (n <= EVT.end ? 'live' : 'after'); }
+    function fmtCount(ms) {
+      const t = Math.max(0, Math.floor(ms / 1000)), p = n => String(n).padStart(2, '0');
+      return p(Math.floor(t / 3600)) + ':' + p(Math.floor((t % 3600) / 60)) + ':' + p(t % 60);
+    }
+    function rnd() { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] / 4294967296; }
+    function pickW(items) { const tot = items.reduce((x, i) => x + i.w, 0); let r = rnd() * tot; for (const it of items) { if ((r -= it.w) < 0) return it; } return items[items.length - 1]; }
+    const SLOT_SYMS = [
+      { e: '🍒', w: 34, p3: 5 }, { e: '🍋', w: 26, p3: 8 }, { e: '🔔', w: 18, p3: 15 },
+      { e: '⭐', w: 12, p3: 30 }, { e: '💎', w: 7, p3: 80 }, { e: '7️⃣', w: 3, p3: 250 }
+    ];
+    const WHEEL = [
+      { m: 0, w: 48, l: 'Perdu ×0' }, { m: 0.5, w: 26, l: '×0,5' }, { m: 1, w: 11, l: '×1' }, { m: 2, w: 9, l: '×2' },
+      { m: 5, w: 4, l: '×5' }, { m: 10, w: 1.5, l: '×10' }, { m: 25, w: 0.45, l: '×25 !' }, { m: 50, w: 0.05, l: '×50 !!' }
+    ];
+    const SHOP = [
+      { id: 'roller', type: 'deco', icon: '💎', name: 'Décoration « High Roller »', price: 800, flag: 'eRoller' },
+      { id: 'jackpot', type: 'deco', icon: '🎰', name: 'Décoration « Jackpot »', price: 2500, flag: 'eJackpot' },
+      { id: 'casino', type: 'theme', icon: '🎰', name: "Thème d'application « Casino »", price: 2000, flag: 'eCasinoTheme' }
+    ];
+    function casinoBalance(k) {
+      const c = casinoData[k] || {};
+      const bonus = c.bonus !== undefined ? Number(c.bonus) : EVT_BONUS;
+      return Math.max(0, (Number((gameData[k] || {}).stars) || 0) + bonus + (Number(c.won) || 0) - (Number(c.spent) || 0));
+    }
+    function slotMult(r) {
+      if (r[0].e === r[1].e && r[1].e === r[2].e) return r[0].p3;
+      for (const sy of SLOT_SYMS) { if (r.filter(x => x.e === sy.e).length === 2) return sy.e === '🍒' ? 1 : 0.5; }
+      return 0;
+    }
+    async function casinoCommit(bet, payout) {
+      try {
+        const stars = Number((gameData[meKey] || {}).stars) || 0;
+        const res = await db.ref('casino/' + meKey).transaction((cur) => {
+          cur = cur || {};
+          const bonus = cur.bonus !== undefined ? cur.bonus : EVT_BONUS;
+          const spent = Number(cur.spent) || 0, won = Number(cur.won) || 0;
+          if (stars + bonus + won - spent < bet) return;
+          return { ...cur, bonus, spent: spent + bet, won: won + payout, plays: (Number(cur.plays) || 0) + 1 };
+        });
+        return !!res.committed;
+      } catch (e) { console.error(e); return false; }
+    }
+    async function claimEventFlag(flag) {
+      const g = gameData[meKey]; if (g && g[flag] === true) return;
+      const upd = {}; if (flag !== '_init') upd[flag] = true; if (!g || g.stars === undefined) upd.stars = 0;
+      if (!Object.keys(upd).length) return;
+      try { await db.ref('game/' + meKey).update(upd); } catch (e) {}
+    }
+    function spinAnim(ids, finals, randFn, base, step) {
+      return new Promise(res => {
+        const t0 = Date.now();
+        const iv = setInterval(() => {
+          const el = Date.now() - t0; let done = true;
+          ids.forEach((id, i) => {
+            const node = document.getElementById(id); if (!node) return;
+            if (el < base + step * i) { node.textContent = randFn(); done = false; } else node.textContent = finals[i];
+          });
+          if (done) { clearInterval(iv); res(); }
+        }, 70);
+      });
+    }
+    async function casinoRound(kind, pick) {
+      if (casinoBusy) return;
+      if (evtState() !== 'live') { casinoMsg = 'Le casino est fermé.'; renderCasino(); return; }
+      const bet = casinoBet;
+      if (bet > casinoBalance(meKey)) { casinoMsg = "Pas assez d'étoiles pour cette mise."; renderCasino(); return; }
+      if (!gameData[meKey]) await claimEventFlag('_init').catch(() => {});
+      casinoBusy = true; casinoMsg = '';
+      document.querySelectorAll('#casinoBody button').forEach(b => { b.disabled = true; });
+      let mult = 0, label = '', big = false;
+      if (kind === 'slots') {
+        const fin = [pickW(SLOT_SYMS), pickW(SLOT_SYMS), pickW(SLOT_SYMS)];
+        mult = slotMult(fin);
+        await spinAnim(['reel0', 'reel1', 'reel2'], fin.map(x => x.e), () => pickW(SLOT_SYMS).e, 700, 350);
+        big = fin[0].e === fin[1].e && fin[1].e === fin[2].e && ['⭐', '💎', '7️⃣'].includes(fin[0].e);
+        label = fin.map(x => x.e).join(' ');
+      } else if (kind === 'coin') {
+        const win = rnd() < 0.48, other = pick === 'Pile' ? 'Face' : 'Pile', face = win ? pick : other;
+        mult = win ? 2 : 0;
+        await spinAnim(['coinOut'], [face], () => (rnd() < 0.5 ? 'Pile' : 'Face'), 900, 0);
+        label = face;
+      } else {
+        const seg = pickW(WHEEL);
+        mult = seg.m; big = seg.m >= 25;
+        await spinAnim(['wheelOut'], [seg.l], () => WHEEL[Math.floor(rnd() * WHEEL.length)].l, 1100, 0);
+        label = seg.l;
+      }
+      const payout = Math.floor(bet * mult);
+      const ok = await casinoCommit(bet, payout);
+      casinoBusy = false;
+      if (!ok) casinoMsg = "Mise refusée (solde insuffisant ou casino fermé).";
+      else if (payout > bet) casinoMsg = `🎉 ${label} : tu gagnes ${payout} ⭐ (net +${payout - bet})`;
+      else if (payout === bet) casinoMsg = `${label} : mise remboursée.`;
+      else if (payout > 0) casinoMsg = `${label} : ${payout} ⭐ récupérés (net ${payout - bet}).`;
+      else casinoMsg = `${label} : perdu (${bet} ⭐).`;
+      if (ok && big) { claimEventFlag('eJackpot'); casinoMsg += ' 🎰 JACKPOT ! Décoration « Jackpot » débloquée !'; }
+      renderCasino();
+    }
+    async function casinoBuy(id) {
+      const it = SHOP.find(x => x.id === id); if (!it || casinoBusy) return;
+      if (evtState() !== 'live') { casinoMsg = 'La boutique est fermée.'; renderCasino(); return; }
+      if ((gameData[meKey] || {})[it.flag] === true) return;
+      if (it.price > casinoBalance(meKey)) { casinoMsg = "Pas assez d'étoiles."; renderCasino(); return; }
+      if (!confirm('Acheter « ' + it.name + ' » pour ' + it.price + ' ⭐ ?')) return;
+      casinoBusy = true;
+      try {
+        const stars = Number((gameData[meKey] || {}).stars) || 0;
+        const res = await db.ref('casino/' + meKey).transaction((cur) => {
+          cur = cur || {};
+          const bonus = cur.bonus !== undefined ? cur.bonus : EVT_BONUS;
+          const spent = Number(cur.spent) || 0, won = Number(cur.won) || 0;
+          if (stars + bonus + won - spent < it.price) return;
+          return { ...cur, bonus, spent: spent + it.price, won, shop: { ...(cur.shop || {}), [it.id]: true } };
+        });
+        if (res.committed) { await claimEventFlag(it.flag); casinoMsg = '✅ Acheté : ' + it.name + ' ! Tu la retrouves dans le menu 🎨.'; }
+        else casinoMsg = 'Achat refusé.';
+      } catch (e) { casinoMsg = 'Achat impossible : ' + (e.code || e.message); }
+      casinoBusy = false; renderCasino();
+    }
+    function casinoRanking() {
+      return Object.keys(casinoData).map(k => ({ k, net: (Number(casinoData[k].won) || 0) - (Number(casinoData[k].spent) || 0), plays: Number(casinoData[k].plays) || 0 }))
+        .filter(x => accounts[x.k] && x.plays > 0).sort((a, b) => b.net - a.net).slice(0, 10);
+    }
+    function openCasino() {
+      document.getElementById('casinoModal').classList.remove('hidden');
+      if (typeof toggleSidebar === 'function') toggleSidebar(false);
+      if (gameLoaded && !gameData[meKey]) claimEventFlag('_init');
+      renderCasino();
+    }
+    function closeCasino() { document.getElementById('casinoModal').classList.add('hidden'); }
+    function renderCasino() {
+      const modal = document.getElementById('casinoModal'), body = document.getElementById('casinoBody');
+      if (!modal || !body || modal.classList.contains('hidden') || !meKey || casinoBusy) return;
+      const st = evtState(), bal = casinoBalance(meKey), g = gameData[meKey] || {};
+      if (st === 'before') {
+        body.innerHTML = `<div class="text-center space-y-2 py-6"><div class="text-4xl">🎰</div><p class="text-sm text-white font-semibold">Ouverture à 20h00</p><p id="casinoCountdown" class="text-2xl font-mono text-amber-300">${fmtCount(EVT.start - nowS())}</p><p class="text-[11px] text-gray-400">Mise tes étoiles, gagne des cosmétiques exclusifs.</p></div>`;
+        return;
+      }
+      const chips = [10, 50, 100, 250, 500].map(v => `<button type="button" data-bet="${v}" class="px-2.5 py-1 rounded-lg text-[11px] ${casinoBet === v ? 'bg-amber-500 text-black font-bold' : 'bg-gray-800 text-gray-200 hover:bg-gray-700'}">${v}</button>`).join('');
+      const tabs = [['slots', '🎰 Slots'], ['coin', '🪙 Pile/Face'], ['wheel', '🎡 Roue'], ['shop', '🛍️ Boutique'], ['rank', '🏆 Top']].map(([id, l]) => `<button type="button" data-tab="${id}" class="px-2 py-1 rounded-lg text-[11px] ${casinoTab === id ? 'bg-brand-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}">${l}</button>`).join('');
+      let tab = '';
+      if (casinoTab === 'slots') {
+        tab = `<div class="flex justify-center gap-2 text-4xl py-2"><span id="reel0">🎰</span><span id="reel1">🎰</span><span id="reel2">🎰</span></div>
+          <button type="button" data-play="slots" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm">Lancer (${casinoBet} ⭐)</button>
+          <p class="text-[10px] text-gray-400 leading-relaxed">3 identiques : 🍒×5 🍋×8 🔔×15 ⭐×30 💎×80 7️⃣×250 · 2 🍒 = ×1 · 2 identiques = ×0,5. Trois ⭐, 💎 ou 7️⃣ = décoration Jackpot offerte !</p>`;
+      } else if (casinoTab === 'coin') {
+        tab = `<div id="coinOut" class="text-center text-3xl font-bold py-3 text-amber-300">🪙</div>
+          <div class="grid grid-cols-2 gap-2"><button type="button" data-play="coin" data-pick="Pile" class="py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm">Pile</button><button type="button" data-play="coin" data-pick="Face" class="py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm">Face</button></div>
+          <p class="text-[10px] text-gray-400">Double ta mise (×2) avec 48 % de chances.</p>`;
+      } else if (casinoTab === 'wheel') {
+        tab = `<div id="wheelOut" class="text-center text-3xl font-bold py-3 text-amber-300">🎡</div>
+          <button type="button" data-play="wheel" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm">Tourner (${casinoBet} ⭐)</button>
+          <p class="text-[10px] text-gray-400">Gains possibles : ×0, ×0,5, ×1, ×2, ×5, ×10, ×25 (Jackpot !) et ×50.</p>`;
+      } else if (casinoTab === 'shop') {
+        tab = SHOP.map(it => { const own = g[it.flag] === true; return `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800"><div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-base shrink-0">${it.icon}</div><div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100">${esc(it.name)}</p><p class="text-[10px] text-gray-400">${it.price} ⭐</p></div>${own ? '<span class="text-[11px] text-emerald-400">Possédé ✓</span>' : `<button type="button" data-buy="${it.id}" class="px-2.5 py-1 rounded-lg text-[11px] bg-brand-600 hover:bg-brand-500 text-white">Acheter</button>`}</div>`; }).join('')
+          + `<p class="text-[10px] text-gray-400">Édition limitée : la boutique ferme à la fin de l'événement. La décoration « 1 semaine 🎂 » est offerte à tous ceux qui se connectent pendant l'événement.</p>`;
+      } else {
+        const top = casinoRanking();
+        tab = (top.length ? top.map((x, i) => `<div class="flex items-center gap-2 p-2 rounded-xl ${x.k === meKey ? 'bg-amber-500/15 border border-amber-500/30' : 'bg-gray-900/50 border border-gray-800'}"><span class="w-6 text-center">${['🥇', '🥈', '🥉'][i] || (i + 1)}</span><span class="flex-1 truncate text-gray-100">${esc(accounts[x.k].name)}</span><span class="${x.net >= 0 ? 'text-emerald-400' : 'text-rose-400'} font-mono">${x.net >= 0 ? '+' : ''}${x.net} ⭐</span></div>`).join('') : '<p class="text-gray-400">Personne n\'a encore joué.</p>')
+          + `<p class="text-[10px] text-gray-400">Classement par gains nets (gains − mises). Le n°1 à la fin peut recevoir la décoration exclusive « Roi du casino 👑 ».</p>`;
+      }
+      body.innerHTML = `<div class="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/30"><div><p class="text-[10px] text-amber-200/80">Ton solde</p><p class="text-lg font-bold text-amber-300">💰 ${bal} ⭐</p></div><div class="text-right text-[10px] text-gray-400 max-w-[55%]">${st === 'live' ? '<span id="casinoCountdown">' + fmtCount(EVT.end - nowS()) + '</span> restant<br>' : 'Événement terminé<br>'}Tes paliers de décorations ne baissent jamais.</div></div>
+        <div class="flex flex-wrap gap-1.5">${tabs}</div>
+        ${['slots', 'coin', 'wheel'].includes(casinoTab) ? `<div class="flex items-center gap-1.5 flex-wrap"><span class="text-[11px] text-gray-400">Mise :</span>${chips}</div>` : ''}
+        <div class="space-y-2">${tab}</div>
+        <p id="casinoMsg" class="text-[12px] text-center text-amber-200 min-h-[18px]">${esc(casinoMsg)}</p>
+        <p class="text-[10px] text-gray-500 text-center">Jeu 100 % virtuel : les étoiles n'ont aucune valeur réelle.</p>`;
+      body.querySelectorAll('[data-tab]').forEach(b => { b.onclick = () => { casinoTab = b.dataset.tab; casinoMsg = ''; renderCasino(); }; });
+      body.querySelectorAll('[data-bet]').forEach(b => { b.onclick = () => { casinoBet = Math.min(MAX_BET, Number(b.dataset.bet)); renderCasino(); }; });
+      body.querySelectorAll('[data-play]').forEach(b => { b.onclick = () => casinoRound(b.dataset.play, b.dataset.pick); });
+      body.querySelectorAll('[data-buy]').forEach(b => { b.onclick = () => casinoBuy(b.dataset.buy); });
+      if (st === 'after') body.querySelectorAll('[data-play],[data-buy]').forEach(b => { b.disabled = true; b.classList.add('opacity-50'); });
+    }
+    function renderCasinoPanel() {
+      const box = document.getElementById('casinoPanel'); if (!box) return;
+      const st = evtState();
+      if (!meKey || offlineMode || (st === 'after' && nowS() > EVT.end + 86400000) || (st === 'before' && EVT.start - nowS() > 24 * 3600000)) { box.classList.add('hidden'); return; }
+      box.classList.remove('hidden');
+      document.getElementById('casinoPanelSub').textContent = st === 'before' ? 'Ouvre dans ' + fmtCount(EVT.start - nowS()) : (st === 'live' ? '💰 ' + casinoBalance(meKey) + ' ⭐ · ' + fmtCount(EVT.end - nowS()) + ' restant' : 'Terminé · voir le classement');
+    }
+    function eventTick() {
+      const st = evtState();
+      if (meKey && !offlineMode) {
+        renderCasinoPanel();
+        const cd = document.getElementById('casinoCountdown');
+        if (cd && !casinoBusy) cd.textContent = fmtCount((st === 'before' ? EVT.start : EVT.end) - nowS());
+        if (evtPrev === 'before' && st === 'live') {
+          showSecretCard('🎰', "L'événement commence !", "Le casino de l'anniversaire est ouvert : mise tes étoiles et gagne des cosmétiques exclusifs.");
+          renderCasino();
+        }
+        if (gameLoaded && Date.now() - lastClaim > 15000) {
+          lastClaim = Date.now();
+          if (st === 'live' && (gameData[meKey] || {}).eParty !== true) claimEventFlag('eParty');
+          // réparation : achat payé mais drapeau pas encore posé
+          const shop = (casinoData[meKey] || {}).shop || {};
+          SHOP.forEach(it => { if (shop[it.id] && (gameData[meKey] || {})[it.flag] !== true) claimEventFlag(it.flag); });
+        }
+      }
+      if (meKey) evtPrev = st;
+    }
+    function startEventTick() {
+      if (evtTimer) return;
+      evtPrev = evtState();
+      evtTimer = setInterval(eventTick, 1000);
     }
     function renderChannels() {
       let total = 0;
