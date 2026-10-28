@@ -2663,7 +2663,8 @@
     const EVT_BONUS = 100, MAX_BET = 500;
     let serverOffset = 0, casinoData = {}, casinoTab = 'roll', casinoBet = 50, casinoBusy = false, casinoMsg = '', gameLoaded = false, evtPrev = '', evtTimer = null, lastClaim = 0, lastRollHtml = '';
     const nowS = () => Date.now() + serverOffset;
-    function evtState() { const n = nowS(); return n < EVT.start ? 'before' : (n <= EVT.end ? 'live' : 'after'); }
+    const isEarlyOwner = () => !!(currentUser && currentUser.role === 'Owner' && nowS() < EVT.start);
+    function evtState() { const n = nowS(); if (n < EVT.start) return isEarlyOwner() ? 'live' : 'before'; return n <= EVT.end ? 'live' : 'after'; }
     function fmtCount(ms) {
       const t = Math.max(0, Math.floor(ms / 1000)), p = n => String(n).padStart(2, '0');
       return p(Math.floor(t / 3600)) + ':' + p(Math.floor((t % 3600) / 60)) + ':' + p(t % 60);
@@ -2824,7 +2825,7 @@
     }
     function casinoRanking() {
       return Object.keys(casinoData).map(k => ({ k, net: (Number(casinoData[k].won) || 0) - (Number(casinoData[k].spent) || 0), plays: Number(casinoData[k].plays) || 0 }))
-        .filter(x => accounts[x.k] && x.plays > 0).sort((a, b) => b.net - a.net).slice(0, 10);
+        .filter(x => accounts[x.k] && accounts[x.k].role !== 'Owner' && x.plays > 0).sort((a, b) => b.net - a.net).slice(0, 10);
     }
     function openCasino() {
       document.getElementById('casinoModal').classList.remove('hidden');
@@ -2871,7 +2872,7 @@
         tab = (top.length ? top.map((x, i) => `<div class="flex items-center gap-2 p-2 rounded-xl ${x.k === meKey ? 'bg-amber-500/15 border border-amber-500/30' : 'bg-gray-900/50 border border-gray-800'}"><span class="w-6 text-center">${['🥇', '🥈', '🥉'][i] || (i + 1)}</span><span class="flex-1 truncate text-gray-100">${esc(accounts[x.k].name)}</span><span class="${x.net >= 0 ? 'text-emerald-400' : 'text-rose-400'} font-mono">${x.net >= 0 ? '+' : ''}${x.net} ⭐</span></div>`).join('') : '<p class="text-gray-400">Personne n\'a encore joué.</p>')
           + `<p class="text-[10px] text-gray-400">Classement par gains nets (gains − mises). Le n°1 à la fin peut recevoir la décoration exclusive « Roi du casino 👑 ».</p>`;
       }
-      body.innerHTML = `<div class="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/30"><div><p class="text-[10px] text-amber-200/80">Ton solde</p><p class="text-lg font-bold text-amber-300">💰 ${bal} ⭐</p></div><div class="text-right text-[10px] text-gray-400 max-w-[55%]">${st === 'live' ? '<span id="casinoCountdown">' + fmtCount(EVT.end - nowS()) + '</span> restant<br>' : 'Événement terminé<br>'}Tes paliers de décorations ne baissent jamais.</div></div>
+      body.innerHTML = `<div class="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/30"><div><p class="text-[10px] text-amber-200/80">Ton solde</p><p class="text-lg font-bold text-amber-300">💰 ${bal} ⭐</p></div><div class="text-right text-[10px] text-gray-400 max-w-[55%]">${isEarlyOwner() ? '🔑 Accès anticipé (Owner)<br>' : (st === 'live' ? '<span id="casinoCountdown">' + fmtCount(EVT.end - nowS()) + '</span> restant<br>' : 'Événement terminé<br>')}Tes paliers de décorations ne baissent jamais.</div></div>
         <div class="flex flex-wrap gap-1.5">${tabs}</div>
         ${['slots', 'coin', 'wheel'].includes(casinoTab) ? `<div class="flex items-center gap-1.5 flex-wrap"><span class="text-[11px] text-gray-400">Mise :</span>${chips}</div>` : ''}
         <div class="space-y-2">${tab}</div>
@@ -2888,7 +2889,7 @@
       const st = evtState();
       if (!meKey || offlineMode || (st === 'after' && nowS() > EVT.end + 86400000) || (st === 'before' && EVT.start - nowS() > 24 * 3600000)) { box.classList.add('hidden'); return; }
       box.classList.remove('hidden');
-      document.getElementById('casinoPanelSub').textContent = st === 'before' ? 'Ouvre dans ' + fmtCount(EVT.start - nowS()) : (st === 'live' ? '💰 ' + casinoBalance(meKey) + ' ⭐ · ' + fmtCount(EVT.end - nowS()) + ' restant' : 'Terminé · voir le classement');
+      document.getElementById('casinoPanelSub').textContent = isEarlyOwner() ? '🔑 Accès anticipé · ouvre pour tous dans ' + fmtCount(EVT.start - nowS()) : st === 'before' ? 'Ouvre dans ' + fmtCount(EVT.start - nowS()) : (st === 'live' ? '💰 ' + casinoBalance(meKey) + ' ⭐ · ' + fmtCount(EVT.end - nowS()) + ' restant' : 'Terminé · voir le classement');
     }
     function eventTick() {
       const st = evtState();
