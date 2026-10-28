@@ -2608,6 +2608,9 @@
     let serverOffset = 0, casinoData = {}, casinoTab = 'slots', casinoBet = 50, casinoBusy = false, casinoMsg = '', gameLoaded = false, evtPrev = '', evtTimer = null, lastClaim = 0;
     const nowS = () => Date.now() + serverOffset;
     function evtState() { const n = nowS(); return n < EVT.start ? 'before' : (n <= EVT.end ? 'live' : 'after'); }
+    // Accès anticipé : seul l'Owner peut utiliser le casino avant l'ouverture publique
+    function isOwnerEarly() { return evtState() === 'before' && !!currentUser && currentUser.role === 'Owner'; }
+    function casinoOpen() { return evtState() === 'live' || isOwnerEarly(); }
     function fmtCount(ms) {
       const t = Math.max(0, Math.floor(ms / 1000)), p = n => String(n).padStart(2, '0');
       return p(Math.floor(t / 3600)) + ':' + p(Math.floor((t % 3600) / 60)) + ':' + p(t % 60);
@@ -2671,7 +2674,7 @@
     }
     async function casinoRound(kind, pick) {
       if (casinoBusy) return;
-      if (evtState() !== 'live') { casinoMsg = 'Le casino est fermé.'; renderCasino(); return; }
+      if (!casinoOpen()) { casinoMsg = 'Le casino est fermé.'; renderCasino(); return; }
       const bet = casinoBet;
       if (bet > casinoBalance(meKey)) { casinoMsg = "Pas assez d'étoiles pour cette mise."; renderCasino(); return; }
       if (!gameData[meKey]) await claimEventFlag('_init').catch(() => {});
@@ -2708,7 +2711,7 @@
     }
     async function casinoBuy(id) {
       const it = SHOP.find(x => x.id === id); if (!it || casinoBusy) return;
-      if (evtState() !== 'live') { casinoMsg = 'La boutique est fermée.'; renderCasino(); return; }
+      if (!casinoOpen()) { casinoMsg = 'La boutique est fermée.'; renderCasino(); return; }
       if ((gameData[meKey] || {})[it.flag] === true) return;
       if (it.price > casinoBalance(meKey)) { casinoMsg = "Pas assez d'étoiles."; renderCasino(); return; }
       if (!confirm('Acheter « ' + it.name + ' » pour ' + it.price + ' ⭐ ?')) return;
@@ -2742,7 +2745,7 @@
       const modal = document.getElementById('casinoModal'), body = document.getElementById('casinoBody');
       if (!modal || !body || modal.classList.contains('hidden') || !meKey || casinoBusy) return;
       const st = evtState(), bal = casinoBalance(meKey), g = gameData[meKey] || {};
-      if (st === 'before') {
+      if (st === 'before' && !isOwnerEarly()) {
         body.innerHTML = `<div class="text-center space-y-2 py-6"><div class="text-4xl">🎰</div><p class="text-sm text-white font-semibold">Ouverture à 20h00</p><p id="casinoCountdown" class="text-2xl font-mono text-amber-300">${fmtCount(EVT.start - nowS())}</p><p class="text-[11px] text-gray-400">Mise tes étoiles, gagne des cosmétiques exclusifs.</p></div>`;
         return;
       }
@@ -2769,7 +2772,7 @@
         tab = (top.length ? top.map((x, i) => `<div class="flex items-center gap-2 p-2 rounded-xl ${x.k === meKey ? 'bg-amber-500/15 border border-amber-500/30' : 'bg-gray-900/50 border border-gray-800'}"><span class="w-6 text-center">${['🥇', '🥈', '🥉'][i] || (i + 1)}</span><span class="flex-1 truncate text-gray-100">${esc(accounts[x.k].name)}</span><span class="${x.net >= 0 ? 'text-emerald-400' : 'text-rose-400'} font-mono">${x.net >= 0 ? '+' : ''}${x.net} ⭐</span></div>`).join('') : '<p class="text-gray-400">Personne n\'a encore joué.</p>')
           + `<p class="text-[10px] text-gray-400">Classement par gains nets (gains − mises). Le n°1 à la fin peut recevoir la décoration exclusive « Roi du casino 👑 ».</p>`;
       }
-      body.innerHTML = `<div class="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/30"><div><p class="text-[10px] text-amber-200/80">Ton solde</p><p class="text-lg font-bold text-amber-300">💰 ${bal} ⭐</p></div><div class="text-right text-[10px] text-gray-400 max-w-[55%]">${st === 'live' ? '<span id="casinoCountdown">' + fmtCount(EVT.end - nowS()) + '</span> restant<br>' : 'Événement terminé<br>'}Tes paliers de décorations ne baissent jamais.</div></div>
+      body.innerHTML = `<div class="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/30"><div><p class="text-[10px] text-amber-200/80">Ton solde</p><p class="text-lg font-bold text-amber-300">💰 ${bal} ⭐</p></div><div class="text-right text-[10px] text-gray-400 max-w-[55%]">${st === 'live' ? '<span id="casinoCountdown">' + fmtCount(EVT.end - nowS()) + '</span> restant<br>' : (st === 'before' ? '👑 Accès anticipé Owner · ouverture publique dans <span id="casinoCountdown">' + fmtCount(EVT.start - nowS()) + '</span><br>' : 'Événement terminé<br>')}Tes paliers de décorations ne baissent jamais.</div></div>
         <div class="flex flex-wrap gap-1.5">${tabs}</div>
         ${['slots', 'coin', 'wheel'].includes(casinoTab) ? `<div class="flex items-center gap-1.5 flex-wrap"><span class="text-[11px] text-gray-400">Mise :</span>${chips}</div>` : ''}
         <div class="space-y-2">${tab}</div>
@@ -2784,7 +2787,7 @@
     function renderCasinoPanel() {
       const box = document.getElementById('casinoPanel'); if (!box) return;
       const st = evtState();
-      if (!meKey || offlineMode || (st === 'after' && nowS() > EVT.end + 86400000) || (st === 'before' && EVT.start - nowS() > 24 * 3600000)) { box.classList.add('hidden'); return; }
+      if (!meKey || offlineMode || (st === 'after' && nowS() > EVT.end + 86400000) || (st === 'before' && EVT.start - nowS() > 24 * 3600000 && !isOwnerEarly())) { box.classList.add('hidden'); return; }
       box.classList.remove('hidden');
       document.getElementById('casinoPanelSub').textContent = st === 'before' ? 'Ouvre dans ' + fmtCount(EVT.start - nowS()) : (st === 'live' ? '💰 ' + casinoBalance(meKey) + ' ⭐ · ' + fmtCount(EVT.end - nowS()) + ' restant' : 'Terminé · voir le classement');
     }
