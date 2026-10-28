@@ -151,6 +151,84 @@
     body.theme-arcade .glass-panel, body.theme-arcade .backdrop-blur-sm { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
     /* Menus ouverts : le flou d'arrière-plan est retiré (fond déjà quasi opaque) pour éviter les saccades */
     body.theme-halloween .glass-panel, body.theme-halloween .backdrop-blur-sm { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+    /* ===== Thème saisonnier : noel ===== */
+    body.theme-noel { background-color:#07140d !important; }
+    body.theme-noel::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0; transform: translateZ(0); contain: strict; background: radial-gradient(2px 2px at 20px 30px, #fff, transparent 100%) 0 0 / 180px 180px, radial-gradient(2px 2px at 70px 90px, rgba(255,255,255,.85), transparent 100%) 0 0 / 180px 180px, radial-gradient(2px 2px at 120px 40px, rgba(255,255,255,.7), transparent 100%) 0 0 / 180px 180px, radial-gradient(2px 2px at 150px 120px, #fff, transparent 100%) 0 0 / 180px 180px, radial-gradient(2px 2px at 40px 140px, rgba(255,255,255,.75), transparent 100%) 0 0 / 180px 180px, radial-gradient(ellipse at 10% 0%, rgba(220,38,38,.20), transparent 52%), radial-gradient(ellipse at 95% 100%, rgba(22,163,74,.22), transparent 55%); }
+    body.theme-noel .bg-darkbg, body.theme-noel .bg-darkpanel { background-color:#07140d !important; }
+    body.theme-noel .bg-gray-950, body.theme-noel .bg-gray-900 { background-color:#0d2016 !important; }
+    body.theme-noel .bg-gray-800 { background-color:#14301f !important; }
+    body.theme-noel .bg-gray-700 { background-color:#1d4430 !important; }
+    body.theme-noel .hover\:bg-gray-800:hover, body.theme-noel .hover\:bg-gray-700:hover { background-color:#1d4430 !important; }
+    body.theme-noel .border-gray-800, body.theme-noel .border-gray-700, body.theme-noel .border-gray-800\/60 { border-color: rgba(250,204,21,.28) !important; }
+    body.theme-noel .glass-panel { background: #0d2016; border-color: rgba(250,204,21,.28); -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+    body.theme-noel .backdrop-blur-sm { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+    body.theme-noel .bg-brand-500, body.theme-noel .bg-brand-600, body.theme-noel .bg-brand-700 { background-color:#b91c1c !important; }
+    body.theme-noel .hover\:bg-brand-500:hover, body.theme-noel .hover\:bg-brand-600:hover { background-color:#dc2626 !important; }
+    body.theme-noel .text-brand-300, body.theme-noel .text-brand-400, body.theme-noel .text-brand-500 { color:#fde68a !important; }
+    body.theme-noel .bg-brand-500\/10, body.theme-noel .bg-brand-500\/20, body.theme-noel .hover\:bg-brand-500\/20, body.theme-noel .bg-brand-600\/30 { background-color: rgba(250,204,21,.28) !important; }
+    body.theme-noel .border-brand-500, body.theme-noel .border-brand-500\/20, body.theme-noel .border-brand-500\/30, body.theme-noel .border-brand-500\/50, body.theme-noel .focus\:border-brand-500 { border-color: #fde68a !important; }
+    body.theme-noel header { border-bottom: 1px solid #fde68a !important; }
+    body.theme-noel h1, body.theme-noel h3 { text-shadow: 0 0 10px rgba(250,204,21,.5); }
+    body.theme-noel .msg-bubble.bg-brand-600 { background: linear-gradient(135deg,#991b1b,#dc2626) !important; }
+    body.theme-noel .msg-bubble.bg-gray-800 { background: #0f2a1a !important; border-color: rgba(74,222,128,.35) !important; }
+    body.theme-noel ::selection { background: #b91c1c; color:#fff; }
+    body.theme-noel ::-webkit-scrollbar-thumb { background: #b91c1c; }
+    body.theme-noel input:focus, body.theme-noel textarea:focus { border-color:#fde68a !important; outline:none; }
+    body.theme-noel .status-dot.bg-brand-500 { background-color:#4ade80 !important; }
+    body.theme-noel .status-dot.bg-red-500 { background-color:#ef4444 !important; }
+    body.theme-noel .status-dot.bg-blue-500 { background-color:#3b82f6 !important; }
+    /* ===== Thème saisonnier : valentin ===== */
+    body.theme-valentin { background-color:#1a0710 !important; }
+    body.theme-valentin::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0; transform: translateZ(0); contain: strict; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cg fill='%23f472b6' fill-opacity='.16'%3E%3Cpath d='M30 38c-5-8-18-4-15 6 2 7 15 14 15 14s13-7 15-14c3-10-10-14-15-6z'/%3E%3Cpath transform='translate(62 58) scale(.8)' d='M30 38c-5-8-18-4-15 6 2 7 15 14 15 14s13-7 15-14c3-10-10-14-15-6z'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 120px 120px, radial-gradient(ellipse at 10% 0%, rgba(236,72,153,.22), transparent 52%), radial-gradient(ellipse at 95% 100%, rgba(126,34,206,.22), transparent 55%); }
+    body.theme-valentin .bg-darkbg, body.theme-valentin .bg-darkpanel { background-color:#1a0710 !important; }
+    body.theme-valentin .bg-gray-950, body.theme-valentin .bg-gray-900 { background-color:#260b19 !important; }
+    body.theme-valentin .bg-gray-800 { background-color:#3a1226 !important; }
+    body.theme-valentin .bg-gray-700 { background-color:#52193a !important; }
+    body.theme-valentin .hover\:bg-gray-800:hover, body.theme-valentin .hover\:bg-gray-700:hover { background-color:#52193a !important; }
+    body.theme-valentin .border-gray-800, body.theme-valentin .border-gray-700, body.theme-valentin .border-gray-800\/60 { border-color: rgba(244,114,182,.30) !important; }
+    body.theme-valentin .glass-panel { background: #260b19; border-color: rgba(244,114,182,.30); -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+    body.theme-valentin .backdrop-blur-sm { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+    body.theme-valentin .bg-brand-500, body.theme-valentin .bg-brand-600, body.theme-valentin .bg-brand-700 { background-color:#db2777 !important; }
+    body.theme-valentin .hover\:bg-brand-500:hover, body.theme-valentin .hover\:bg-brand-600:hover { background-color:#ec4899 !important; }
+    body.theme-valentin .text-brand-300, body.theme-valentin .text-brand-400, body.theme-valentin .text-brand-500 { color:#fbcfe8 !important; }
+    body.theme-valentin .bg-brand-500\/10, body.theme-valentin .bg-brand-500\/20, body.theme-valentin .hover\:bg-brand-500\/20, body.theme-valentin .bg-brand-600\/30 { background-color: rgba(244,114,182,.30) !important; }
+    body.theme-valentin .border-brand-500, body.theme-valentin .border-brand-500\/20, body.theme-valentin .border-brand-500\/30, body.theme-valentin .border-brand-500\/50, body.theme-valentin .focus\:border-brand-500 { border-color: #fbcfe8 !important; }
+    body.theme-valentin header { border-bottom: 1px solid #fbcfe8 !important; }
+    body.theme-valentin h1, body.theme-valentin h3 { text-shadow: 0 0 10px rgba(244,114,182,.55); }
+    body.theme-valentin .msg-bubble.bg-brand-600 { background: linear-gradient(135deg,#be185d,#9d174d) !important; }
+    body.theme-valentin .msg-bubble.bg-gray-800 { background: #2a0e22 !important; border-color: rgba(244,114,182,.38) !important; }
+    body.theme-valentin ::selection { background: #db2777; color:#fff; }
+    body.theme-valentin ::-webkit-scrollbar-thumb { background: #db2777; }
+    body.theme-valentin input:focus, body.theme-valentin textarea:focus { border-color:#fbcfe8 !important; outline:none; }
+    body.theme-valentin .status-dot.bg-brand-500 { background-color:#4ade80 !important; }
+    body.theme-valentin .status-dot.bg-red-500 { background-color:#ef4444 !important; }
+    body.theme-valentin .status-dot.bg-blue-500 { background-color:#3b82f6 !important; }
+    /* ===== Thème saisonnier : ete ===== */
+    body.theme-ete { background-color:#06141f !important; }
+    body.theme-ete::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0; transform: translateZ(0); contain: strict; background: radial-gradient(circle at 90% 6%, rgba(253,224,71,.30) 0, rgba(251,146,60,.16) 9%, transparent 24%), linear-gradient(180deg, transparent 70%, rgba(6,182,212,.10) 100%), radial-gradient(ellipse at 10% 0%, rgba(249,115,22,.18), transparent 52%), radial-gradient(ellipse at 95% 100%, rgba(6,182,212,.22), transparent 55%); }
+    body.theme-ete .bg-darkbg, body.theme-ete .bg-darkpanel { background-color:#06141f !important; }
+    body.theme-ete .bg-gray-950, body.theme-ete .bg-gray-900 { background-color:#0b2230 !important; }
+    body.theme-ete .bg-gray-800 { background-color:#123043 !important; }
+    body.theme-ete .bg-gray-700 { background-color:#1a4259 !important; }
+    body.theme-ete .hover\:bg-gray-800:hover, body.theme-ete .hover\:bg-gray-700:hover { background-color:#1a4259 !important; }
+    body.theme-ete .border-gray-800, body.theme-ete .border-gray-700, body.theme-ete .border-gray-800\/60 { border-color: rgba(251,191,36,.30) !important; }
+    body.theme-ete .glass-panel { background: #0b2230; border-color: rgba(251,191,36,.30); -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+    body.theme-ete .backdrop-blur-sm { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+    body.theme-ete .bg-brand-500, body.theme-ete .bg-brand-600, body.theme-ete .bg-brand-700 { background-color:#ea580c !important; }
+    body.theme-ete .hover\:bg-brand-500:hover, body.theme-ete .hover\:bg-brand-600:hover { background-color:#f97316 !important; }
+    body.theme-ete .text-brand-300, body.theme-ete .text-brand-400, body.theme-ete .text-brand-500 { color:#fcd34d !important; }
+    body.theme-ete .bg-brand-500\/10, body.theme-ete .bg-brand-500\/20, body.theme-ete .hover\:bg-brand-500\/20, body.theme-ete .bg-brand-600\/30 { background-color: rgba(251,191,36,.30) !important; }
+    body.theme-ete .border-brand-500, body.theme-ete .border-brand-500\/20, body.theme-ete .border-brand-500\/30, body.theme-ete .border-brand-500\/50, body.theme-ete .focus\:border-brand-500 { border-color: #fcd34d !important; }
+    body.theme-ete header { border-bottom: 1px solid #fcd34d !important; }
+    body.theme-ete h1, body.theme-ete h3 { text-shadow: 0 0 10px rgba(251,191,36,.5); }
+    body.theme-ete .msg-bubble.bg-brand-600 { background: linear-gradient(135deg,#ea580c,#f59e0b) !important; }
+    body.theme-ete .msg-bubble.bg-gray-800 { background: #0e2a3b !important; border-color: rgba(34,211,238,.38) !important; }
+    body.theme-ete ::selection { background: #ea580c; color:#fff; }
+    body.theme-ete ::-webkit-scrollbar-thumb { background: #ea580c; }
+    body.theme-ete input:focus, body.theme-ete textarea:focus { border-color:#fcd34d !important; outline:none; }
+    body.theme-ete .status-dot.bg-brand-500 { background-color:#4ade80 !important; }
+    body.theme-ete .status-dot.bg-red-500 { background-color:#ef4444 !important; }
+    body.theme-ete .status-dot.bg-blue-500 { background-color:#3b82f6 !important; }
   </style>
 </head>
 <body class="h-screen h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-hidden">
@@ -213,7 +291,7 @@
               <span class="hidden sm:inline">Securechat</span>
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v3.9.3</span>
+                <span>v4.0.0</span>
               </button>
             </h2>
           </div>
@@ -265,6 +343,7 @@
               <span class="flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4"></i><span>Projets Privés</span></span>
               <div class="flex items-center gap-2"><span id="dot-self" class="min-w-[16px] h-4 px-1 rounded-full bg-brand-500 text-[10px] font-bold text-white items-center justify-center hidden"></span></div>
             </button>
+            <div id="groupsList" class="space-y-1"></div>
           </nav>
         </div>
         <div id="eventPanel" class="p-4 border-b border-gray-800 shrink-0">
@@ -302,6 +381,7 @@
           </div>
         </div>
 
+        <div id="pinBar" class="hidden px-4 py-2 border-b border-gray-800 bg-gray-900/60 text-xs text-gray-300 items-center gap-2 cursor-pointer shrink-0"></div>
         <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
 
         <div id="typingIndicator" class="px-4 h-5 text-[11px] text-gray-400 italic shrink-0"></div>
@@ -421,8 +501,20 @@
       <div class="space-y-4 text-gray-300">
         <div class="border-l-2 border-amber-500 pl-3 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.9.3</span>
+            <span class="font-bold text-white text-sm">v4.0.0</span>
             <span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
+          </div>
+          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
+            <li>Messages épinglés (salons et groupes)</li>
+            <li>« Vu » dans les messages privés</li>
+            <li>Groupes privés chiffrés (créés par l'Owner)</li>
+            <li>Thèmes de saison automatiques, avec des secrets cachés</li>
+            <li>Ouverture plus rapide et lecture hors ligne</li>
+          </ul>
+        </div>
+        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white text-sm">v3.9.3</span>
           </div>
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>Un nouveau thème secret</li>
@@ -598,12 +690,16 @@
   </div>
 
   <script>
-    const CURRENT_VERSION = "v3.9.3";
+    const CURRENT_VERSION = "v4.0.0";
     const DEV_MODE = false; // true = aucune annonce automatique
     const VERSION_CHANGELOG =
-      "🕒 Securechat v3.9.3 : un secret de plus\n\n" +
+      "🚀 Securechat v4.0 : la grosse mise à jour !\n\n" +
       "Voici les nouveautés :\n" +
-      "🕹️ Un nouveau thème secret est caché quelque part… bonne chasse\n\n" +
+      "📌 Messages épinglés dans les salons et les groupes\n" +
+      "✓ « Vu » discret dans les messages privés\n" +
+      "👥 Groupes privés chiffrés, créés par l'Owner\n" +
+      "🎄 Thèmes de saison (Noël, Saint-Valentin, Été) qui s'activent tout seuls, avec un secret caché dans chacun pour les garder pour toujours\n" +
+      "⚡ Ouverture beaucoup plus rapide, et lecture des derniers messages même sans réseau\n\n" +
       "Bon chat !";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
@@ -764,16 +860,24 @@
       groupKey = null; myPriv = null; sessionPass = null;
       Object.keys(dmKeys).forEach(x => delete dmKeys[x]); decCache.clear();
       idb.del('group'); if (k) idb.del('ecdh:' + k);
+      if (k) {
+        idb.del('msgs:' + k); idb.del('accounts:' + k); idb.del('groups:' + k);
+        Object.keys(accounts || {}).forEach(x => idb.del('dm:' + k + ':' + x));
+        Object.keys(groupsData || {}).forEach(g => { for (let v = 1; v <= ((groupsData[g] || {}).kv || 1); v++) idb.del('gk:' + k + ':' + g + ':' + v); });
+      }
+      try { localStorage.removeItem('sc_prof'); } catch (e) {}
     }
 
     function partnerOf(chan) { return Object.keys(accounts).find(k => k !== meKey && dmName(meKey, k) === chan) || null; }
     async function getDmKey(partner) {
       if (dmKeys[partner]) return dmKeys[partner];
+      if (offlineMode) { const ok = await idb.get('dm:' + meKey + ':' + partner); if (ok) dmKeys[partner] = ok; return ok; }
       if (!myPriv) return null;
       const pub = (await db.ref('pubkeys/' + partner).once('value')).val();
       if (!pub) return null;
       const pk = await crypto.subtle.importKey('jwk', pub, ECDH, false, []);
       const k = await crypto.subtle.deriveKey({ name: 'ECDH', public: pk }, myPriv, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+      idb.set('dm:' + meKey + ':' + partner, k);
       return (dmKeys[partner] = k);
     }
     async function encryptPayload(chan, payload) {
@@ -786,6 +890,13 @@
         if (!partner) throw { userMsg: "Conversation introuvable." };
         key = await getDmKey(partner);
         if (!key) throw { userMsg: "Cet ami doit d'abord se connecter une fois à la v3 pour créer ses clés." };
+      } else if (isGrp(chan)) {
+        const gid = gidOf(chan), g = groupsData[gid];
+        if (!g || !(g.members && g.members[meKey])) throw { userMsg: "Tu n'es plus dans ce groupe." };
+        const gk = await getGroupKey(gid, g.kv);
+        if (!gk) throw { userMsg: "La clé du groupe n'est pas disponible. Réessaie dans un instant." };
+        const r = await aesEnc(gk, enc.encode(JSON.stringify(payload)));
+        return { iv: r.iv, c: r.c, kv: g.kv };
       } else {
         key = groupKey;
         if (!key) throw { userMsg: "Le chiffrement des salons n'est pas encore activé : l'Owner doit d'abord définir la phrase secrète." };
@@ -800,7 +911,7 @@
         try {
           const chan = m.channel || 'general';
           let key = null;
-          if (chan === 'self') key = await getDmKey(meKey); else if (chan.startsWith('dm_')) { const pt = partnerOf(chan); key = pt ? await getDmKey(pt) : null; } else key = groupKey;
+          if (chan === 'self') key = await getDmKey(meKey); else if (chan.startsWith('dm_')) { const pt = partnerOf(chan); key = pt ? await getDmKey(pt) : null; } else if (isGrp(chan)) key = await getGroupKey(gidOf(chan), m.kv || 1); else key = groupKey;
           if (key) pl = JSON.parse(dec.decode(await aesDec(key, m.iv, m.c)));
         } catch (e) {}
         if (pl) decCache.set(ck, pl);
@@ -845,7 +956,7 @@
           await db.ref('messages').push(o);
         } else {
           const e = await encryptPayload(currentChannel, pl);
-          await db.ref('messages').push({ ...base, v: 3, iv: e.iv, c: e.c });
+          await db.ref('messages').push({ ...base, v: 3, iv: e.iv, c: e.c, ...(e.kv ? { kv: e.kv } : {}) });
         }
         pingNtfy(base.channel, pl);
         return true;
@@ -981,6 +1092,7 @@
         const isDm = chan.startsWith('dm_'), isAnn = chan === 'annonce-update';
         let targets;
         if (isDm) { const pt = partnerOf(chan); targets = pt ? [pt] : []; }
+        else if (isGrp(chan)) targets = Object.keys(((groupsData[gidOf(chan)] || {}).members) || {}).filter(k => k !== meKey && accounts[k]);
         else targets = Object.keys(all).filter(k => k !== meKey && accounts[k]);
         const text = String((pl && pl.t) || '').toLowerCase();
         const jobs = targets.filter(k => all[k] && all[k].topic).map(k => {
@@ -989,7 +1101,7 @@
           const msg = isAnn ? '📢 Nouvelle annonce'
             : isDm ? `💬 ${currentUser.name} t'a écrit en privé`
             : mention ? `@ ${currentUser.name} t'a mentionné`
-            : `${currentUser.name} a écrit dans ${CHAN_NAMES[chan] || chan}`;
+            : `${currentUser.name} a écrit dans ${chanLabel(chan)}`;
           return fetch(NTFY_URL, { method: 'POST', body: JSON.stringify({ topic: all[k].topic, title: 'Securechat', message: msg, click: SITE_URL, tags: ['lock'], priority: 4 }) }).then(r => { if (!r.ok) console.warn('ntfy', r.status); }).catch(e => console.warn('ntfy', e));
         }).filter(Boolean);
         await Promise.all(jobs);
@@ -1079,6 +1191,7 @@
     ];
     // ----- Photos de profil (avatars/<clé> : petite image JPEG en data URL)
     let avatarsData = {};
+    let offlineMode = false;
     function avatarSrc(k) { const v = avatarsData[k]; return (typeof v === 'string' && v.startsWith('data:image/')) ? v : ''; }
     function avatarHtml(k, size, textCls) {
       const src = avatarSrc(k), nm = String((accounts[k] || {}).name || '?');
@@ -1124,7 +1237,11 @@
     // Thèmes d'application. kind 'secret' : débloqué par le drapeau gameData[k][flag]
     const THEMES = [
       { id: 'halloween', name: 'Halloween', icon: '🎃', kind: 'secret', flag: 'sHalloween', bg: 'linear-gradient(120deg,#7c2d12,#ea580c,#4c1d95)' },
-      { id: 'arcade', name: 'Arcade', icon: '🕹️', kind: 'secret', flag: 'sArcade', bg: 'linear-gradient(120deg,#d946ef,#6d28d9,#22d3ee)' }
+      { id: 'arcade', name: 'Arcade', icon: '🕹️', kind: 'secret', flag: 'sArcade', bg: 'linear-gradient(120deg,#d946ef,#6d28d9,#22d3ee)' },
+      // Thèmes saisonniers : actifs automatiquement à la bonne date ; le secret caché (hunt) les débloque pour toujours
+      { id: 'noel', name: 'Noël', icon: '🎄', kind: 'secret', flag: 'sNoel', bg: 'linear-gradient(120deg,#14532d,#b91c1c,#fde68a)', season: { from: [12, 1], to: [12, 26] }, hunt: { emoji: '🎁', taps: 3, pos: 'left' } },
+      { id: 'valentin', name: 'Saint-Valentin', icon: '💘', kind: 'secret', flag: 'sValentin', bg: 'linear-gradient(120deg,#be185d,#f472b6,#7e22ce)', season: { from: [2, 6], to: [2, 15] }, hunt: { emoji: '💌', taps: 3, pos: 'right' } },
+      { id: 'ete', name: 'Été', icon: '☀️', kind: 'secret', flag: 'sEte', bg: 'linear-gradient(120deg,#f97316,#facc15,#06b6d4)', season: { from: [6, 21], to: [8, 31] }, hunt: { emoji: '🐚', taps: 5, pos: 'br' } }
     ];
     const SECRET_WORDS = [{ word: 'halloween', theme: 'halloween' }];
     let gameData = {}, grantsData = {}, gameTimers = [], gameRunning = false, lastGain = null;
@@ -1135,17 +1252,76 @@
       const t = THEMES.find(x => x.id === g.theme);
       return t && ownsTheme(k, t) ? t : null;
     }
+    function inSeason(t) {
+      if (!t.season) return false;
+      const d = new Date(), md = (d.getMonth() + 1) * 100 + d.getDate();
+      return md >= t.season.from[0] * 100 + t.season.from[1] && md <= t.season.to[0] * 100 + t.season.to[1];
+    }
+    function seasonNow() { return THEMES.find(inSeason) || null; }
+    // Thème réellement affiché : celui que tu as équipé ; sinon le thème de saison ; « classic » désactive tout
+    function activeTheme() {
+      if (!meKey) return null;
+      const g = gameData[meKey] || {};
+      if (g.theme === 'classic') return null;
+      return themeFor(meKey) || seasonNow();
+    }
+    const THEME_COLORS = { halloween: '#0f0805', arcade: '#07031a', noel: '#07140d', valentin: '#1a0710', ete: '#06141f' };
     function applyTheme() {
-      const t = currentUser ? themeFor(meKey) : null;
+      const t = currentUser ? activeTheme() : null;
       THEMES.forEach(x => document.body.classList.toggle('theme-' + x.id, !!t && t.id === x.id));
       const m = document.querySelector('meta[name="theme-color"]');
-      if (m) m.setAttribute('content', t ? ({ halloween: '#0f0805', arcade: '#07031a' }[t.id] || '#0b0f17') : '#0b0f17');
+      if (m) m.setAttribute('content', t ? (THEME_COLORS[t.id] || '#0b0f17') : '#0b0f17');
+      renderSeasonHunt();
+    }
+    // Secret saisonnier : un petit objet discret à toucher plusieurs fois d'affilée
+    let huntTaps = 0, huntLast = 0;
+    function renderSeasonHunt() {
+      const old = document.getElementById('seasonHunt'); if (old) old.remove();
+      const t = currentUser ? activeTheme() : null;
+      if (!t || !t.hunt || ownsTheme(meKey, t)) return;
+      const POS = { left: 'left:0;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);', right: 'right:0;top:calc(env(safe-area-inset-top,0px) + 64px);', br: 'right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);' };
+      const b = document.createElement('button');
+      b.id = 'seasonHunt'; b.type = 'button'; b.textContent = t.hunt.emoji; b.setAttribute('aria-hidden', 'true');
+      b.style.cssText = 'position:fixed;z-index:55;font-size:22px;line-height:1;opacity:.28;background:none;border:0;padding:10px;' + POS[t.hunt.pos];
+      b.onclick = async () => {
+        const now = Date.now();
+        huntTaps = (now - huntLast < 2500) ? huntTaps + 1 : 1; huntLast = now;
+        if (huntTaps >= t.hunt.taps) { huntTaps = 0; await unlockSeasonTheme(t); }
+      };
+      document.body.appendChild(b);
+    }
+    async function unlockSeasonTheme(t) {
+      if (!meKey || ownsTheme(meKey, t)) return;
+      const g = gameData[meKey];
+      const upd = { [t.flag]: true };
+      if (!g || g.stars === undefined) upd.stars = 0;
+      try {
+        await db.ref('game/' + meKey).update(upd);
+        showSecretCard(t.hunt.emoji, 'Secret trouvé !', 'Le thème « ' + t.name + ' » est à toi pour toujours. Tu le retrouveras tout en bas du menu 🎨 Décorations & thèmes.');
+      } catch (e) { alert("Impossible d'enregistrer le secret : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)"); }
+    }
+    function showSecretCard(icon, title, text) {
+      const old = document.getElementById('secretCard'); if (old) old.remove();
+      const o = document.createElement('div');
+      o.id = 'secretCard';
+      o.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;padding:24px;cursor:pointer';
+      o.innerHTML = '<div style="max-width:340px;text-align:center;background:#111827;color:#f3f4f6;border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:28px 22px;font-family:system-ui,sans-serif"><div style="font-size:54px;line-height:1">' + icon + '</div><div style="font-size:18px;font-weight:700;margin:12px 0 6px">' + esc(title) + '</div><div style="font-size:13px;line-height:1.5;opacity:.85">' + esc(text) + '</div><div style="font-size:11px;opacity:.5;margin-top:14px">Touche pour fermer</div></div>';
+      document.body.appendChild(o);
+      o.onclick = () => o.remove();
+      setTimeout(() => { if (o.isConnected) o.remove(); }, 9000);
     }
     async function equipTheme(id) {
-      const t = THEMES.find(x => x.id === id);
-      if (!meKey || !t || !ownsTheme(meKey, t)) return;
+      if (!meKey) return;
       const g = gameData[meKey];
-      const upd = { theme: (g && g.theme === id) ? null : id };
+      let val;
+      if (id === 'auto') val = null;
+      else if (id === 'classic') val = 'classic';
+      else {
+        const t = THEMES.find(x => x.id === id);
+        if (!t || !ownsTheme(meKey, t)) return;
+        val = (g && g.theme === id) ? null : id;
+      }
+      const upd = { theme: val };
       if (!g || g.stars === undefined) upd.stars = 0;
       try { await db.ref('game/' + meKey).update(upd); }
       catch (e) { alert("Impossible : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)"); }
@@ -1501,6 +1677,11 @@
         ...DECOS.filter(d => d.kind === 'secret').map(d => ({ kind: 'Décoration', owned: ownsDeco(meKey, d), eq: !!cur && cur.id === d.id, icon: d.icon, name: d.name, cls: d.cls, attr: `data-equip="${d.id}"` })),
         ...THEMES.filter(t => t.kind === 'secret').map(t => ({ kind: "Thème d'application", owned: ownsTheme(meKey, t), eq: !!curTh && curTh.id === t.id, icon: t.icon, name: t.name, bg: t.bg, attr: `data-theme="${t.id}"` }))
       ];
+      const g0 = gameData[meKey] || {};
+      const seasonT = seasonNow();
+      const themeMode = g0.theme === 'classic' ? 'classic' : (curTh ? curTh.id : 'auto');
+      const thRow = (id, icon, name, sub) => `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800"><div class="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-sm shrink-0">${icon}</div><div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100 truncate">${name}</p><p class="text-[10px] text-gray-400">${sub}</p></div><button type="button" data-theme="${id}" class="px-2.5 py-1 rounded-lg text-[11px] ${themeMode === id ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${themeMode === id ? 'Actif ✓' : 'Choisir'}</button></div>`;
+      const themeChoiceHtml = `<div class="space-y-2"><p class="font-semibold text-white">Thème de l'application</p>${thRow('auto', '🗓️', 'Automatique', seasonT ? 'Thème de saison en ce moment' : 'Suit les saisons (rien en ce moment)')}${thRow('classic', '🌑', 'Classique', 'Désactive les thèmes automatiques')}</div>`;
       const secretsHtml = `<div class="space-y-2"><p class="font-semibold text-white">🤫 Secrets <span class="text-[10px] font-normal text-gray-400">${secrets.filter(x => x.owned).length}/${secrets.length} trouvés</span></p>${secrets.map(secRow).join('')}</div>`;
       body.innerHTML = `
         <div class="space-y-2">
@@ -1524,6 +1705,7 @@
         </div>
         ${sec('Exclusives', DECOS.filter(d => d.kind === 'exclusive' && ownsDeco(meKey, d)))}
         ${sec('Étoiles ⭐', DECOS.filter(d => d.kind === 'stars'))}
+        ${themeChoiceHtml}
         ${secretsHtml}
         <p class="text-[11px] text-gray-500">Gagne des étoiles dans l'event « ${esc(EVENT.name)} » pour débloquer les autres.</p>`;
       body.querySelectorAll('[data-equip]').forEach(b => { b.onclick = () => equipDeco(b.dataset.equip); });
@@ -1693,6 +1875,7 @@
 
     function onAccounts(snapshot) {
       accounts = snapshot.val() || {};
+      saveAccountsCache(accounts);
       if (currentUser) {
         if (!accounts[meKey]) { alert("Ton compte a été supprimé."); logout(); return; }
         currentUser = accounts[meKey];
@@ -1709,12 +1892,14 @@
 
     let msgSeq = 0;
     async function onMessages(snapshot) {
+      lastMsgsSnap = snapshot;
       const msgs = snapshot.val() || {};
       const seq = ++msgSeq;
       const list = Object.entries(msgs).map(([k, v]) => ({ ...v, _key: k }));
       await Promise.all(list.map(decryptMessage));
       if (seq !== msgSeq) return;
       messagesList = list;
+      saveMsgCache(msgs);
       const byKey = Object.fromEntries(list.map(x => [x._key, x]));
 
       Object.entries(msgs).forEach(([key, m]) => {
@@ -1725,7 +1910,8 @@
         if (m.senderKey ? m.senderKey === meKey : m.sender === currentUser.name) return;
         const chan = m.isGlobalAnnouncement ? 'annonce-update' : (m.channel || 'general');
         if (chan.startsWith('dm_') && !isMyDm(chan)) return;
-        if (!chan.startsWith('dm_') && !CHANNELS.includes(chan)) return;
+        if (isGrp(chan)) { if (!amInGroup(gidOf(chan))) return; }
+        else if (!chan.startsWith('dm_') && !CHANNELS.includes(chan)) return;
         if (chan !== currentChannel) unreadChannels[chan] = (unreadChannels[chan] || 0) + 1;
         notifyMessage(byKey[key] || m, chan);
       });
@@ -1734,6 +1920,7 @@
       renderMessages();
       renderUsersList();
       renderChannels();
+      markRead();
     }
 
     setInterval(() => {
@@ -1749,6 +1936,7 @@
     let hiddenAt = 0;
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) { hiddenAt = Date.now(); return; }
+      markRead();
       if (meKey && hiddenAt && Date.now() - hiddenAt > 30000) { db.goOffline(); db.goOnline(); }
       hiddenAt = 0;
     });
@@ -1831,6 +2019,7 @@
     auth.onAuthStateChanged(async (user) => {
       if (!user) { if (!currentUser && !starting && !migrating) endBoot(true); return; }
       if (migrating || currentUser || starting) return;
+      if (!navigator.onLine) { try { if (await startOffline(user)) return; } catch (e) { starting = false; offlineMode = false; } }
       let key = null, ok = false;
       try { key = (await db.ref('uidMap/' + user.uid + '/key').once('value')).val(); ok = true; } catch (e) {}
       if (!key) {
@@ -1869,6 +2058,7 @@
       const lastChan = readLastChan(key);
       currentUser = snap.val();
       currentUser.username = currentUser.username || key;
+      try { localStorage.setItem('sc_prof', JSON.stringify({ uid: auth.currentUser && auth.currentUser.uid, key, acc: { name: currentUser.name, role: currentUser.role, username: currentUser.username } })); } catch (e) {}
 
       document.getElementById('loginError').classList.add('hidden');
       document.getElementById('authScreen').classList.add('hidden');
@@ -1903,12 +2093,15 @@
       soft(db.ref('lastPublishedVersion'), (v) => { const pub = v.val(); document.getElementById('updateBanner').classList.toggle('hidden', !(pub && isNewer(pub, CURRENT_VERSION))); });
       soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; applyTheme(); renderUsersList(); renderGamePanel(); renderGameModal(); renderDecoButton(); renderDecoModal(); });
       soft(db.ref('avatars'), (as) => { avatarsData = as.val() || {}; renderMyAvatar(); renderUsersList(); renderDecoModal(); renderMessages(); });
+      startGroupListeners();
+      soft(db.ref('pins'), (pn) => { pinsData = pn.val() || {}; renderMessages(); });
       soft(db.ref('grants'), (gr) => { grantsData = gr.val() || {}; renderUsersList(); renderDecoButton(); renderDecoModal(); });
       listen(db.ref('status'), (snap2) => { userStatuses = snap2.val() || {}; renderUsersList(); });
       listen(db.ref('typing'), (t) => { typingData = t.val() || {}; updateTypingLabel(); });
       renderNotifBtn();
       // On revient là où on était : salon, notes perso ou message privé (si le contact existe toujours)
       if (lastChan.startsWith('dm_') && partnerOf(lastChan)) openDm(partnerOf(lastChan));
+      else if (isGrp(lastChan)) { pendingChan = lastChan; selectChannel('general'); }
       else if (CHANNELS.includes(lastChan)) selectChannel(lastChan);
       else selectChannel('general');
       // Les messages et les notes ont besoin des clés : on attend la fin du chiffrement (déjà bien avancé)
@@ -1921,7 +2114,7 @@
 
     async function logout() {
       if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline', at: firebase.database.ServerValue.TIMESTAMP }); } catch (e) {} }
-      abortRound(); stopListeners(); wipeKeys(); gameData = {}; avatarsData = {}; applyTheme();
+      abortRound(); stopListeners(); wipeKeys(); gameData = {}; avatarsData = {}; groupsData = {}; userGroupsData = {}; Object.keys(groupWatch).forEach(k => delete groupWatch[k]); Object.keys(groupKeyCache).forEach(k => delete groupKeyCache[k]); pendingChan = ''; lastMsgsSnap = null; applyTheme();
       currentUser = null; meKey = ''; starting = false;
       accounts = {}; rolesData = {}; gameData = {}; grantsData = {}; notesList = []; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
@@ -2076,6 +2269,265 @@
     const EMOJIS = ['👍', '❤️', '😂', '😮', '😢', '🔥'];
     let replyingTo = null, typingTs = 0, typingChan = null, typingData = {}, lastRenderedChannel = null;
 
+    // ----- Messages épinglés (salons et groupes) et accusés de lecture (messages privés)
+    let pinsData = {}, readsData = {}, pinIdx = 0, readsRef = null, readsChan = '', lastReadWrite = 0;
+    function hhmm(ts) { const d = new Date(Number(ts)); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+    function pinnableChan(c) { return c !== 'self' && c !== 'annonce-update' && !String(c).startsWith('dm_'); }
+    function renderPinBar() {
+      const bar = document.getElementById('pinBar'); if (!bar) return;
+      const p = pinsData[currentChannel] || {};
+      const list = pinnableChan(currentChannel) ? messagesList.filter(m => (m.channel || 'general') === currentChannel && p[m._key]) : [];
+      if (!list.length) { bar.classList.add('hidden'); bar.classList.remove('flex'); return; }
+      pinIdx = pinIdx % list.length;
+      const m = list[pinIdx];
+      bar.classList.remove('hidden'); bar.classList.add('flex');
+      bar.innerHTML = `<span>📌</span><span class="truncate flex-1"><b>${esc(m.sender)}</b> : ${esc(String(m.text || (m.audio ? '🎤 Message vocal' : '📷 Image')).slice(0, 90))}</span><span class="text-[10px] text-gray-400 shrink-0">${pinIdx + 1}/${list.length}</span>`;
+      bar.onclick = () => {
+        const el = document.getElementById('msg-' + m._key);
+        if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('ring-2', 'ring-amber-400/60', 'rounded-xl'); setTimeout(() => el.classList.remove('ring-2', 'ring-amber-400/60'), 1600); }
+        pinIdx++; renderPinBar();
+      };
+    }
+    function togglePin(m) {
+      const ref = db.ref('pins/' + currentChannel + '/' + m._key);
+      ref.once('value').then(sn => (sn.exists() ? ref.remove() : ref.set(true))).catch(e => alert("Épinglage impossible : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)"));
+    }
+    function watchReads() {
+      if (offlineMode) return;
+      if (readsRef && readsChan !== currentChannel) { readsRef.off(); readsRef = null; readsChan = ''; }
+      if (!currentChannel.startsWith('dm_') || readsRef) return;
+      readsChan = currentChannel;
+      const chan = currentChannel;
+      readsRef = db.ref('reads/' + chan);
+      readsRef.on('value', (sn) => { readsData[chan] = sn.val() || {}; if (currentChannel === chan) renderMessages(); }, () => {});
+    }
+    function markRead() {
+      if (!meKey || !currentChannel.startsWith('dm_') || document.hidden || offlineMode) return;
+      const now = Date.now();
+      if (now - lastReadWrite < 1500) { setTimeout(markRead, 1600); return; }
+      lastReadWrite = now;
+      db.ref('reads/' + currentChannel + '/' + meKey).set(now).catch(() => {});
+    }
+    // ===== Groupes privés (créés et gérés par l'Owner uniquement) =====
+    // Chaque groupe a sa propre clé AES, chiffrée pour chaque membre avec la clé partagée Owner<->membre.
+    // À chaque ajout ou retrait de membre, une nouvelle version de la clé est créée (kv).
+    let groupsData = {}, userGroupsData = {}, pendingChan = '', lastMsgsSnap = null, groupsRedecryptTimer = null;
+    const groupKeyCache = {}, groupWatch = {};
+    const isGrp = (c) => String(c).startsWith('grp_');
+    const gidOf = (c) => String(c).slice(4);
+    function amInGroup(gid) { const g = groupsData[gid]; return !!(g && g.members && g.members[meKey]); }
+    function myGroups() { return Object.keys(groupsData).filter(amInGroup).sort((a, b) => String(groupsData[a].name || '').localeCompare(String(groupsData[b].name || ''))); }
+    function chanLabel(c) { return isGrp(c) ? '👥 ' + ((groupsData[gidOf(c)] || {}).name || 'Groupe') : (CHAN_NAMES[c] || c); }
+    async function getGroupKey(gid, v) {
+      const ck = gid + ':' + v;
+      if (groupKeyCache[ck]) return groupKeyCache[ck];
+      try {
+        let key = null;
+        if (offlineMode) key = await idb.get('gk:' + meKey + ':' + ck);
+        else {
+          const g = groupsData[gid]; if (!g) return null;
+          const w = (await db.ref('groupKeys/' + gid + '/' + v + '/' + meKey).once('value')).val();
+          if (!w) return null;
+          const dk = await getDmKey(g.owner); if (!dk) return null;
+          const raw = await aesDec(dk, w.iv, w.c);
+          key = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['encrypt', 'decrypt']);
+          idb.set('gk:' + meKey + ':' + ck, key);
+        }
+        if (key) groupKeyCache[ck] = key;
+        return key;
+      } catch (e) { return null; }
+    }
+    function startGroupListeners() {
+      if (offlineMode) return;
+      if (currentUser.role === 'Owner') {
+        const ref = db.ref('groups');
+        ref.on('value', (gs) => { groupsData = gs.val() || {}; onGroupsChanged(); }, () => {});
+        listeners.push(ref);
+      } else {
+        const ug = db.ref('userGroups/' + meKey);
+        ug.on('value', (u) => {
+          userGroupsData = u.val() || {};
+          Object.keys(groupsData).forEach(gid => { if (!userGroupsData[gid]) { delete groupsData[gid]; } });
+          Object.keys(userGroupsData).forEach(gid => {
+            if (groupWatch[gid]) return;
+            groupWatch[gid] = true;
+            const r = db.ref('groups/' + gid);
+            r.on('value', (gs) => { if (gs.val()) groupsData[gid] = gs.val(); else delete groupsData[gid]; onGroupsChanged(); },
+              () => { delete groupsData[gid]; groupWatch[gid] = false; onGroupsChanged(); });
+            listeners.push(r);
+          });
+          onGroupsChanged();
+        }, () => {});
+        listeners.push(ug);
+      }
+    }
+    function onGroupsChanged() {
+      renderGroupsList();
+      if (pendingChan && amInGroup(gidOf(pendingChan))) { const c = pendingChan; pendingChan = ''; selectChannel(c); }
+      else if (isGrp(currentChannel)) {
+        if (!amInGroup(gidOf(currentChannel))) selectChannel('general');
+        else document.getElementById('currentChannelTitle').textContent = chanLabel(currentChannel);
+      }
+      clearTimeout(groupsRedecryptTimer);
+      groupsRedecryptTimer = setTimeout(() => { if (lastMsgsSnap) onMessages(lastMsgsSnap); }, 250);
+      if (!offlineMode && meKey) idb.set('groups:' + meKey, JSON.parse(JSON.stringify(groupsData)));
+    }
+    function renderGroupsList() {
+      const box = document.getElementById('groupsList'); if (!box) return;
+      const ids = myGroups();
+      box.innerHTML = ids.map(gid => {
+        const c = 'grp_' + gid, active = currentChannel === c, n = c !== currentChannel ? (Number(unreadChannels[c]) || 0) : 0;
+        return `<button data-grp="${esc(gid)}" class="w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between ${active ? 'bg-gray-800 text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-200'} transition"><span class="flex items-center gap-2 min-w-0"><i data-lucide="users" class="w-4 h-4 shrink-0"></i><span class="truncate">${esc(groupsData[gid].name || 'Groupe')}</span></span>${n ? `<span class="min-w-[16px] h-4 px-1 rounded-full bg-brand-500 text-[10px] font-bold text-white flex items-center justify-center">${n > 99 ? '99+' : n}</span>` : ''}</button>`;
+      }).join('');
+      box.querySelectorAll('[data-grp]').forEach(b => { b.onclick = () => selectChannel('grp_' + b.dataset.grp); });
+      lucide.createIcons();
+    }
+    // --- Commandes /group (Owner)
+    function findGroup(name) { const n = String(name).trim().toLowerCase(); return Object.keys(groupsData).find(g => String(groupsData[g].name || '').toLowerCase() === n) || null; }
+    async function newGroupKeyFor(gid, v, memberKeys) {
+      const k = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+      const raw = new Uint8Array(await crypto.subtle.exportKey('raw', k));
+      const upd = {};
+      for (const mk of memberKeys) {
+        const dk = await getDmKey(mk);
+        if (!dk) throw { userMsg: ((accounts[mk] && accounts[mk].name) || mk) + " n'a pas encore ses clés de chiffrement (il doit se connecter une fois à la dernière version)." };
+        const w = await aesEnc(dk, raw);
+        upd['groupKeys/' + gid + '/' + v + '/' + mk] = { iv: w.iv, c: w.c };
+      }
+      groupKeyCache[gid + ':' + v] = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['encrypt', 'decrypt']);
+      return upd;
+    }
+    async function rotateGroup(gid, g, members, extra) {
+      const v = (g.kv || 0) + 1;
+      const need = new Set(Object.keys(members)); need.add(meKey);
+      const upd = await newGroupKeyFor(gid, v, [...need]);
+      upd['groups/' + gid + '/kv'] = v;
+      await db.ref().update(Object.assign(upd, extra || {}));
+    }
+    async function groupCommand(a) {
+      const sub = (a[0] || '').toLowerCase();
+      const HELP = "Groupes (Owner) :\n/group create [nom]\n/group add [nom] [user]\n/group remove [nom] [user]\n/group leave [nom] : te retirer du groupe\n/group join [nom] : te remettre dans le groupe\n/group delete [nom]\n/group list";
+      if (!sub) { alert(HELP); return; }
+      if (sub === 'list') {
+        const ids = Object.keys(groupsData);
+        alert(ids.length ? ids.map(id => '• ' + groupsData[id].name + ' : ' + Object.keys(groupsData[id].members || {}).map(k => (accounts[k] || {}).name || k).join(', ')).join('\n') : "Aucun groupe. Crée-en un avec /group create [nom]");
+        return;
+      }
+      if (sub === 'create') {
+        const name = a.slice(1).join(' ').trim();
+        if (!name || name.length > 30) { alert("Donne un nom de 1 à 30 caractères : /group create les potes"); return; }
+        if (findGroup(name)) { alert("Un groupe porte déjà ce nom."); return; }
+        const gid = 'g' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+        const upd = await newGroupKeyFor(gid, 1, [meKey]);
+        upd['groups/' + gid] = { name, owner: meKey, kv: 1, created: Date.now(), members: { [meKey]: true } };
+        upd['userGroups/' + meKey + '/' + gid] = true;
+        await db.ref().update(upd);
+        alert('Groupe « ' + name + ' » créé. Ajoute des membres avec /group add ' + name + ' [user]');
+        return;
+      }
+      if (sub === 'add' || sub === 'remove') {
+        if (a.length < 3) { alert(HELP); return; }
+        const user = a[a.length - 1].toLowerCase(), name = a.slice(1, -1).join(' ');
+        const gid = findGroup(name), g = gid && groupsData[gid];
+        if (!g) { alert('Groupe « ' + name + ' » introuvable.'); return; }
+        if (!accounts[user]) { alert('Identifiant « ' + user + ' » introuvable.'); return; }
+        const members = { ...(g.members || {}) };
+        if (sub === 'add') {
+          if (members[user]) { alert('Déjà dans le groupe.'); return; }
+          members[user] = true;
+          await rotateGroup(gid, g, members, { ['groups/' + gid + '/members/' + user]: true, ['userGroups/' + user + '/' + gid]: true });
+          alert(accounts[user].name + ' a été ajouté à « ' + g.name + ' ».');
+        } else {
+          if (user === meKey) { alert("Pour toi, utilise /group leave " + g.name); return; }
+          if (!members[user]) { alert("Cette personne n'est pas dans le groupe."); return; }
+          delete members[user];
+          const extra = { ['groups/' + gid + '/members/' + user]: null, ['userGroups/' + user + '/' + gid]: null };
+          for (let v = 1; v <= (g.kv || 1); v++) extra['groupKeys/' + gid + '/' + v + '/' + user] = null;
+          await rotateGroup(gid, g, members, extra);
+          alert(accounts[user].name + ' a été retiré de « ' + g.name + ' ». Ses nouveaux messages lui seront illisibles.');
+        }
+        return;
+      }
+      if (sub === 'leave' || sub === 'join' || sub === 'delete') {
+        const name = a.slice(1).join(' '), gid = findGroup(name), g = gid && groupsData[gid];
+        if (!g) { alert('Groupe « ' + name + ' » introuvable.'); return; }
+        if (sub === 'leave') { await db.ref().update({ ['groups/' + gid + '/members/' + meKey]: null, ['userGroups/' + meKey + '/' + gid]: null }); alert('Tu t\'es retiré de « ' + g.name + ' ». /group join ' + g.name + ' pour revenir.'); }
+        else if (sub === 'join') { await db.ref().update({ ['groups/' + gid + '/members/' + meKey]: true, ['userGroups/' + meKey + '/' + gid]: true }); alert('Tu es de retour dans « ' + g.name + ' ».'); }
+        else {
+          if (!confirm('Supprimer le groupe « ' + g.name + ' » pour tout le monde ?')) return;
+          const upd = { ['groups/' + gid]: null, ['groupKeys/' + gid]: null };
+          Object.keys(g.members || {}).forEach(k => { upd['userGroups/' + k + '/' + gid] = null; });
+          upd['userGroups/' + meKey + '/' + gid] = null;
+          await db.ref().update(upd);
+          alert('Groupe supprimé.');
+        }
+        return;
+      }
+      alert(HELP);
+    }
+    // ===== Lecture hors ligne : on garde une copie CHIFFRÉE des derniers messages (déchiffrés à l'ouverture avec tes clés locales) =====
+    let msgCacheTimer = null, accCacheTimer = null;
+    function saveMsgCache(msgs) {
+      clearTimeout(msgCacheTimer);
+      msgCacheTimer = setTimeout(() => {
+        if (!meKey || offlineMode) return;
+        const out = {};
+        Object.entries(msgs).sort((a, b) => (a[1].id || 0) - (b[1].id || 0)).slice(-200).forEach(([k, v]) => {
+          try { if (JSON.stringify(v).length <= 20000) out[k] = v; } catch (e) {}
+        });
+        idb.set('msgs:' + meKey, out);
+      }, 2000);
+    }
+    function saveAccountsCache(acc) {
+      clearTimeout(accCacheTimer);
+      accCacheTimer = setTimeout(() => {
+        if (!meKey || offlineMode) return;
+        const out = {};
+        Object.entries(acc).forEach(([k, v]) => { const c = { ...v }; delete c.pass; out[k] = c; });
+        idb.set('accounts:' + meKey, out);
+      }, 1500);
+    }
+    function showOfflineBar() {
+      if (document.getElementById('offlineBar')) return;
+      const b = document.createElement('div');
+      b.id = 'offlineBar';
+      b.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:70;background:#92400e;color:#fff;font-size:12px;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 6px) 8px 6px';
+      b.textContent = '📴 Hors ligne : lecture seule. Ça reviendra tout seul dès que le réseau est de retour.';
+      document.body.appendChild(b);
+      window.addEventListener('online', () => location.reload());
+    }
+    async function startOffline(user) {
+      let prof = null;
+      try { prof = JSON.parse(localStorage.getItem('sc_prof') || 'null'); } catch (e) {}
+      if (!prof || prof.uid !== user.uid || !prof.key) return false;
+      const cached = await idb.get('msgs:' + prof.key);
+      if (!cached) return false;
+      starting = true; offlineMode = true;
+      meKey = prof.key; currentUser = prof.acc;
+      try { groupKey = await idb.get('group'); myPriv = await idb.get('ecdh:' + meKey); } catch (e) {}
+      accounts = (await idb.get('accounts:' + meKey)) || { [meKey]: prof.acc };
+      groupsData = (await idb.get('groups:' + meKey)) || {};
+      document.getElementById('loginError').classList.add('hidden');
+      document.getElementById('authScreen').classList.add('hidden');
+      endBoot(false);
+      document.getElementById('appContainer').classList.remove('hidden');
+      document.getElementById('userNameDisplay').textContent = currentUser.name;
+      document.getElementById('userRoleDisplay').textContent = roleLabel(currentUser);
+      document.getElementById('adminBtn').classList.add('hidden');
+      renderMyAvatar();
+      unreadChannels = {}; seenKeys.clear(); firstLoadDone = true;
+      const list = Object.entries(cached).map(([k, v]) => ({ ...v, _key: k }));
+      await Promise.all(list.map(decryptMessage));
+      messagesList = list;
+      applyTheme();
+      const last = readLastChan(meKey);
+      if (isGrp(last) && amInGroup(gidOf(last))) selectChannel(last);
+      else if (last.startsWith('dm_') && partnerOf(last)) selectChannel(last);
+      else selectChannel(CHANNELS.includes(last) && last !== 'self' ? last : 'general');
+      renderUsersList(); renderGroupsList(); renderMessages();
+      showOfflineBar();
+      return true;
+    }
     function renderChannels() {
       let total = 0;
       Object.keys(unreadChannels).forEach(k => { total += Number(unreadChannels[k]) || 0; });
@@ -2088,6 +2540,7 @@
         dotEl.classList.toggle('hidden', !n);
         dotEl.classList.toggle('flex', !!n);
       });
+      renderGroupsList();
     }
 
     function clearSearch() { const el = document.getElementById('searchInput'); if (el) el.value = ''; }
@@ -2117,7 +2570,7 @@
       try {
         if (m.c) {
           const e = await encryptPayload(m.channel || 'general', { t: v, ...(m.replyTo ? { r: m.replyTo } : {}) });
-          await db.ref((m._note ? 'notes/' + meKey + '/' : 'messages/') + m._key).update({ iv: e.iv, c: e.c, edited: true });
+          await db.ref((m._note ? 'notes/' + meKey + '/' : 'messages/') + m._key).update({ iv: e.iv, c: e.c, ...(e.kv ? { kv: e.kv } : {}), edited: true });
         } else {
           await db.ref((m._note ? 'notes/' + meKey + '/' : 'messages/') + m._key).update({ text: v, edited: true });
         }
@@ -2236,6 +2689,7 @@
     function saveLastChan(c) { try { if (meKey) localStorage.setItem('sc_last_chan:' + meKey, c); } catch (e) {} }
     function readLastChan(k) { try { return localStorage.getItem('sc_last_chan:' + k) || ''; } catch (e) { return ''; } }
     function selectChannel(chan) {
+      if (isGrp(chan) && !amInGroup(gidOf(chan))) chan = 'general';
       currentChannel = chan; saveLastChan(chan);
       clearTyping(); cancelReply(); clearSearch(); unreadChannels[chan] = 0;
 
@@ -2252,11 +2706,12 @@
         inputEl.placeholder = isOwner ? "Publier une annonce officielle..." : "Seul l'Owner peut publier dans ce salon";
       } else {
         inputEl.disabled = sendBtnEl.disabled = imgBtnEl.disabled = false;
-        inputEl.placeholder = chan === 'self' ? "Note privée (visible par toi seul)..." : "Écrire un message chiffré...";
-        titleEl.textContent = chan === 'general' ? 'Général' : 'Projets Privés · visible par toi seul';
-        setChannelIcon(chan === 'self' ? 'lock' : 'hash');
+        inputEl.placeholder = chan === 'self' ? "Note privée (visible par toi seul)..." : (isGrp(chan) ? "Message au groupe (chiffré)..." : "Écrire un message chiffré...");
+        titleEl.textContent = chan === 'general' ? 'Général' : (isGrp(chan) ? chanLabel(chan) : 'Projets Privés · visible par toi seul');
+        setChannelIcon(chan === 'self' ? 'lock' : (isGrp(chan) ? 'users' : 'hash'));
       }
 
+      if (offlineMode) { inputEl.disabled = sendBtnEl.disabled = imgBtnEl.disabled = true; inputEl.placeholder = 'Hors ligne : lecture seule'; }
       if (currentUser && (isStaffRole(currentUser.role))) {
         document.getElementById('headerCommandHint').textContent = CMD_HINT;
       }
@@ -2264,6 +2719,7 @@
       styleChannelButtons(chan);
       renderChannels();
       renderUsersList();
+      watchReads(); markRead();
       renderMessages();
       toggleSidebar(false);
       lucide.createIcons();
@@ -2296,6 +2752,7 @@
       styleChannelButtons(null);
       renderChannels();
       renderUsersList();
+      watchReads(); markRead();
       renderMessages();
       toggleSidebar(false);
       lucide.createIcons();
@@ -2427,6 +2884,12 @@
           return;
         }
 
+        if (cmd === 'group') {
+          if (currentUser.role !== 'Owner') { alert("Réservé à l'Owner."); return; }
+          groupCommand(args.slice(1)).catch(e => alert('Erreur : ' + ((e && (e.userMsg || e.code || e.message)) || e)));
+          return;
+        }
+
         if (cmd === 'deco') {
           if (currentUser.role !== 'Owner') { alert("Réservé à l'Owner."); return; }
           const sub = (args[1] || '').toLowerCase(), target = (args[2] || '').toLowerCase(), did = (args[3] || '').toLowerCase();
@@ -2456,7 +2919,7 @@
         }
 
         if (cmd === 'help') {
-          alert("Commandes disponibles :\n- /clean : Nettoie le salon\n- /ban [user] : Banni un compte\n- /mute [user] [sec] : Mute un utilisateur\n- /toall [msg] : Annonce globale\n- /admin [user] : Nomme un Admin\n- /help : Aide\n- /deco list|give|remove [user] [id] : décorations exclusives (Owner)\n\nPour tout le monde :\n- /roll 20 ou /roll 2d6 : dés\n- /pile : pile ou face\n- /poll Question | choix 1 | choix 2 : sondage");
+          alert("Commandes disponibles :\n- /clean : Nettoie le salon\n- /ban [user] : Banni un compte\n- /mute [user] [sec] : Mute un utilisateur\n- /toall [msg] : Annonce globale\n- /admin [user] : Nomme un Admin\n- /help : Aide\n- /deco list|give|remove [user] [id] : décorations exclusives (Owner)\n- /group create|add|remove|leave|join|delete|list : groupes privés (Owner)\n\nPour tout le monde :\n- /roll 20 ou /roll 2d6 : dés\n- /pile : pile ou face\n- /poll Question | choix 1 | choix 2 : sondage");
           return;
         }
 
@@ -2490,6 +2953,8 @@
       });
       if (q && !filtered.length) container.innerHTML = '<p class="text-center text-xs text-gray-500 mt-6">Aucun résultat.</p>';
 
+      const lastMine = [...filtered].reverse().find(x => x.senderKey === meKey && !x.isSystem && !x.isGlobalAnnouncement);
+      const lastMineKey = lastMine ? lastMine._key : null;
       filtered.forEach(m => {
         if (m.isGlobalAnnouncement) {
           const annDiv = document.createElement('div');
@@ -2556,25 +3021,35 @@
         const picker = EMOJIS.map(em => `<button data-emoji="${em}" class="px-1 text-base hover:scale-125 transition">${em}</button>`).join('');
         const canEdit = own && !!m.text && !m.imageUrl && !m.poll && !m.audio;
         const canDel = own || isStaff;
+        const pinned = !!(pinsData[currentChannel] && pinsData[currentChannel][key]);
+        const canPin = isStaff && !m._note && pinnableChan(currentChannel);
+        let seenLine = '';
+        if (mine && currentChannel.startsWith('dm_') && key === lastMineKey) {
+          const rt = (readsData[currentChannel] || {})[partnerOf(currentChannel)];
+          if (rt && Number(rt) >= Number(m.id || 0)) seenLine = `<p class="px-1 text-[10px] text-gray-500">✓ Vu à ${hhmm(rt)}</p>`;
+        }
 
         wrap.innerHTML = `
           <div class="flex items-center gap-2 text-[10px] text-gray-400 px-1">
             ${avatarHtml(m.senderKey, 'w-5 h-5', 'text-[9px]')}<span class="font-semibold text-gray-300">${esc(m.sender)}</span>${msgBadgeHtml(accounts[m.senderKey])}
-            <span>• ${esc(msgStamp(m))}</span>${m.c ? '' : '<span title="Ancien message non chiffré">🔓</span>'}${m.edited ? '<span class="italic">(modifié)</span>' : ''}
+            <span>• ${esc(msgStamp(m))}</span>${pinned ? '<span title="Épinglé">📌</span>' : ''}${m.c ? '' : '<span title="Ancien message non chiffré">🔓</span>'}${m.edited ? '<span class="italic">(modifié)</span>' : ''}
           </div>
           <div class="msg-bubble max-w-[85%] sm:max-w-md p-3 rounded-2xl text-xs sm:text-sm ${mine ? 'bg-brand-600 text-white rounded-tr-none shadow-md shadow-brand-600/10' : 'bg-gray-800 text-gray-100 rounded-tl-none border border-gray-700/60'} ${mentioned ? 'ring-2 ring-amber-400/70' : ''}">${content}</div>
           ${chips ? `<div class="flex flex-wrap gap-1 px-1 ${mine ? 'justify-end' : ''}">${chips}</div>` : ''}
           <div class="flex items-center gap-1 px-1 text-gray-500">
             <button data-act="reply" title="Répondre" class="p-1 hover:text-white"><i data-lucide="corner-up-left" class="w-3.5 h-3.5"></i></button>
             ${m._note ? '' : '<button data-act="react" title="Réagir" class="p-1 hover:text-white"><i data-lucide="smile" class="w-3.5 h-3.5"></i></button>'}
+            ${canPin ? `<button data-act="pin" title="${pinned ? 'Désépingler' : 'Épingler'}" class="p-1 hover:text-amber-300 ${pinned ? 'text-amber-400' : ''}"><i data-lucide="pin" class="w-3.5 h-3.5"></i></button>` : ''}
             ${canEdit ? '<button data-act="edit" title="Modifier" class="p-1 hover:text-white"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>' : ''}
             ${canDel ? '<button data-act="del" title="Supprimer" class="p-1 hover:text-red-400"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>' : ''}
           </div>
+          ${seenLine}
           <div data-picker style="display:none" class="gap-1 px-2 py-1 rounded-xl bg-gray-900 border border-gray-700">${picker}</div>`;
 
         const on = (sel, fn) => { const el = wrap.querySelector(sel); if (el) el.onclick = fn; };
         on('[data-act=reply]', () => startReply(m));
         on('[data-act=react]', () => { const pk = wrap.querySelector('[data-picker]'); pk.style.display = pk.style.display === 'flex' ? 'none' : 'flex'; });
+        on('[data-act=pin]', () => togglePin(m));
         on('[data-act=edit]', () => editMessage(m));
         on('[data-act=del]', () => deleteMessage(m));
         on('[data-goto]', () => { const t = document.getElementById('msg-' + m.replyTo.key); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
@@ -2583,6 +3058,7 @@
         container.appendChild(wrap);
       });
 
+      renderPinBar();
       lucide.createIcons();
       container.scrollTop = (sameChan && !nearBottom && !q) ? prevTop : container.scrollHeight;
       lastRenderedChannel = currentChannel;
