@@ -619,7 +619,7 @@
           </div>
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>Événement anniversaire : le Roll (décoration, thème, et les deux améliorés)</li>
-            <li>Les étoiles dépensées ne font pas baisser les paliers</li>
+            <li>1500 étoiles d'événement offertes à tous, indépendantes de celles du jeu</li>
             <li>Décoration « 1 semaine » pour tous les participants</li>
           </ul>
         </div>
@@ -818,11 +818,11 @@
     const VERSION_CHANGELOG =
       "🎂 Securechat fête sa première semaine : ÉVÉNEMENT !\n\n" +
       "À partir de ce soir 20h00 et jusqu'à demain minuit :\n" +
-      "🎲 Le ROLL de l'anniversaire : dépense tes étoiles du jeu pour tirer des récompenses exclusives\n" +
+      "🎲 Le ROLL de l'anniversaire : tout le monde reçoit 1500 ⭐ d'événement pour tirer des récompenses exclusives\n" +
       "🎂 Rare : la décoration Anniversaire\n" +
       "🎉 Épique : le thème Anniversaire\n" +
       "🌟 Légendaire : les deux en version améliorée !\n\n" +
-      "Chaque roll coûte des étoiles, mais tes paliers de décorations ne baissent jamais. Bonne chance !";
+      "Ces étoiles sont à part : tes étoiles du jeu et tes paliers ne bougent pas. Bonne chance !";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
 
@@ -2234,6 +2234,7 @@
       soft(db.ref('roles'), (r) => { rolesData = r.val() || {}; renderUsersList(); updateAdminUsersList(); renderRolesList(); renderMessages(); if (currentUser) document.getElementById('userRoleDisplay').textContent = roleLabel(currentUser); });
       soft(db.ref('lastPublishedVersion'), (v) => { const pub = v.val(); document.getElementById('updateBanner').classList.toggle('hidden', !(pub && isNewer(pub, CURRENT_VERSION))); });
       db.ref('.info/serverTimeOffset').on('value', (o) => { serverOffset = Number(o.val()) || 0; }); listeners.push(db.ref('.info/serverTimeOffset'));
+      soft(db.ref('ev/' + key), (e) => { evData = e.val() || {}; renderRoll(); renderRollPanel(); });
       startEventTick();
       soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; gameLoaded = true; applyTheme(); renderUsersList(); renderGamePanel(); renderGameModal(); renderDecoButton(); renderDecoModal(); renderRoll(); renderRollPanel(); });
       soft(db.ref('avatars'), (as) => { avatarsData = as.val() || {}; renderMyAvatar(); renderUsersList(); renderDecoModal(); renderMessages(); });
@@ -2258,7 +2259,7 @@
 
     async function logout() {
       if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline', at: firebase.database.ServerValue.TIMESTAMP }); } catch (e) {} }
-      abortRound(); stopListeners(); wipeKeys(); gameData = {}; avatarsData = {}; groupsData = {}; userGroupsData = {}; gameLoaded = false; closeRoll(); renderRollPanel(); Object.keys(groupWatch).forEach(k => delete groupWatch[k]); Object.keys(groupKeyCache).forEach(k => delete groupKeyCache[k]); pendingChan = ''; lastMsgsSnap = null; applyTheme();
+      abortRound(); stopListeners(); wipeKeys(); gameData = {}; avatarsData = {}; groupsData = {}; userGroupsData = {}; gameLoaded = false; evData = {}; pendingRollUpd = null; closeRoll(); renderRollPanel(); Object.keys(groupWatch).forEach(k => delete groupWatch[k]); Object.keys(groupKeyCache).forEach(k => delete groupKeyCache[k]); pendingChan = ''; lastMsgsSnap = null; applyTheme();
       currentUser = null; meKey = ''; starting = false;
       accounts = {}; rolesData = {}; gameData = {}; grantsData = {}; notesList = []; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
@@ -2675,7 +2676,8 @@
     // ===== Événement anniversaire : le Roll (dépense des étoiles du jeu) =====
     // Rouler coûte des étoiles : ton solde baisse, mais tes paliers de décorations ne baissent jamais (étoiles gagnées = solde + dépensées).
     const EVT = { start: 1793214000000, end: 1793314800000 }; // 28/10/2026 20h00 -> 30/10/2026 00h00 (heure de Paris)
-    let serverOffset = 0, rollBusy = false, rollMsg = '', lastRollHtml = '', gameLoaded = false, evtPrev = '', evtTimer = null;
+    const EV_START_BAL = 1500; // étoiles de l'événement offertes à tout le monde (monnaie à part des étoiles du jeu)
+    let evData = {}, pendingRollUpd = null, serverOffset = 0, rollBusy = false, rollMsg = '', lastRollHtml = '', gameLoaded = false, evtPrev = '', evtTimer = null;
     const nowS = () => Date.now() + serverOffset;
     const isEarlyOwner = () => !!(currentUser && currentUser.role === 'Owner' && nowS() < EVT.start);
     function evtState() { const n = nowS(); if (n < EVT.start) return isEarlyOwner() ? 'live' : 'before'; return n <= EVT.end ? 'live' : 'after'; }
@@ -2685,6 +2687,7 @@
     }
     function rnd() { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] / 4294967296; }
     function pickW(items) { const tot = items.reduce((x, i) => x + i.w, 0); let r = rnd() * tot; for (const it of items) { if ((r -= it.w) < 0) return it; } return items[items.length - 1]; }
+    function evBal() { return evData && evData.bal !== undefined ? Number(evData.bal) : EV_START_BAL; }
     function giveOwned(x, g) { return x.t === 'theme' ? g[x.flag] === true : !!(g.roll && g.roll[x.id] === true); }
     const itemOwnedIn = (it, g) => it.give.every(x => giveOwned(x, g));
     function rollOnce(g, pity) {
@@ -2698,12 +2701,12 @@
       if (rollBusy) return;
       if (evtState() !== 'live') { rollMsg = "Le roll n'est pas ouvert."; renderRoll(); return; }
       const cost = n === 10 ? ROLL_COST * 9 : ROLL_COST; // ×10 = 10 rolls pour le prix de 9
-      if (cost > myStars()) { rollMsg = "Pas assez d'étoiles (" + myStars() + ' ⭐).'; renderRoll(); return; }
+      if (cost > evBal()) { rollMsg = "Pas assez d'étoiles de l'événement (" + evBal() + ' ⭐).'; renderRoll(); return; }
       rollBusy = true; rollMsg = '';
       document.querySelectorAll('#rollBody button').forEach(b => { b.disabled = true; });
       const g0 = gameData[meKey] || {};
       const work = { roll: { ...(g0.roll || {}) }, ePartyTheme: g0.ePartyTheme, ePartyPlus: g0.ePartyPlus };
-      let pity = Number(g0.pity) || 0;
+      let pity = Number((evData || {}).pity) || 0;
       const results = [];
       for (let i = 0; i < n; i++) {
         const r = rollOnce(work, pity); pity = r.pity; results.push(r);
@@ -2722,24 +2725,33 @@
       let ok = false;
       try {
         const finalPity = pity;
-        const res = await db.ref('game/' + meKey).transaction((cur) => {
-          if (!cur) return;
-          const stars = Number(cur.stars) || 0, spent = Number(cur.spent) || 0;
-          if (stars < cost) return;
-          const net = cost - refund;
-          const out = { ...cur, stars: stars - net, spent: spent + net, pity: finalPity, rolls: (Number(cur.rolls) || 0) + n, roll: { ...(cur.roll || {}) } };
-          results.forEach(r => r.item.give.forEach(x => { if (x.t === 'theme') out[x.flag] = true; else out.roll[x.id] = true; }));
-          return out;
+        const res = await db.ref('ev/' + meKey).transaction((cur) => {
+          cur = cur || {};
+          const spent = Number(cur.spent) || 0, refunded = Number(cur.refunded) || 0;
+          const bal = EV_START_BAL - spent + refunded;
+          if (bal < cost) return;
+          return { ...cur, spent: spent + cost, refunded: refunded + refund, bal: bal - cost + refund, pity: finalPity, rolls: (Number(cur.rolls) || 0) + n };
         });
         ok = !!res.committed;
       } catch (e) { console.error(e); rollMsg = 'Roll impossible : ' + (e.code || e.message) + ' (règles Firebase à jour ?)'; }
       if (ok) {
+        const upd = {};
+        results.forEach(r => r.item.give.forEach(x => { if (x.t === 'theme') upd[x.flag] = true; else upd['roll/' + x.id] = true; }));
+        if (!gameData[meKey] || gameData[meKey].stars === undefined) upd.stars = 0;
+        pendingRollUpd = { ...(pendingRollUpd || {}), ...upd };
+        flushPendingRoll();
         lastRollHtml = n === 1 ? rollCardHtml(results[0]) : `<div class="grid grid-cols-5 gap-1.5">${results.map(r => `<div class="rounded-lg p-1 text-center" style="border:1px solid ${RARITIES[r.rar].color}" title="${esc(r.item.name)}"><div class="text-lg">${r.item.icon}</div><div class="text-[8px] ${r.dup ? 'text-gray-500' : 'text-emerald-400 font-bold'}">${r.dup ? '+' + r.refund : 'NEW'}</div></div>`).join('')}</div><p class="text-[11px] text-gray-300 mt-2">Meilleur : ${best.item.icon} ${esc(best.item.name)} (<span style="color:${RARITIES[best.rar].color}">${RARITIES[best.rar].name}</span>)${refund ? ' · doublons : +' + refund + ' ⭐' : ''}</p>`;
         if (best.rar === 'legendary') rollMsg = '✨ LÉGENDAIRE ! Décoration + thème débloqués ✨';
         else if (best.rar === 'epic') rollMsg = '🎉 Épique ! Thème débloqué (menu 🎨, tout en bas)';
         else rollMsg = best.dup ? '' : 'Décoration débloquée (menu 🎨)';
       } else { lastRollHtml = ''; if (!rollMsg) rollMsg = 'Roll refusé (solde insuffisant ou événement terminé).'; }
       rollBusy = false; renderRoll();
+    }
+    async function flushPendingRoll() {
+      if (!pendingRollUpd || !meKey) return;
+      const upd = pendingRollUpd;
+      try { await db.ref('game/' + meKey).update(upd); if (pendingRollUpd === upd) pendingRollUpd = null; }
+      catch (e) { rollMsg = "Cosmétique en attente d'enregistrement : " + (e.code || e.message); }
     }
     function openRoll() {
       document.getElementById('rollModal').classList.remove('hidden');
@@ -2752,18 +2764,18 @@
       if (!modal || !body || modal.classList.contains('hidden') || !meKey || rollBusy) return;
       const st = evtState(), g = gameData[meKey] || {};
       if (st === 'before') {
-        body.innerHTML = `<div class="text-center space-y-2 py-6"><div class="text-4xl">🎲</div><p class="text-sm text-white font-semibold">Ouverture à 20h00</p><p id="rollCountdown" class="text-2xl font-mono text-amber-300">${fmtCount(EVT.start - nowS())}</p><p class="text-[11px] text-gray-400">Dépense tes étoiles pour tirer des cosmétiques exclusifs.</p></div>`;
+        body.innerHTML = `<div class="text-center space-y-2 py-6"><div class="text-4xl">🎲</div><p class="text-sm text-white font-semibold">Ouverture à 20h00</p><p id="rollCountdown" class="text-2xl font-mono text-amber-300">${fmtCount(EVT.start - nowS())}</p><p class="text-[11px] text-gray-400">Tout le monde reçoit 1500 ⭐ d'événement pour tirer des cosmétiques exclusifs.</p></div>`;
         return;
       }
       const pity = Number(g.pity) || 0;
       const rewards = ROLL_ITEMS.map(it => { const own = itemOwnedIn(it, g); return `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border" style="border-color:${RARITIES[it.r].color}66"><div class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-lg shrink-0">${it.icon}</div><div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100">${esc(it.name)}</p><p class="text-[10px]"><span style="color:${RARITIES[it.r].color}">${RARITIES[it.r].name} · ${RARITIES[it.r].w} %</span> <span class="text-gray-400">· ${esc(it.desc)}</span></p></div>${own ? '<span class="text-[11px] text-emerald-400 shrink-0">Obtenu ✓</span>' : '<span class="text-[11px] text-gray-500 shrink-0">À trouver</span>'}</div>`; }).join('');
-      body.innerHTML = `<div class="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/30"><div><p class="text-[10px] text-amber-200/80">Tes étoiles</p><p class="text-lg font-bold text-amber-300">⭐ ${myStars()}</p></div><div class="text-right text-[10px] text-gray-400 max-w-[55%]">${isEarlyOwner() ? '🔑 Accès anticipé (Owner)<br>' : (st === 'live' ? '<span id="rollCountdown">' + fmtCount(EVT.end - nowS()) + '</span> restant<br>' : 'Événement terminé<br>')}Tes paliers de décorations ne baissent jamais.</div></div>
+      body.innerHTML = `<div class="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/30"><div><p class="text-[10px] text-amber-200/80">Étoiles de l'événement</p><p class="text-lg font-bold text-amber-300">⭐ ${evBal()}</p></div><div class="text-right text-[10px] text-gray-400 max-w-[55%]">${isEarlyOwner() ? '🔑 Accès anticipé (Owner)<br>' : (st === 'live' ? '<span id="rollCountdown">' + fmtCount(EVT.end - nowS()) + '</span> restant<br>' : 'Événement terminé<br>')}Offertes à tous : 1500 ⭐ au départ.</div></div>
         <div id="rollStage" class="min-h-[120px] flex flex-col items-center justify-center rounded-xl bg-gray-900/60 border border-gray-800 p-3 text-center">${lastRollHtml || '<div class="text-4xl">🎲</div><p class="text-[11px] text-gray-400 mt-1">Lance un roll pour tenter ta chance</p>'}</div>
         <div class="grid grid-cols-2 gap-2"><button type="button" data-roll="1" class="py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm">Roll ×1<br><span class="text-[11px] font-semibold">${ROLL_COST} ⭐</span></button><button type="button" data-roll="10" class="py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-bold text-sm">Roll ×10<br><span class="text-[11px] font-semibold">${ROLL_COST * 9} ⭐ (1 offert)</span></button></div>
         <p id="rollMsg" class="text-[12px] text-center text-amber-200 min-h-[18px]">${esc(rollMsg)}</p>
         <p class="text-[10px] text-gray-400 text-center">Légendaire garanti dans <b>${Math.max(1, ROLL_PITY - pity)}</b> roll(s) maximum.</p>
         <div class="space-y-1.5">${rewards}</div>
-        <p class="text-[10px] text-gray-500 text-center">Un doublon te rembourse une partie des étoiles. Tes décorations et thèmes se choisissent dans le menu 🎨.</p>`;
+        <p class="text-[10px] text-gray-500 text-center">Ces étoiles sont propres à l'événement : elles n'affectent ni tes étoiles du jeu, ni tes paliers. Un doublon te rembourse une partie de la mise. Tes décorations et thèmes se choisissent dans le menu 🎨.</p>`;
       body.querySelectorAll('[data-roll]').forEach(b => { b.onclick = () => rollNow(Number(b.dataset.roll)); });
       if (st === 'after') body.querySelectorAll('[data-roll]').forEach(b => { b.disabled = true; b.classList.add('opacity-50'); });
     }
@@ -2772,7 +2784,7 @@
       const st = evtState();
       if (!meKey || offlineMode || (st === 'after' && nowS() > EVT.end + 86400000) || (st === 'before' && EVT.start - nowS() > 24 * 3600000)) { box.classList.add('hidden'); return; }
       box.classList.remove('hidden');
-      document.getElementById('rollPanelSub').textContent = isEarlyOwner() ? '🔑 Accès anticipé · ouvre pour tous dans ' + fmtCount(EVT.start - nowS()) : st === 'before' ? 'Ouvre dans ' + fmtCount(EVT.start - nowS()) : (st === 'live' ? '⭐ ' + myStars() + ' · ' + fmtCount(EVT.end - nowS()) + ' restant' : 'Événement terminé');
+      document.getElementById('rollPanelSub').textContent = isEarlyOwner() ? '🔑 Accès anticipé · ouvre pour tous dans ' + fmtCount(EVT.start - nowS()) : st === 'before' ? 'Ouvre dans ' + fmtCount(EVT.start - nowS()) : (st === 'live' ? '⭐ ' + evBal() + ' · ' + fmtCount(EVT.end - nowS()) + ' restant' : 'Événement terminé');
     }
     function eventTick() {
       const st = evtState();
@@ -2781,10 +2793,11 @@
         const cd = document.getElementById('rollCountdown');
         if (cd && !rollBusy) cd.textContent = fmtCount((st === 'before' ? EVT.start : EVT.end) - nowS());
         if (evtPrev === 'before' && st === 'live') {
-          showSecretCard('🎲', "L'événement commence !", "Le Roll de l'anniversaire est ouvert : dépense tes étoiles pour tirer des cosmétiques exclusifs.");
+          showSecretCard('🎲', "L'événement commence !", "Le Roll de l'anniversaire est ouvert : tu as 1500 ⭐ d'événement pour tirer des cosmétiques exclusifs.");
           renderRoll();
         }
         evtPrev = st;
+        if (pendingRollUpd && !rollBusy) flushPendingRoll();
       }
     }
     function startEventTick() {
