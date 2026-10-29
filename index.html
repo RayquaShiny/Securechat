@@ -431,6 +431,9 @@
       body.theme-noel::after, body.theme-valentin::after, body.theme-ete::after, body.theme-party::after, body.theme-partyplus::after, body.theme-halloween::before { animation: none; }
     }
     @media (prefers-reduced-motion: reduce) { html:has(body.theme-halloween)::after { animation: none; } }
+    .deco-nerd { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='30' viewBox='0 0 60 30'%3E%3Crect x='2' y='4' width='24' height='21' rx='8' fill='white' fill-opacity='.6' stroke='%235b3a14' stroke-width='3'/%3E%3Crect x='34' y='4' width='24' height='21' rx='8' fill='white' fill-opacity='.6' stroke='%235b3a14' stroke-width='3'/%3E%3Cpath d='M26 12Q30 8 34 12' fill='none' stroke='%235b3a14' stroke-width='3'/%3E%3Ccircle cx='15' cy='15' r='3.2' fill='%233b2410'/%3E%3Ccircle cx='47' cy='15' r='3.2' fill='%233b2410'/%3E%3C/svg%3E") no-repeat right 8px center / 40px 20px, radial-gradient(circle, rgba(146,64,14,.50) 0 1px, transparent 1.6px) 0 0 / 11px 11px, radial-gradient(circle, rgba(146,64,14,.40) 0 1px, transparent 1.6px) 5px 6px / 13px 13px, radial-gradient(ellipse at 28% 0%, rgba(255,255,255,.6), transparent 55%), linear-gradient(180deg,#fde68a,#fbbf24 60%,#f59e0b) !important; border-color: #7c4a12 !important; border-width: 2px; box-shadow: 0 0 10px rgba(251,191,36,.55), inset 0 -3px 6px rgba(146,64,14,.25); }
+    .deco-nerd p { color: #4a2a08 !important; font-weight: 800; text-shadow: 0 1px 0 rgba(255,255,255,.55); }
+    .deco-nerd .av { box-shadow: 0 0 0 2px #7c4a12; }
   </style>
 </head>
 <body class="h-screen h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-hidden">
@@ -726,7 +729,7 @@
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>Événement anniversaire : le Roll (décoration, thème, et les deux améliorés)</li>
             <li>1500 étoiles d'événement offertes à tous, indépendantes de celles du jeu</li>
-            <li>Un nouveau secret à découvrir…</li>
+            <li>De nouveaux secrets à découvrir…</li>
             <li>Tous les thèmes améliorés : décors animés légers, en-têtes et boutons retravaillés</li>
             <li>Thèmes de saison (Halloween, Noël, Saint-Valentin, Été) : imposés pendant leur période, choix libre le reste de l'année</li>
             <li>Décoration « 1 semaine » pour tous les participants</li>
@@ -931,7 +934,7 @@
       "🎂 Rare : la décoration Anniversaire\n" +
       "🎉 Épique : le thème Anniversaire\n" +
       "🌟 Légendaire : les deux en version améliorée !\n\n" +
-      "Ces étoiles sont à part : tes étoiles du jeu et tes paliers ne bougent pas.\n🕵️ Et un nouveau secret traîne quelque part… Bonne chance !";
+      "Ces étoiles sont à part : tes étoiles du jeu et tes paliers ne bougent pas.\n🕵️ Et de nouveaux secrets traînent quelque part… Bonne chance !";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
 
@@ -1432,6 +1435,7 @@
       { id: 'error404', name: 'Écran bleu', icon: ':(', cls: 'deco-404', kind: 'secret', flag: 's404' },
       { id: 'hacker', name: 'Hacker', icon: '💻', cls: 'deco-hack', kind: 'secret', flag: 'sHack' },
       // Événement anniversaire (édition limitée) : kind 'event' = débloqué par un drapeau eXxx
+      { id: 'nerd', name: 'Nerd', icon: '🤓', cls: 'deco-nerd', kind: 'secret', flag: 'sNerd' },
       { id: 'eee', name: 'E', icon: 'E', cls: 'deco-e', kind: 'secret', flag: 'sE' },
       { id: 'bday', name: 'Anniversaire', icon: '🎂', cls: 'deco-bday', kind: 'roll', rarity: 'rare' },
       { id: 'bdayplus', name: 'Anniversaire ★', icon: '🌟', cls: 'deco-bdayplus', kind: 'roll', rarity: 'legendary' }
@@ -1580,6 +1584,20 @@
       catch (e) { alert("Impossible : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)"); }
     }
     // Mot secret écrit dans le Général : débloque et active un thème (une seule fois)
+    // Secret « Nerd » : dire « note » dans ses notes privées
+    async function checkNoteSecret(text) {
+      if (!meKey || currentChannel !== 'self') return;
+      const norm = String(text).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      if (!/(^|[^a-z0-9])note([^a-z0-9]|$)/.test(norm)) return;
+      const g = gameData[meKey];
+      if (g && g.sNerd === true) return;
+      const upd = { sNerd: true };
+      if (!g || g.stars === undefined) upd.stars = 0;
+      try {
+        await db.ref('game/' + meKey).update(upd);
+        showSecretCard('🤓', 'Bien joué, nerd !', 'Décoration secrète « Nerd » débloquée ! Tu la trouveras dans le menu 🎨, tout en bas (Secrets).');
+      } catch (e) { alert("Impossible d'enregistrer le secret : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)"); }
+    }
     async function checkSecretWord(text) {
       if (!meKey || currentChannel !== 'general') return;
       const norm = String(text).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -3377,6 +3395,7 @@
       cancelReply(); clearTyping();
       input.value = '';
       if (sentChan === 'general') checkSecretWord(text);
+      else if (sentChan === 'self') checkNoteSecret(text);
     }
 
     function renderMessages() {
