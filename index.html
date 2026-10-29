@@ -325,6 +325,11 @@
     .deco-bdayplus p { color: #fff7cc !important; text-shadow: 0 0 6px rgba(253,224,71,.8); }
     .deco-bdayplus::after { content: ''; position: absolute; top: 0; bottom: 0; width: 26px; left: -26px; background: linear-gradient(90deg, transparent, rgba(255,240,170,.5), transparent); animation: jackpotShine 3.2s linear infinite; pointer-events: none; }
     @media (prefers-reduced-motion: reduce) { .deco-bdayplus::after { animation: none; } }
+    .deco-e { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Ctext x='24' y='40' text-anchor='middle' font-family='Impact,Arial Black,sans-serif' font-weight='900' font-size='46' fill='white' stroke='black' stroke-width='3' paint-order='stroke'%3EE%3C/text%3E%3C/svg%3E") no-repeat right 5px center / 26px 26px, radial-gradient(circle, #00ff3c 0 22%, transparent 24%) 0 0 / 5px 5px, radial-gradient(circle, #1e40ff 0 22%, transparent 24%) 2px 2px / 7px 7px, radial-gradient(circle, #ff00e6 0 20%, transparent 22%) 3px 1px / 9px 9px, radial-gradient(circle, #ffee00 0 24%, transparent 26%) 1px 3px / 6px 6px, linear-gradient(120deg,#ff1a00,#ff6a00 45%,#e60000) !important; border-color: #000 !important; box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px #000; animation: fryNoise .5s steps(1) infinite; }
+    .deco-e p { color: #fff !important; font-family: Impact, "Arial Black", sans-serif; font-weight: 900; letter-spacing: .04em; text-shadow: 1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000; }
+    .deco-e .av { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #000; }
+    @keyframes fryNoise { 0% { background-position: right 5px center, 0 0, 2px 2px, 3px 1px, 1px 3px, 0 0; } 50% { background-position: right 5px center, 3px 2px, 0 3px, 1px 4px, 3px 0, 0 0; } }
+    @media (prefers-reduced-motion: reduce) { .deco-e { animation: none; } }
   </style>
 </head>
 <body class="h-screen h-[100dvh] flex flex-col font-sans antialiased text-gray-100 selection:bg-brand-500 selection:text-white overflow-hidden">
@@ -620,6 +625,7 @@
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>Événement anniversaire : le Roll (décoration, thème, et les deux améliorés)</li>
             <li>1500 étoiles d'événement offertes à tous, indépendantes de celles du jeu</li>
+            <li>Un nouveau secret à découvrir…</li>
             <li>Thèmes de saison (Halloween, Noël, Saint-Valentin, Été) : imposés pendant leur période, choix libre le reste de l'année</li>
             <li>Décoration « 1 semaine » pour tous les participants</li>
           </ul>
@@ -823,7 +829,7 @@
       "🎂 Rare : la décoration Anniversaire\n" +
       "🎉 Épique : le thème Anniversaire\n" +
       "🌟 Légendaire : les deux en version améliorée !\n\n" +
-      "Ces étoiles sont à part : tes étoiles du jeu et tes paliers ne bougent pas. Bonne chance !";
+      "Ces étoiles sont à part : tes étoiles du jeu et tes paliers ne bougent pas.\n🕵️ Et un nouveau secret traîne quelque part… Bonne chance !";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
 
@@ -1324,6 +1330,7 @@
       { id: 'error404', name: 'Écran bleu', icon: ':(', cls: 'deco-404', kind: 'secret', flag: 's404' },
       { id: 'hacker', name: 'Hacker', icon: '💻', cls: 'deco-hack', kind: 'secret', flag: 'sHack' },
       // Événement anniversaire (édition limitée) : kind 'event' = débloqué par un drapeau eXxx
+      { id: 'eee', name: 'E', icon: 'E', cls: 'deco-e', kind: 'secret', flag: 'sE' },
       { id: 'bday', name: 'Anniversaire', icon: '🎂', cls: 'deco-bday', kind: 'roll', rarity: 'rare' },
       { id: 'bdayplus', name: 'Anniversaire ★', icon: '🌟', cls: 'deco-bdayplus', kind: 'roll', rarity: 'legendary' }
     ];
@@ -1660,6 +1667,7 @@
         const ok = await unlockHack();
         return ok ? 'Accès autorisé.' : 'Échec.';
       },
+      e: async () => { feedE(); return 'e'; },
       help: async () => "Commandes : help, clear, exit.\nD'autres existent, cachées.",
       clear: async () => '\u0000CLEAR',
       exit: async () => '\u0000EXIT'
@@ -1684,6 +1692,7 @@
         const cmd = inp.value.trim().toLowerCase(); inp.value = '';
         if (!cmd) return;
         print('> ' + cmd);
+        if (cmd !== 'e') eCount = 0;
         const fn = Object.prototype.hasOwnProperty.call(TERM_COMMANDS, cmd) ? TERM_COMMANDS[cmd] : null;
         if (!fn) { print('commande introuvable : ' + cmd); return; }
         let out; try { out = await fn(); } catch (err) { out = 'Erreur : ' + (err.message || err); }
@@ -1706,6 +1715,33 @@
       const g = document.getElementById('chan-general'), a = document.getElementById('chan-annonce-update');
       if (g) g.addEventListener('click', () => hit('g'));
       if (a) a.addEventListener('click', () => hit('a'));
+    })();
+    // Secret « e » (référence au meme) : taper  e  dix fois de suite, dans la console du navigateur ou dans le terminal secret
+    let eCount = 0, eLast = 0;
+    function feedE() {
+      const now = Date.now();
+      if (now - eLast > 120000) eCount = 0;
+      eLast = now; eCount++;
+      if (eCount >= 10) { eCount = 0; unlockE(); }
+    }
+    async function unlockE() {
+      if (!meKey || (gameData[meKey] || {}).sE === true) return false;
+      const g = gameData[meKey];
+      const upd = { sE: true };
+      if (!g || g.stars === undefined) upd.stars = 0;
+      try {
+        await db.ref('game/' + meKey).update(upd);
+        showSecretCard('<span style="font:900 70px Impact,Arial Black,sans-serif;color:#fff;-webkit-text-stroke:3px #000;text-shadow:0 0 14px #ff1a00,3px 3px 0 #ffee00">E</span>', 'E E E E E E E E E E', 'Décoration secrète « E » débloquée ! Tu la trouveras dans le menu 🎨, tout en bas (Secrets).');
+        return true;
+      } catch (err) { alert("Impossible d'enregistrer le secret : " + (err.code || err.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)"); return false; }
+    }
+    (function () {
+      try {
+        Object.defineProperty(window, 'e', {
+          configurable: true,
+          get() { setTimeout(feedE, 0); return 'e'; }
+        });
+      } catch (err) {}
     })();
     // Écran bleu plein écran (look Windows) affiché au déblocage du secret
     function showBsod() {
