@@ -2219,9 +2219,21 @@
     window.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
 
     // Retour au premier plan après un long passage en arrière-plan (iOS suspend la page) : reconnexion propre
+    // Vérification de mise à jour : au retour dans l'appli (iPhone : elle reste ouverte en arrière-plan) et toutes les 10 minutes
+    let lastUpdateCheck = 0;
+    function checkForUpdate(force) {
+      if (!('serviceWorker' in navigator) || !navigator.onLine || offlineMode) return;
+      const now = Date.now();
+      if (!force && now - lastUpdateCheck < 120000) return;
+      lastUpdateCheck = now;
+      navigator.serviceWorker.getRegistration().then(r => { if (r) r.update(); }).catch(() => {});
+      if (navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage({ type: 'check' });
+    }
+    setInterval(() => checkForUpdate(false), 10 * 60 * 1000);
     let hiddenAt = 0;
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) { hiddenAt = Date.now(); return; }
+      checkForUpdate(false);
       markRead();
       if (meKey && hiddenAt && Date.now() - hiddenAt > 30000) { db.goOffline(); db.goOnline(); }
       hiddenAt = 0;
@@ -2230,7 +2242,18 @@
 
     // PWA : fonctionne uniquement en https (GitHub Pages, Firebase Hosting...)
     if ('serviceWorker' in navigator && location.protocol === 'https:') {
-      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {}));
+      // Le service worker nous prévient quand une nouvelle version de la page est arrivée
+      let updateNotified = false;
+      navigator.serviceWorker.addEventListener('message', (ev) => {
+        if (!ev.data || ev.data.type !== 'sw-update' || updateNotified) return;
+        updateNotified = true;
+        const input = document.getElementById('messageInput');
+        const typing = !!input && (input.value.trim() !== '' || document.activeElement === input);
+        const busy = (typeof gameRunning !== 'undefined' && gameRunning) || (typeof rollBusy !== 'undefined' && rollBusy);
+        if (!typing && !busy) { location.reload(); return; }
+        const b = document.getElementById('updateBanner'); if (b) b.classList.remove('hidden');
+      });
     }
 
     function showLoginError(msg) {
