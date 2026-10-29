@@ -620,6 +620,7 @@
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>Événement anniversaire : le Roll (décoration, thème, et les deux améliorés)</li>
             <li>1500 étoiles d'événement offertes à tous, indépendantes de celles du jeu</li>
+            <li>Thèmes de saison (Halloween, Noël, Saint-Valentin, Été) : imposés pendant leur période, choix libre le reste de l'année</li>
             <li>Décoration « 1 semaine » pour tous les participants</li>
           </ul>
         </div>
@@ -1373,7 +1374,7 @@
 
     // Thèmes d'application. kind 'secret' : débloqué par le drapeau gameData[k][flag]
     const THEMES = [
-      { id: 'halloween', name: 'Halloween', icon: '🎃', kind: 'secret', flag: 'sHalloween', bg: 'linear-gradient(120deg,#7c2d12,#ea580c,#4c1d95)' },
+      { id: 'halloween', name: 'Halloween', icon: '🎃', kind: 'secret', flag: 'sHalloween', bg: 'linear-gradient(120deg,#7c2d12,#ea580c,#4c1d95)', season: { from: [10, 20], to: [10, 31] } },
       { id: 'arcade', name: 'Arcade', icon: '🕹️', kind: 'secret', flag: 'sArcade', bg: 'linear-gradient(120deg,#d946ef,#6d28d9,#22d3ee)' },
       // Thèmes saisonniers : actifs automatiquement à la bonne date ; le secret caché (hunt) les débloque pour toujours
       { id: 'noel', name: 'Noël', icon: '🎄', kind: 'secret', flag: 'sNoel', bg: 'linear-gradient(120deg,#14532d,#b91c1c,#fde68a)', season: { from: [12, 1], to: [12, 26] }, hunt: { emoji: '🎁', taps: 3, pos: 'left' } },
@@ -1398,11 +1399,13 @@
     }
     function seasonNow() { return THEMES.find(inSeason) || null; }
     // Thème réellement affiché : celui que tu as équipé ; sinon le thème de saison ; « classic » désactive tout
+    function seasonEnd(t) { return String(t.season.to[1]).padStart(2, '0') + '/' + String(t.season.to[0]).padStart(2, '0'); }
+    // Pendant une période de saison, son thème s'impose à tout le monde ; en dehors, chacun garde le thème qu'il a choisi (parmi ceux débloqués)
     function activeTheme() {
       if (!meKey) return null;
-      const g = gameData[meKey] || {};
-      if (g.theme === 'classic') return null;
-      return themeFor(meKey) || seasonNow();
+      const sn = seasonNow();
+      if (sn) return sn;
+      return themeFor(meKey) || null;
     }
     const THEME_COLORS = { halloween: '#0f0805', arcade: '#07031a', noel: '#07140d', valentin: '#1a0710', ete: '#06141f', party: '#150a2a', partyplus: '#120c02' };
     function applyTheme() {
@@ -1451,6 +1454,8 @@
     }
     async function equipTheme(id) {
       if (!meKey) return;
+      const sn = seasonNow();
+      if (sn) { alert('Le thème « ' + sn.name + ' » est imposé jusqu\'au ' + seasonEnd(sn) + ' : impossible de changer de thème pendant la période de saison.'); return; }
       const g = gameData[meKey];
       let val;
       if (id === 'auto') val = null;
@@ -1472,7 +1477,7 @@
       for (const sw of SECRET_WORDS) {
         if (!new RegExp('(^|[^a-z0-9])' + sw.word + '([^a-z0-9]|$)').test(norm)) continue;
         const t = THEMES.find(x => x.id === sw.theme);
-        if (!t || ownsTheme(meKey, t)) continue;
+        if (!t || ownsTheme(meKey, t) || (t.season && !inSeason(t))) continue;
         const g = gameData[meKey];
         const upd = { [t.flag]: true, theme: t.id };
         if (!g || g.stars === undefined) upd.stars = 0;
@@ -1812,17 +1817,18 @@
       const curTh = themeFor(meKey);
       const secRow = (o) => `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800 ${o.owned ? (o.cls || '') : 'opacity-60'}">
           <div class="av w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-sm shrink-0" ${o.owned && o.bg ? `style="background:${o.bg}"` : ''}>${o.owned ? o.icon : '❓'}</div>
-          <div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100 truncate">${o.owned ? esc(o.name) : '???'} <span class="text-[10px] font-normal text-gray-400">${esc(o.kind)}</span></p><p class="text-[10px] text-gray-400">${o.owned ? (o.eq ? 'Équipé ✓' : 'Débloqué') : 'Secret : à toi de le trouver'}</p></div>
-          ${o.owned ? `<button type="button" ${o.attr} class="px-2.5 py-1 rounded-lg text-[11px] ${o.eq ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${o.eq ? 'Retirer' : 'Équiper'}</button>` : ''}</div>`;
+          <div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100 truncate">${o.owned ? esc(o.name) : '???'} <span class="text-[10px] font-normal text-gray-400">${esc(o.kind)}</span></p><p class="text-[10px] text-gray-400">${o.owned ? (o.eq && !o.locked ? 'Équipé ✓' : 'Débloqué') : (o.hint || 'Secret : à toi de le trouver')}</p></div>
+          ${o.owned ? (o.locked ? '<span class="text-[10px] text-gray-500 shrink-0">🔒 Saison</span>' : `<button type="button" ${o.attr} class="px-2.5 py-1 rounded-lg text-[11px] ${o.eq ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${o.eq ? 'Retirer' : 'Équiper'}</button>`) : ''}</div>`;
       const secrets = [
         ...DECOS.filter(d => d.kind === 'secret').map(d => ({ kind: 'Décoration', owned: ownsDeco(meKey, d), eq: !!cur && cur.id === d.id, icon: d.icon, name: d.name, cls: d.cls, attr: `data-equip="${d.id}"` })),
-        ...THEMES.filter(t => t.kind === 'secret').map(t => ({ kind: "Thème d'application", owned: ownsTheme(meKey, t), eq: !!curTh && curTh.id === t.id, icon: t.icon, name: t.name, bg: t.bg, attr: `data-theme="${t.id}"` }))
+        ...THEMES.filter(t => t.kind === 'secret').map(t => ({ kind: "Thème d'application", owned: ownsTheme(meKey, t), eq: !!curTh && curTh.id === t.id, locked: !!seasonNow(), hint: t.season ? 'Thème de saison : à trouver pendant sa période' : '', icon: t.icon, name: t.name, bg: t.bg, attr: `data-theme="${t.id}"` }))
       ];
-      const g0 = gameData[meKey] || {};
       const seasonT = seasonNow();
-      const themeMode = g0.theme === 'classic' ? 'classic' : (curTh ? curTh.id : 'auto');
+      const themeMode = curTh ? curTh.id : 'auto';
       const thRow = (id, icon, name, sub) => `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800"><div class="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-sm shrink-0">${icon}</div><div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100 truncate">${name}</p><p class="text-[10px] text-gray-400">${sub}</p></div><button type="button" data-theme="${id}" class="px-2.5 py-1 rounded-lg text-[11px] ${themeMode === id ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${themeMode === id ? 'Actif ✓' : 'Choisir'}</button></div>`;
-      const themeChoiceHtml = `<div class="space-y-2"><p class="font-semibold text-white">Thème de l'application</p>${thRow('auto', '🗓️', 'Automatique', seasonT ? 'Thème de saison en ce moment' : 'Suit les saisons (rien en ce moment)')}${thRow('classic', '🌑', 'Classique', 'Désactive les thèmes automatiques')}</div>`;
+      const themeChoiceHtml = seasonT
+        ? `<div class="space-y-2"><p class="font-semibold text-white">Thème de l'application</p><div class="p-3 rounded-xl border border-amber-500/30 bg-amber-500/10 text-[11px] text-amber-100 leading-relaxed">${seasonT.icon} <b>${esc(seasonT.name)}</b> est actif pour tout le monde jusqu'au ${seasonEnd(seasonT)}. Le thème est verrouillé pendant la période de saison, tu pourras de nouveau choisir ensuite.</div></div>`
+        : `<div class="space-y-2"><p class="font-semibold text-white">Thème de l'application</p>${thRow('auto', '🌑', 'Classique', 'Aucun thème. Tes thèmes débloqués sont dans Secrets, tout en bas.')}</div>`;
       const secretsHtml = `<div class="space-y-2"><p class="font-semibold text-white">🤫 Secrets <span class="text-[10px] font-normal text-gray-400">${secrets.filter(x => x.owned).length}/${secrets.length} trouvés</span></p>${secrets.map(secRow).join('')}</div>`;
       body.innerHTML = `
         <div class="space-y-2">
