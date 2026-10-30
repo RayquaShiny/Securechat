@@ -574,6 +574,10 @@
             <span class="text-xs font-semibold text-gray-200">🏆 Succès</span>
             <span id="achBtnSub" class="text-[10px] text-gray-400 truncate">0/0</span>
           </button>
+          <button id="ownerBtn" onclick="openOwner()" class="hidden mt-2 w-full text-left px-3 py-2 rounded-xl border border-rose-500/40 bg-rose-500/10 hover:bg-rose-500/20 transition flex items-center justify-between gap-2">
+            <span class="text-xs font-semibold text-rose-200">🛠️ Outils Owner</span>
+            <span class="text-[10px] text-rose-300/80">stats · cadeaux · aperçu</span>
+          </button>
         </div>
         <div class="p-4 space-y-3 flex-1 overflow-y-auto">
           <div class="flex items-center justify-between">
@@ -671,6 +675,17 @@
   </div>
 
   <input type="file" id="avatarInput" accept="image/*" class="hidden">
+
+  <!-- MODAL OUTILS OWNER -->
+  <div id="ownerModal" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+    <div class="w-full max-w-md glass-panel p-5 rounded-2xl border border-rose-500/30 space-y-4 max-h-[88vh] overflow-y-auto text-xs sm:text-sm">
+      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+        <h3 class="text-sm font-bold text-white">🛠️ Outils Owner</h3>
+        <button onclick="closeOwner()" class="text-gray-400 hover:text-white text-base leading-none">✕</button>
+      </div>
+      <div id="ownerBody" class="space-y-4 text-gray-300"></div>
+    </div>
+  </div>
 
   <!-- MODAL FICHE DE PROFIL -->
   <div id="profModal" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onclick="if(event.target===this)closeProfile()">
@@ -1546,6 +1561,7 @@
     // Pendant une période de saison, son thème s'impose à tout le monde ; en dehors, chacun garde le thème qu'il a choisi (parmi ceux débloqués)
     function activeTheme() {
       if (!meKey) return null;
+      if (typeof ownerPreview !== 'undefined' && ownerPreview.theme) { const pt = THEMES.find(x => x.id === ownerPreview.theme); if (pt) return pt; }
       const sn = seasonNow();
       if (sn) return sn;
       return themeFor(meKey) || null;
@@ -1659,6 +1675,7 @@
       return false;
     }
     function decoFor(k) {
+      if (k && k === meKey && typeof ownerPreview !== 'undefined' && ownerPreview.deco) { const pd = DECOS.find(x => x.id === ownerPreview.deco); if (pd) return pd; }
       const g = gameData[k];
       if (!k || !g || !g.deco) return null;
       const d = DECOS.find(x => x.id === g.deco);
@@ -2345,6 +2362,7 @@
     async function handleLogin(e) {
       e.preventDefault();
       const key = document.getElementById('loginUsername').value.trim().toLowerCase();
+      if (key === 'ee') { showLoginError("Ce compte est verrouillé : la connexion est impossible."); return; }
       const pass = document.getElementById('loginPassword').value;
       const btn = e.target.querySelector('button[type=submit]');
       btn.disabled = true;
@@ -2384,6 +2402,7 @@
         if (ok) { try { await user.delete(); } catch (e) {} showLoginError("Ce compte a été supprimé."); }
         await auth.signOut(); return;
       }
+      if (key === 'ee') { endBoot(true); showLoginError("Ce compte est verrouillé : la connexion est impossible."); await auth.signOut(); return; }
       // Lectures en parallèle (avant : l'une après l'autre) pour gagner plusieurs allers-retours réseau
       const accountP = db.ref('accounts/' + key).once('value').catch(() => null);
       const allAccP = db.ref('accounts').once('value').then(x => x.val() || {}).catch(() => ({}));
@@ -2451,7 +2470,7 @@
       db.ref('.info/serverTimeOffset').on('value', (o) => { serverOffset = Number(o.val()) || 0; }); listeners.push(db.ref('.info/serverTimeOffset'));
       soft(db.ref('ev/' + key), (e) => { evData = e.val() || {}; renderRoll(); renderRollPanel(); renderAchBtn(); renderAch(); });
       startEventTick();
-      soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; gameLoaded = true; applyTheme(); renderUsersList(); renderGamePanel(); renderGameModal(); renderDecoButton(); renderDecoModal(); renderRoll(); renderRollPanel(); renderAchBtn(); renderAch(); renderProfile(); checkNewAch(); });
+      soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; gameLoaded = true; applyTheme(); renderUsersList(); renderGamePanel(); renderGameModal(); renderDecoButton(); renderDecoModal(); renderRoll(); renderRollPanel(); renderAchBtn(); renderAch(); renderProfile(); renderOwner(); checkNewAch(); });
       soft(db.ref('avatars'), (as) => { avatarsData = as.val() || {}; renderMyAvatar(); renderUsersList(); renderDecoModal(); renderMessages(); renderAchBtn(); renderAch(); checkNewAch(); });
       startGroupListeners();
       soft(db.ref('pins'), (pn) => { pinsData = pn.val() || {}; renderMessages(); });
@@ -2474,7 +2493,7 @@
 
     async function logout() {
       if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline', at: firebase.database.ServerValue.TIMESTAMP }); } catch (e) {} }
-      abortRound(); stopListeners(); wipeKeys(); gameData = {}; avatarsData = {}; groupsData = {}; userGroupsData = {}; gameLoaded = false; evData = {}; pendingRollUpd = null; closeRoll(); closeAch(); closeProfile(); renderRollPanel(); Object.keys(groupWatch).forEach(k => delete groupWatch[k]); Object.keys(groupKeyCache).forEach(k => delete groupKeyCache[k]); pendingChan = ''; lastMsgsSnap = null; applyTheme();
+      abortRound(); stopListeners(); wipeKeys(); gameData = {}; avatarsData = {}; groupsData = {}; userGroupsData = {}; gameLoaded = false; evData = {}; pendingRollUpd = null; closeRoll(); closeAch(); closeProfile(); closeOwner(); ownerPreview = { deco: null, theme: null }; { const pp = document.getElementById('previewPill'); if (pp) pp.remove(); } renderRollPanel(); Object.keys(groupWatch).forEach(k => delete groupWatch[k]); Object.keys(groupKeyCache).forEach(k => delete groupKeyCache[k]); pendingChan = ''; lastMsgsSnap = null; applyTheme();
       currentUser = null; meKey = ''; starting = false;
       accounts = {}; rolesData = {}; gameData = {}; grantsData = {}; notesList = []; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
@@ -2582,6 +2601,7 @@
         alert("Tu ne peux pas supprimer le compte du Founder/Owner Rayqua !");
         return;
       }
+      if (keyUser === 'ee' && (!currentUser || currentUser.role !== 'Owner')) { alert("Le compte « ee » ne peut être banni que par l'Owner."); return; }
       if (confirm(`Veux-tu vraiment supprimer le compte "${keyUser}" ?`)) {
         const bannedPersonName = accounts[keyUser] ? accounts[keyUser].name : keyUser;
         banAccount(keyUser).then(() => {
@@ -2610,11 +2630,11 @@
         div.className = "flex flex-wrap items-center justify-between gap-2 p-2.5 bg-gray-900 rounded-xl border border-gray-800";
         div.innerHTML = `
           <div>
-            <p class="font-bold text-gray-200">${esc(acc.name)} <span class="text-[10px] text-gray-500">(${esc(acc.username)})</span></p>
+            <p class="font-bold text-gray-200">${esc(acc.name)} <span class="text-[10px] text-gray-500">(${esc(acc.username)})</span>${accKey === 'ee' ? ' <span class="text-[10px] text-amber-400">🔒 verrouillé · ban : Owner seul</span>' : ''}</p>
           </div>
           <div class="flex items-center gap-2">
             ${selHtml}
-            ${accKey !== 'rayqua' ? `<button data-del="1" class="p-1 text-red-400 hover:bg-red-500/20 rounded transition" title="Supprimer"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+            ${accKey !== 'rayqua' && (accKey !== 'ee' || (currentUser && currentUser.role === 'Owner')) ? `<button data-del="1" class="p-1 text-red-400 hover:bg-red-500/20 rounded transition" title="Supprimer"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
           </div>
         `;
         const sel = div.querySelector('[data-role-sel]');
@@ -3053,6 +3073,7 @@
       const el = document.getElementById('achBtnSub'); if (!el || !meKey) return;
       const P = achProgress(achievements());
       el.textContent = P.rank.icon + ' ' + P.done + '/' + P.total;
+      const ob = document.getElementById('ownerBtn'); if (ob) ob.classList.toggle('hidden', !(currentUser && currentUser.role === 'Owner'));
     }
     function showToast(text) {
       let t = document.getElementById('toastMsg');
@@ -3122,6 +3143,82 @@
         + `<div class="flex gap-2">${me ? '<button type="button" id="profEdit" class="flex-1 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold">Modifier mon profil</button>' : '<button type="button" id="profDm" class="flex-1 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold">✉️ Envoyer un message</button>'}<button type="button" onclick="closeProfile()" class="px-4 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs">Fermer</button></div>`;
       const dm = document.getElementById('profDm'); if (dm) dm.onclick = () => { closeProfile(); openDm(k); };
       const ed = document.getElementById('profEdit'); if (ed) ed.onclick = () => { closeProfile(); openDecoModal(); };
+    }
+    // ===== Outils Owner : statistiques, cadeaux de cosmétiques, aperçu local =====
+    let ownerTab = 'stats', ownerTarget = '', ownerPreview = { deco: null, theme: null };
+    const isOwnerRole = () => !!(currentUser && currentUser.role === 'Owner');
+    function openOwner() { if (!isOwnerRole()) return; document.getElementById('ownerModal').classList.remove('hidden'); if (typeof toggleSidebar === 'function') toggleSidebar(false); renderOwner(); }
+    function closeOwner() { const m = document.getElementById('ownerModal'); if (m) m.classList.add('hidden'); }
+    // Tout ce qu'on peut offrir : { label, path (avec {k}), has(k) }
+    function ownerCosmetics() {
+      const L = [];
+      DECOS.forEach(d => {
+        if (d.kind === 'secret') L.push({ label: d.icon + ' ' + d.name + ' · déco secrète', path: 'game/{k}/' + d.flag, has: k => ownsDeco(k, d) });
+        else if (d.kind === 'roll') L.push({ label: d.icon + ' ' + d.name + ' · déco du Roll', path: 'game/{k}/roll/' + d.id, has: k => ownsDeco(k, d) });
+        else if (d.kind === 'exclusive' && !d.only) L.push({ label: d.icon + ' ' + d.name + ' · déco exclusive', path: 'grants/{k}/' + d.id, has: k => ownsDeco(k, d) });
+      });
+      THEMES.forEach(t => L.push({ label: t.icon + ' ' + t.name + ' · thème', path: 'game/{k}/' + t.flag, has: k => ownsTheme(k, t) }));
+      return L;
+    }
+    async function ownerSet(k, c, on) {
+      const upd = {}; upd[c.path.replace('{k}', k)] = on ? true : null;
+      if (on && c.path.startsWith('game/') && !(gameData[k] && gameData[k].stars !== undefined)) upd['game/' + k + '/stars'] = 0;
+      try { await db.ref().update(upd); showToast((on ? '🎁 Offert à ' : '🗑️ Retiré à ') + ((accounts[k] || {}).name || k)); }
+      catch (e) { alert('Impossible : ' + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)"); }
+    }
+    function setOwnerPreview(kind, id) { ownerPreview[kind] = ownerPreview[kind] === id ? null : id; afterOwnerPreview(); }
+    function afterOwnerPreview() {
+      applyTheme(); renderUsersList(); renderMessages(); renderDecoButton(); renderOwner();
+      let pill = document.getElementById('previewPill');
+      const active = ownerPreview.deco || ownerPreview.theme;
+      if (!active) { if (pill) pill.remove(); return; }
+      if (!pill) {
+        pill = document.createElement('button'); pill.id = 'previewPill'; pill.type = 'button';
+        pill.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 8px);z-index:9997;background:#be123c;color:#fff;font-size:12px;border-radius:999px;padding:6px 12px;border:0;box-shadow:0 4px 16px rgba(0,0,0,.5)';
+        pill.onclick = () => { ownerPreview = { deco: null, theme: null }; afterOwnerPreview(); };
+        document.body.appendChild(pill);
+      }
+      pill.textContent = '👁️ Aperçu local en cours · toucher pour arrêter';
+    }
+    function renderOwner() {
+      const body = document.getElementById('ownerBody'), modal = document.getElementById('ownerModal');
+      if (!body || !modal || modal.classList.contains('hidden') || !isOwnerRole()) return;
+      const tabs = [['stats', '📊 Stats'], ['gift', '🎁 Cadeaux'], ['prev', '👁️ Aperçu']].map(([id, l]) => `<button type="button" data-otab="${id}" class="px-3 py-1.5 rounded-lg text-[11px] ${ownerTab === id ? 'bg-rose-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}">${l}</button>`).join('');
+      let html = `<div class="flex gap-1.5">${tabs}</div>`;
+      const keys = Object.keys(accounts);
+      if (ownerTab === 'stats') {
+        const online = keys.filter(k => (userStatuses[k] || {}).state === 'online').length;
+        const photos = keys.filter(k => avatarSrc(k)).length;
+        const life = keys.reduce((a, k) => a + lifeOf(k), 0);
+        const cell = (i, l, v) => `<div class="p-2 rounded-xl bg-gray-900/50 border border-gray-800 text-center"><div class="text-base">${i}</div><div class="text-[10px] text-gray-400">${l}</div><div class="text-sm font-bold text-white">${v}</div></div>`;
+        const secrets = [
+          ...DECOS.filter(d => d.kind === 'secret').map(d => ({ n: d.icon + ' ' + d.name, c: keys.filter(k => ownsDeco(k, d)).length })),
+          ...THEMES.filter(t => t.kind === 'secret').map(t => ({ n: t.icon + ' ' + t.name, c: keys.filter(k => ownsTheme(k, t)).length })),
+          ...ROLL_ITEMS.map(it => ({ n: it.icon + ' ' + it.name + ' (Roll)', c: keys.filter(k => itemOwnedIn(it, gameData[k] || {})).length }))
+        ];
+        const top = keys.map(k => ({ k, v: lifeOf(k) })).sort((a, b) => b.v - a.v).slice(0, 5);
+        html += `<div class="grid grid-cols-3 gap-2">${cell('👥', 'Membres', keys.length)}${cell('🟢', 'En ligne', online)}${cell('📷', 'Photos', photos)}${cell('⭐', 'Étoiles gagnées', life)}${cell('💬', 'Messages chargés', messagesList.length)}${cell('👥', 'Groupes', Object.keys(groupsData).length)}</div>`
+          + `<p class="font-semibold text-white">Cosmétiques et secrets trouvés</p>` + secrets.map(x => `<div class="flex items-center justify-between p-2 rounded-xl bg-gray-900/50 border border-gray-800"><span class="text-xs text-gray-200">${esc(x.n)}</span><span class="text-xs font-mono ${x.c ? 'text-emerald-400' : 'text-gray-500'}">${x.c}/${keys.length}</span></div>`).join('')
+          + `<p class="font-semibold text-white">Top étoiles</p>` + top.map((x, i) => `<div class="flex items-center justify-between p-2 rounded-xl bg-gray-900/50 border border-gray-800"><span class="text-xs text-gray-200">${['🥇', '🥈', '🥉'][i] || (i + 1)} ${esc((accounts[x.k] || {}).name || x.k)}</span><span class="text-xs font-mono text-amber-300">${x.v} ⭐</span></div>`).join('');
+      } else if (ownerTab === 'gift') {
+        if (!ownerTarget || !accounts[ownerTarget]) ownerTarget = keys[0] || '';
+        html += `<select id="ownerWho" class="w-full text-xs py-2 px-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 outline-none">${keys.map(k => `<option value="${esc(k)}" ${k === ownerTarget ? 'selected' : ''}>${esc(accounts[k].name)} (@${esc(k)})</option>`).join('')}</select>`
+          + ownerCosmetics().map((c, i) => { const has = c.has(ownerTarget); return `<div class="flex items-center gap-2 p-2 rounded-xl bg-gray-900/50 border ${has ? 'border-emerald-500/30' : 'border-gray-800'}"><span class="flex-1 min-w-0 truncate text-xs text-gray-100">${esc(c.label)}</span><button type="button" data-ogift="${i}" class="px-2.5 py-1 rounded-lg text-[11px] ${has ? 'bg-gray-700 text-white' : 'bg-rose-600 hover:bg-rose-500 text-white'}">${has ? 'Retirer' : 'Offrir'}</button></div>`; }).join('')
+          + `<p class="text-[10px] text-gray-500">L'effet est immédiat pour la personne. Les étoiles et les paliers ne sont pas modifiés.</p>`;
+      } else {
+        html += `<p class="text-[11px] text-gray-400">Essaie n'importe quelle décoration ou thème sur toi, sans rien débloquer. Seul toi le vois, jusqu'à ce que tu arrêtes l'aperçu.</p>`
+          + `<p class="font-semibold text-white">Décorations</p><div class="grid grid-cols-3 gap-1.5">${DECOS.filter(d => !d.only).map(d => `<button type="button" data-pdeco="${esc(d.id)}" class="px-1.5 py-2 rounded-lg text-[11px] truncate ${ownerPreview.deco === d.id ? 'bg-rose-600 text-white' : 'bg-gray-800 text-gray-200 hover:bg-gray-700'}">${d.icon} ${esc(d.name)}</button>`).join('')}</div>`
+          + `<p class="font-semibold text-white">Thèmes</p><div class="grid grid-cols-3 gap-1.5">${THEMES.map(t => `<button type="button" data-ptheme="${esc(t.id)}" class="px-1.5 py-2 rounded-lg text-[11px] truncate ${ownerPreview.theme === t.id ? 'bg-rose-600 text-white' : 'bg-gray-800 text-gray-200 hover:bg-gray-700'}">${t.icon} ${esc(t.name)}</button>`).join('')}</div>`
+          + ((ownerPreview.deco || ownerPreview.theme) ? `<button type="button" id="ownerStopPrev" class="w-full py-2 rounded-xl bg-gray-700 hover:bg-gray-600 text-white text-xs">Arrêter l'aperçu</button>` : '');
+      }
+      body.innerHTML = html;
+      body.querySelectorAll('[data-otab]').forEach(b => { b.onclick = () => { ownerTab = b.dataset.otab; renderOwner(); }; });
+      const who = document.getElementById('ownerWho'); if (who) who.onchange = () => { ownerTarget = who.value; renderOwner(); };
+      const list = ownerCosmetics();
+      body.querySelectorAll('[data-ogift]').forEach(b => { b.onclick = () => { const c = list[Number(b.dataset.ogift)]; ownerSet(ownerTarget, c, !c.has(ownerTarget)); }; });
+      body.querySelectorAll('[data-pdeco]').forEach(b => { b.onclick = () => setOwnerPreview('deco', b.dataset.pdeco); });
+      body.querySelectorAll('[data-ptheme]').forEach(b => { b.onclick = () => setOwnerPreview('theme', b.dataset.ptheme); });
+      const sp = document.getElementById('ownerStopPrev'); if (sp) sp.onclick = () => { ownerPreview = { deco: null, theme: null }; afterOwnerPreview(); };
     }
     function renderChannels() {
       let total = 0;
@@ -3442,6 +3539,7 @@
           const targetKey = args[1] ? args[1].toLowerCase() : '';
           if (!targetKey) { alert("Utilisation : /ban [identifiant]"); return; }
           if (targetKey === 'rayqua') { alert("Impossible de bannir l'Owner Rayqua !"); return; }
+          if (targetKey === 'ee' && currentUser.role !== 'Owner') { alert("Le compte « ee » ne peut être banni que par l'Owner."); return; }
           if (accounts[targetKey]) {
             const bannedPersonName = accounts[targetKey].name;
             banAccount(targetKey).then(() => {
@@ -3458,6 +3556,7 @@
           const sec = parseInt(args[2], 10);
           if (!targetKey || isNaN(sec)) { alert("Utilisation : /mute [identifiant] [secondes]"); return; }
           if (targetKey === 'rayqua') { alert("Impossible de mute l'Owner Rayqua !"); return; }
+          if (targetKey === 'ee' && currentUser.role !== 'Owner') { alert("Le compte « ee » est protégé : seul l'Owner peut agir dessus."); return; }
           if (accounts[targetKey]) {
             db.ref('accounts/' + targetKey + '/mutedUntil').set(Date.now() + sec * 1000).then(() => {
               sendSystemMessage(`${accounts[targetKey].name} a été rendu muet pour ${sec} secondes par ${currentUser.name}.`, false);
