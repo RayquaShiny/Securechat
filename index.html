@@ -570,10 +570,6 @@
             <span class="text-xs font-semibold text-gray-200">🎨 Décorations &amp; thèmes</span>
             <span id="decoBtnSub" class="text-[10px] text-gray-400 truncate">Aucune</span>
           </button>
-          <button onclick="openAch()" class="mt-2 w-full text-left px-3 py-2 rounded-xl border border-gray-800 bg-gray-900/50 hover:bg-gray-800/80 transition flex items-center justify-between gap-2">
-            <span class="text-xs font-semibold text-gray-200">🏆 Succès</span>
-            <span id="achBtnSub" class="text-[10px] text-gray-400 truncate">0/0</span>
-          </button>
           <button id="ownerBtn" onclick="openOwner()" class="hidden mt-2 w-full text-left px-3 py-2 rounded-xl border border-rose-500/40 bg-rose-500/10 hover:bg-rose-500/20 transition flex items-center justify-between gap-2">
             <span class="text-xs font-semibold text-rose-200">🛠️ Outils Owner</span>
             <span class="text-[10px] text-rose-300/80">stats · cadeaux · aperçu</span>
@@ -698,17 +694,6 @@
     </div>
   </div>
 
-  <!-- MODAL SUCCÈS -->
-  <div id="achModal" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-    <div class="w-full max-w-md glass-panel p-5 rounded-2xl border border-amber-500/30 space-y-4 max-h-[88vh] overflow-y-auto text-xs sm:text-sm">
-      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-        <h3 class="text-sm font-bold text-white">🏆 Succès</h3>
-        <button onclick="closeAch()" class="text-gray-400 hover:text-white text-base leading-none">✕</button>
-      </div>
-      <div id="achBody" class="space-y-4 text-gray-300"></div>
-    </div>
-  </div>
-
   <!-- MODAL DÉCORATIONS -->
   <div id="decoModal" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
     <div class="w-full max-w-md glass-panel p-5 rounded-2xl border border-fuchsia-500/30 space-y-4 max-h-[88vh] overflow-y-auto text-xs sm:text-sm">
@@ -770,7 +755,6 @@
           <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
             <li>Événement anniversaire : le Roll (décoration, thème, et les deux améliorés)</li>
             <li>1500 étoiles d'événement offertes à tous, indépendantes de celles du jeu</li>
-            <li>Page « 🏆 Succès » : progression, rangs et secrets trouvés</li>
             <li>Fiche de profil : touche la photo d'un membre</li>
             <li>De nouveaux secrets à découvrir…</li>
             <li>Tous les thèmes améliorés : décors animés légers, en-têtes et boutons retravaillés</li>
@@ -977,7 +961,6 @@
       "🎂 Rare : la décoration Anniversaire\n" +
       "🎉 Épique : le thème Anniversaire\n" +
       "🌟 Légendaire : les deux en version améliorée !\n\n" +
-      "🏆 Et une nouvelle page « Succès » dans le menu de gauche : suis ta progression et ton rang\n" +
       "👤 Touche la photo d'un membre pour voir sa fiche de profil\n\n" +
       "Ces étoiles sont à part : tes étoiles du jeu et tes paliers ne bougent pas.\n🕵️ Et de nouveaux secrets traînent quelque part… Bonne chance !";
     const CHANNELS = ['annonce-update', 'general', 'self'];
@@ -1557,6 +1540,12 @@
     }
     function seasonNow() { return THEMES.find(inSeason) || null; }
     // Thème réellement affiché : celui que tu as équipé ; sinon le thème de saison ; « classic » désactive tout
+    // Un cosmétique qui n'est plus obtenable n'est visible que par ceux qui l'ont déjà
+    function themeObtainable(t) {
+      if (t.season) return inSeason(t);
+      if (String(t.flag)[0] === 'e') return evtState() !== 'after';
+      return true;
+    }
     function seasonEnd(t) { return String(t.season.to[1]).padStart(2, '0') + '/' + String(t.season.to[0]).padStart(2, '0'); }
     // Pendant une période de saison, son thème s'impose à tout le monde ; en dehors, chacun garde le thème qu'il a choisi (parmi ceux débloqués)
     function activeTheme() {
@@ -2024,7 +2013,7 @@
           ${o.owned ? (o.locked ? '<span class="text-[10px] text-gray-500 shrink-0">🔒 Saison</span>' : `<button type="button" ${o.attr} class="px-2.5 py-1 rounded-lg text-[11px] ${o.eq ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${o.eq ? 'Retirer' : 'Équiper'}</button>`) : ''}</div>`;
       const secrets = [
         ...DECOS.filter(d => d.kind === 'secret').map(d => ({ kind: 'Décoration', owned: ownsDeco(meKey, d), eq: !!cur && cur.id === d.id, icon: d.icon, name: d.name, cls: d.cls, attr: `data-equip="${d.id}"` })),
-        ...THEMES.filter(t => t.kind === 'secret').map(t => ({ kind: "Thème d'application", owned: ownsTheme(meKey, t), eq: !!curTh && curTh.id === t.id, locked: !!seasonNow(), hint: t.season ? 'Thème de saison : à trouver pendant sa période' : '', icon: t.icon, name: t.name, bg: t.bg, attr: `data-theme="${t.id}"` }))
+        ...THEMES.filter(t => t.kind === 'secret' && (ownsTheme(meKey, t) || themeObtainable(t))).map(t => ({ kind: "Thème d'application", owned: ownsTheme(meKey, t), eq: !!curTh && curTh.id === t.id, locked: !!seasonNow(), hint: t.season ? 'Thème de saison : à trouver pendant sa période' : '', icon: t.icon, name: t.name, bg: t.bg, attr: `data-theme="${t.id}"` }))
       ];
       const seasonT = seasonNow();
       const themeMode = curTh ? curTh.id : 'auto';
@@ -2055,7 +2044,7 @@
         </div>
         ${sec('Exclusives', DECOS.filter(d => d.kind === 'exclusive' && ownsDeco(meKey, d)))}
         ${sec('Étoiles ⭐', DECOS.filter(d => d.kind === 'stars'))}
-        ${sec('Roll de l\'anniversaire 🎲', DECOS.filter(d => d.kind === 'roll'))}
+        ${sec('Roll de l\'anniversaire 🎲', DECOS.filter(d => d.kind === 'roll' && (ownsDeco(meKey, d) || evtState() !== 'after')))}
         ${themeChoiceHtml}
         ${secretsHtml}
         <p class="text-[11px] text-gray-500">Gagne des étoiles dans l'event « ${esc(EVENT.name)} » pour débloquer les autres.</p>`;
@@ -2468,10 +2457,10 @@
       soft(db.ref('roles'), (r) => { rolesData = r.val() || {}; renderUsersList(); updateAdminUsersList(); renderRolesList(); renderMessages(); if (currentUser) document.getElementById('userRoleDisplay').textContent = roleLabel(currentUser); });
       soft(db.ref('lastPublishedVersion'), (v) => { const pub = v.val(); document.getElementById('updateBanner').classList.toggle('hidden', !(pub && isNewer(pub, CURRENT_VERSION))); });
       db.ref('.info/serverTimeOffset').on('value', (o) => { serverOffset = Number(o.val()) || 0; }); listeners.push(db.ref('.info/serverTimeOffset'));
-      soft(db.ref('ev/' + key), (e) => { evData = e.val() || {}; renderRoll(); renderRollPanel(); renderAchBtn(); renderAch(); });
+      soft(db.ref('ev/' + key), (e) => { evData = e.val() || {}; renderRoll(); renderRollPanel(); renderOwnerBtn(); });
       startEventTick();
-      soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; gameLoaded = true; applyTheme(); renderUsersList(); renderGamePanel(); renderGameModal(); renderDecoButton(); renderDecoModal(); renderRoll(); renderRollPanel(); renderAchBtn(); renderAch(); renderProfile(); renderOwner(); checkNewAch(); });
-      soft(db.ref('avatars'), (as) => { avatarsData = as.val() || {}; renderMyAvatar(); renderUsersList(); renderDecoModal(); renderMessages(); renderAchBtn(); renderAch(); checkNewAch(); });
+      soft(db.ref('game'), (gs) => { gameData = gs.val() || {}; gameLoaded = true; applyTheme(); renderUsersList(); renderGamePanel(); renderGameModal(); renderDecoButton(); renderDecoModal(); renderRoll(); renderRollPanel(); renderOwnerBtn(); renderProfile(); renderOwner(); });
+      soft(db.ref('avatars'), (as) => { avatarsData = as.val() || {}; renderMyAvatar(); renderUsersList(); renderDecoModal(); renderMessages(); renderOwnerBtn(); });
       startGroupListeners();
       soft(db.ref('pins'), (pn) => { pinsData = pn.val() || {}; renderMessages(); });
       soft(db.ref('grants'), (gr) => { grantsData = gr.val() || {}; renderUsersList(); renderDecoButton(); renderDecoModal(); });
@@ -2493,7 +2482,7 @@
 
     async function logout() {
       if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline', at: firebase.database.ServerValue.TIMESTAMP }); } catch (e) {} }
-      abortRound(); stopListeners(); wipeKeys(); gameData = {}; avatarsData = {}; groupsData = {}; userGroupsData = {}; gameLoaded = false; evData = {}; pendingRollUpd = null; closeRoll(); closeAch(); closeProfile(); closeOwner(); ownerPreview = { deco: null, theme: null }; { const pp = document.getElementById('previewPill'); if (pp) pp.remove(); } renderRollPanel(); Object.keys(groupWatch).forEach(k => delete groupWatch[k]); Object.keys(groupKeyCache).forEach(k => delete groupKeyCache[k]); pendingChan = ''; lastMsgsSnap = null; applyTheme();
+      abortRound(); stopListeners(); wipeKeys(); gameData = {}; avatarsData = {}; groupsData = {}; userGroupsData = {}; gameLoaded = false; evData = {}; pendingRollUpd = null; closeRoll(); closeProfile(); closeOwner(); ownerPreview = { deco: null, theme: null }; { const pp = document.getElementById('previewPill'); if (pp) pp.remove(); } renderRollPanel(); Object.keys(groupWatch).forEach(k => delete groupWatch[k]); Object.keys(groupKeyCache).forEach(k => delete groupKeyCache[k]); pendingChan = ''; lastMsgsSnap = null; applyTheme();
       currentUser = null; meKey = ''; starting = false;
       accounts = {}; rolesData = {}; gameData = {}; grantsData = {}; notesList = []; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
@@ -3017,7 +3006,7 @@
     function renderRollPanel() {
       const box = document.getElementById('rollPanel'); if (!box) return;
       const st = evtState();
-      if (!meKey || offlineMode || (st === 'after' && nowS() > EVT.end + 86400000) || (st === 'before' && EVT.start - nowS() > 24 * 3600000)) { box.classList.add('hidden'); return; }
+      if (!meKey || offlineMode || st === 'after' || (st === 'before' && EVT.start - nowS() > 24 * 3600000)) { box.classList.add('hidden'); return; }
       box.classList.remove('hidden');
       document.getElementById('rollPanelSub').textContent = isEarlyOwner() ? '🔑 Accès anticipé · ouvre pour tous dans ' + fmtCount(EVT.start - nowS()) : st === 'before' ? 'Ouvre dans ' + fmtCount(EVT.start - nowS()) : (st === 'live' ? '⭐ ' + evBal() + ' · ' + fmtCount(EVT.end - nowS()) + ' restant' : 'Événement terminé');
     }
@@ -3040,40 +3029,15 @@
       evtPrev = evtState();
       evtTimer = setInterval(eventTick, 1000);
     }
-    // ===== Succès : tout ce qu'on peut accomplir dans l'appli, calculé à partir de tes données =====
-    const RANKS = [
-      { at: 0,   name: 'Débutant',  icon: '🌱' },
-      { at: 25,  name: 'Initié',    icon: '🥉' },
-      { at: 50,  name: 'Confirmé',  icon: '🥈' },
-      { at: 75,  name: 'Expert',    icon: '🥇' },
-      { at: 100, name: 'Légende',   icon: '👑' }
-    ];
+    // ----- Petits utilitaires (étoiles gagnées, secrets, message flottant)
     const lifeOf = (k) => { const g = gameData[k] || {}; return (Number(g.stars) || 0) + (Number(g.spent) || 0); };
-    const hasAnyRoll = (g) => ROLL_ITEMS.some(it => it.give.some(x => giveOwned(x, g)));
-    function achievements(k) {
-      k = k || meKey;
-      const g = gameData[k] || {}, life = lifeOf(k), L = [];
-      const add = (cat, icon, name, desc, done, secret) => L.push({ id: cat + ':' + name, cat, icon, name, desc, done: !!done, secret: !!secret });
-      add('Profil', '📷', 'Visage connu', 'Mettre une photo de profil', !!avatarSrc(k));
-      add('Profil', '🎨', 'Un peu de style', 'Équiper une décoration', !!g.deco);
-      add('Profil', '🌗', "Changement d'ambiance", 'Posséder un thème', THEMES.some(t => ownsTheme(k, t)));
-      DECOS.filter(d => d.kind === 'stars').forEach(d => add('Étoiles', d.icon, 'Palier ' + d.at + ' ⭐', 'Gagner ' + d.at + ' étoiles au jeu', life >= d.at));
-      add('Événement', '🎲', 'Premier roll', "Faire un roll de l'anniversaire", (k === meKey && Number((evData || {}).rolls) > 0) || hasAnyRoll(g));
-      ROLL_ITEMS.forEach(it => add('Événement', it.icon, it.name, 'Obtenir au Roll (' + RARITIES[it.r].name + ')', itemOwnedIn(it, g)));
-      DECOS.filter(d => d.kind === 'secret').forEach(d => add('Secrets', d.icon, d.name, 'Décoration secrète', ownsDeco(k, d), true));
-      THEMES.filter(t => t.kind === 'secret' && String(t.flag)[0] === 's').forEach(t => add('Secrets', t.icon, t.name, 'Thème secret', ownsTheme(k, t), true));
-      return L;
+    function secretCount(k) {
+      const decos = DECOS.filter(d => d.kind === 'secret'), themes = THEMES.filter(t => t.kind === 'secret' && String(t.flag)[0] === 's');
+      return { found: decos.filter(d => ownsDeco(k, d)).length + themes.filter(t => ownsTheme(k, t)).length, total: decos.length + themes.length };
     }
-    function achProgress(L) {
-      const done = L.filter(a => a.done).length, pct = L.length ? Math.round(done / L.length * 100) : 0;
-      const rank = [...RANKS].reverse().find(r => pct >= r.at) || RANKS[0];
-      return { done, total: L.length, pct, rank };
-    }
-    function renderAchBtn() {
-      const el = document.getElementById('achBtnSub'); if (!el || !meKey) return;
-      const P = achProgress(achievements());
-      el.textContent = P.rank.icon + ' ' + P.done + '/' + P.total;
-      const ob = document.getElementById('ownerBtn'); if (ob) ob.classList.toggle('hidden', !(currentUser && currentUser.role === 'Owner'));
+    function renderOwnerBtn() {
+      const ob = document.getElementById('ownerBtn');
+      if (ob) ob.classList.toggle('hidden', !(currentUser && currentUser.role === 'Owner'));
     }
     function showToast(text) {
       let t = document.getElementById('toastMsg');
@@ -3084,37 +3048,6 @@
       }
       t.textContent = text; t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)';
       clearTimeout(t._h); t._h = setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(20px)'; }, 3800);
-    }
-    // Petit message quand un nouveau succès vient d'être débloqué (le tout premier calcul est silencieux)
-    function checkNewAch() {
-      if (!meKey || offlineMode || !gameLoaded) return;
-      const key = 'sc_ach_seen:' + meKey;
-      let seen = null; try { seen = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
-      const L = achievements(), doneIds = L.filter(a => a.done).map(a => a.id);
-      if (seen) {
-        const fresh = L.filter(a => a.done && !seen.includes(a.id));
-        if (fresh.length) showToast('🏆 Succès débloqué : ' + fresh[0].icon + ' ' + fresh[0].name + (fresh.length > 1 ? ' (+' + (fresh.length - 1) + ')' : ''));
-      }
-      try { localStorage.setItem(key, JSON.stringify(doneIds)); } catch (e) {}
-    }
-    function openAch() {
-      document.getElementById('achModal').classList.remove('hidden');
-      if (typeof toggleSidebar === 'function') toggleSidebar(false);
-      renderAch();
-    }
-    function closeAch() { const m = document.getElementById('achModal'); if (m) m.classList.add('hidden'); }
-    function renderAch() {
-      const body = document.getElementById('achBody'), modal = document.getElementById('achModal');
-      if (!body || !modal || modal.classList.contains('hidden') || !meKey) return;
-      const L = achievements(), P = achProgress(L);
-      const next = RANKS.find(r => r.at > P.pct);
-      const row = (a) => {
-        const hide = a.secret && !a.done;
-        return `<div class="flex items-center gap-2.5 p-2 rounded-xl border ${a.done ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-gray-900/50 border-gray-800 opacity-70'}"><div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-base shrink-0">${hide ? '❓' : a.icon}</div><div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100 truncate">${hide ? '???' : esc(a.name)}</p><p class="text-[10px] text-gray-400">${hide ? 'Secret : à toi de le trouver' : esc(a.desc)}</p></div><span class="text-[11px] shrink-0 ${a.done ? 'text-emerald-400' : 'text-gray-500'}">${a.done ? '✓' : '🔒'}</span></div>`;
-      };
-      const cats = ['Profil', 'Étoiles', 'Événement', 'Secrets'];
-      body.innerHTML = `<div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-2"><div class="flex items-center justify-between"><div><p class="text-[10px] text-amber-200/80">Ton rang</p><p class="text-lg font-bold text-amber-300">${P.rank.icon} ${P.rank.name}</p></div><div class="text-right"><p class="text-lg font-bold text-white">${P.done}/${P.total}</p><p class="text-[10px] text-gray-400">${P.pct} %</p></div></div><div class="h-2 rounded-full bg-gray-800 overflow-hidden"><div class="h-full bg-gradient-to-r from-amber-400 to-rose-400" style="width:${P.pct}%"></div></div><p class="text-[10px] text-gray-400">${next ? 'Prochain rang : ' + next.icon + ' ' + next.name + ' à ' + next.at + ' %' : 'Rang maximum atteint, bravo !'}</p></div>`
-        + cats.map(c => { const sub = L.filter(a => a.cat === c); const d = sub.filter(a => a.done).length; return `<div class="space-y-2"><p class="font-semibold text-white">${c} <span class="text-[10px] font-normal text-gray-400">${d}/${sub.length}</span></p>${sub.map(row).join('')}</div>`; }).join('');
     }
     // ===== Fiche de profil : touche la photo d'un membre (liste des membres ou messages) =====
     let profKey = '';
@@ -3132,14 +3065,14 @@
       const k = profKey, u = accounts[k];
       if (!u) { closeProfile(); return; }
       const g = gameData[k] || {}, dc = decoFor(k), th = themeFor(k), st = userStatuses[k];
-      const L = achievements(k), P = achProgress(L), found = L.filter(a => a.secret && a.done).length, totalSecrets = L.filter(a => a.secret).length;
+      const sc = secretCount(k), found = sc.found, totalSecrets = sc.total;
       const online = !!(st && st.state === 'online');
       const status = online ? '<span class="text-emerald-400">● En ligne</span>' : (st && st.at ? '<span class="text-gray-400">🕒 Déconnecté le ' + fmtDateTime(st.at) + '</span>' : '<span class="text-gray-500">Hors ligne</span>');
       const me = k === meKey;
       const cell = (icon, label, val) => `<div class="p-2 rounded-xl bg-gray-900/50 border border-gray-800 text-center"><div class="text-base">${icon}</div><div class="text-[10px] text-gray-400">${label}</div><div class="text-xs font-semibold text-gray-100 truncate">${val}</div></div>`;
       body.innerHTML = `<div class="flex flex-col items-center gap-2 text-center">${avatarHtml(k, 'w-20 h-20', 'text-3xl')}<div><p class="text-base font-bold text-white">${esc(u.name)}${dc ? ' ' + dc.icon : ''}</p><p class="text-[11px] text-gray-400">${esc(roleLabel(u))} · @${esc(k)}</p><p class="text-[11px] mt-0.5">${status}</p></div></div>`
         + (dc ? `<div class="flex items-center gap-2.5 p-2 rounded-xl border border-gray-800 bg-gray-900/50 ${dc.cls}">${avatarHtml(k, 'w-7 h-7', 'text-xs')}<p class="nm text-xs font-medium text-gray-200 truncate">${esc(u.name)} ${dc.icon}</p></div>` : '')
-        + `<div class="grid grid-cols-2 gap-2">${cell('⭐', 'Étoiles gagnées', lifeOf(k))}${cell(P.rank.icon, 'Rang', P.rank.name)}${cell('🏆', 'Succès', P.done + '/' + P.total)}${cell('🤫', 'Secrets trouvés', found + '/' + totalSecrets)}${cell(dc ? dc.icon : '🎨', 'Décoration', dc ? esc(dc.name) : 'Aucune')}${cell(th ? th.icon : '🌑', 'Thème choisi', th ? esc(th.name) : 'Classique')}</div>`
+        + `<div class="grid grid-cols-2 gap-2">${cell('⭐', 'Étoiles gagnées', lifeOf(k))}${cell('🤫', 'Secrets trouvés', found + '/' + totalSecrets)}${cell(dc ? dc.icon : '🎨', 'Décoration', dc ? esc(dc.name) : 'Aucune')}${cell(th ? th.icon : '🌑', 'Thème choisi', th ? esc(th.name) : 'Classique')}</div>`
         + `<div class="flex gap-2">${me ? '<button type="button" id="profEdit" class="flex-1 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold">Modifier mon profil</button>' : '<button type="button" id="profDm" class="flex-1 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold">✉️ Envoyer un message</button>'}<button type="button" onclick="closeProfile()" class="px-4 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs">Fermer</button></div>`;
       const dm = document.getElementById('profDm'); if (dm) dm.onclick = () => { closeProfile(); openDm(k); };
       const ed = document.getElementById('profEdit'); if (ed) ed.onclick = () => { closeProfile(); openDecoModal(); };
