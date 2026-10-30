@@ -3410,6 +3410,8 @@
         const cmd = args[0].toLowerCase();
         input.value = '';
 
+        if (cmd === 'give' && currentChannel === 'general' && (args[1] || '').toLowerCase() === 'musket') { musketGive(); return; }
+
         if (['roll', 'pile', 'poll'].includes(cmd)) {
           if (currentChannel === 'annonce-update') { alert("Les commandes fun ne marchent pas dans le salon d'annonces."); return; }
           if (cmd === 'poll' && currentChannel === 'self') { alert("Les sondages ne marchent pas dans tes notes privées."); return; }
@@ -4060,6 +4062,91 @@ body.theme-fnaf #fnLurk2{display:block}
       TERM_COMMANDS.fnaf = async () => { const r = start(); if (document.getElementById('termOverlay')) document.getElementById('termOverlay').remove(); return r; };
       ['FNAF', 'fnaf'].forEach(n => { try { Object.defineProperty(window, n, { configurable: true, get() { const r = !meKey ? "Connecte-toi d'abord." : "Les lumières s'éteignent..."; setTimeout(start, 0); return r; } }); } catch (e) {} });
     })();
+    // ===== Secret « Mousquet » : écrire /give musket dans le Général =====
+    THEMES.push({ id: 'musket', name: 'Mousquet', icon: '🎖️', kind: 'secret', flag: 'sMusket', bg: 'linear-gradient(120deg,#1b2a4d,#9b1c1c,#4a5a52)' });
+    THEME_COLORS.musket = '#12171a';
+    (function () {
+      const cross = 'url("data:image/svg+xml,' + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M38 6h24l4 26 28 4v28l-28 4-4 26H38l-4-26-28-4V36l28-4z' fill='#e8e4d4' stroke='#0a0a0a' stroke-width='5' stroke-linejoin='round'/><path d='M44 20h12v24h24v12H56v24H44V56H20V44h24z' fill='#0a0a0a'/></svg>") + '")';
+      const st = document.createElement('style');
+      st.textContent = `
+body.theme-musket,body.theme-musket input,body.theme-musket textarea,body.theme-musket button{font-family:Georgia,"Times New Roman",serif!important}
+body.theme-musket{background-color:#12171a!important}
+body.theme-musket::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;transform:translateZ(0);contain:strict;background:linear-gradient(90deg,rgba(225,225,218,.08) 0 38px,transparent 90px),linear-gradient(270deg,rgba(225,225,218,.08) 0 38px,transparent 90px),radial-gradient(ellipse 80% 40% at 30% 0%,rgba(160,180,185,.22),transparent 70%),radial-gradient(ellipse 70% 35% at 80% 5%,rgba(140,160,168,.18),transparent 70%),linear-gradient(180deg,transparent 72%,rgba(70,42,26,.55)),linear-gradient(180deg,#1d2528,#12171a)}
+body.theme-musket::after{content:"";position:fixed;top:0;left:0;width:200%;height:100%;z-index:60;pointer-events:none;background:radial-gradient(ellipse 22% 18% at 10% 70%,rgba(205,215,215,.07),transparent),radial-gradient(ellipse 18% 14% at 35% 40%,rgba(205,215,215,.06),transparent),radial-gradient(ellipse 24% 16% at 60% 80%,rgba(205,215,215,.07),transparent),radial-gradient(ellipse 20% 15% at 85% 30%,rgba(205,215,215,.06),transparent);animation:muFog 70s linear infinite}
+body.theme-musket .bg-darkbg,body.theme-musket .bg-darkpanel{background-color:#12171a!important}
+body.theme-musket .bg-gray-950,body.theme-musket .bg-gray-900{background-color:#161c20!important}
+body.theme-musket .bg-gray-800{background-color:#1e262b!important}
+body.theme-musket .bg-gray-700,body.theme-musket .hover\\:bg-gray-800:hover,body.theme-musket .hover\\:bg-gray-700:hover{background-color:#2a343a!important}
+body.theme-musket .border-gray-800,body.theme-musket .border-gray-700,body.theme-musket .border-gray-800\\/60{border-color:rgba(212,212,216,.28)!important}
+body.theme-musket .glass-panel{background:rgba(22,28,32,.96);border:2px solid rgba(212,212,216,.5);border-radius:10px;box-shadow:0 0 0 1px #000,inset 0 0 26px rgba(0,0,0,.55),0 8px 24px rgba(0,0,0,.5);-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+body.theme-musket .backdrop-blur-sm{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+body.theme-musket .bg-brand-500,body.theme-musket .bg-brand-600,body.theme-musket .bg-brand-700{background-color:#243a6b!important}
+body.theme-musket .hover\\:bg-brand-500:hover,body.theme-musket .hover\\:bg-brand-600:hover{background-color:#2f4a86!important}
+body.theme-musket .text-brand-300,body.theme-musket .text-brand-400,body.theme-musket .text-brand-500{color:#e0c978!important}
+body.theme-musket .bg-brand-500\\/10,body.theme-musket .bg-brand-500\\/20,body.theme-musket .hover\\:bg-brand-500\\/20,body.theme-musket .bg-brand-600\\/30{background-color:rgba(36,58,107,.45)!important}
+body.theme-musket .border-brand-500,body.theme-musket .border-brand-500\\/20,body.theme-musket .border-brand-500\\/30,body.theme-musket .border-brand-500\\/50,body.theme-musket .focus\\:border-brand-500{border-color:rgba(224,201,120,.55)!important}
+body.theme-musket header{border-bottom:7px solid!important;border-image:linear-gradient(90deg,#3fbf3f 0 64%,#241012 64% 100%) 7!important;box-shadow:0 6px 20px rgba(0,0,0,.5)}
+body.theme-musket h1,body.theme-musket h3{color:#e8e4d4;letter-spacing:.05em;text-shadow:0 2px 0 #000,0 0 10px rgba(224,201,120,.25)}
+body.theme-musket .msg-bubble{border-radius:6px!important}
+body.theme-musket .msg-bubble.bg-brand-600{background:linear-gradient(115deg,transparent 0 44%,rgba(232,228,212,.17) 44% 51%,transparent 51%),linear-gradient(135deg,#1a2a52,#2c4175)!important;border:1px solid rgba(232,228,212,.45)!important;box-shadow:0 2px 0 #000,0 0 14px rgba(44,65,117,.45)!important}
+body.theme-musket .msg-bubble.bg-gray-800{background:#1b2226!important;border:1px solid rgba(212,212,216,.25)!important;border-left:4px solid #a11d1d!important;box-shadow:0 2px 0 #000!important}
+body.theme-musket button{transition:transform .12s,box-shadow .12s}
+body.theme-musket button:hover{box-shadow:0 0 0 1px rgba(232,228,212,.5)}
+body.theme-musket button:active{transform:scale(.96)}
+body.theme-musket ::selection{background:#243a6b;color:#fff}
+body.theme-musket ::-webkit-scrollbar-thumb{background:#59656b!important;border-radius:3px}
+body.theme-musket input:focus,body.theme-musket textarea:focus{border-color:#e0c978!important;box-shadow:0 0 0 2px rgba(224,201,120,.3)!important;outline:none}
+body.theme-musket .status-dot.bg-brand-500{background-color:#3fbf3f!important}
+body.theme-musket .status-dot.bg-red-500{background-color:#ef4444!important}
+body.theme-musket .status-dot.bg-blue-500{background-color:#3b82f6!important}
+#muCross{display:none;position:fixed;right:14px;bottom:14px;width:64px;height:64px;z-index:59;pointer-events:none;opacity:.16;background:${cross} center/contain no-repeat}
+body.theme-musket #muCross{display:block}
+@keyframes muFog{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){body.theme-musket::after{animation:none}}`;
+      document.head.appendChild(st);
+      const cr = document.createElement('div'); cr.id = 'muCross'; document.body.appendChild(cr);
+    })();
+    function showMusketScreen() {
+      const old = document.getElementById('muskOv'); if (old) old.remove();
+      try {
+        const ac = new (window.AudioContext || window.webkitAudioContext)(), t0 = ac.currentTime + 1.3;
+        const b = ac.createBuffer(1, ac.sampleRate * .6, ac.sampleRate), d = b.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3);
+        const n = ac.createBufferSource(), g = ac.createGain(); n.buffer = b; g.gain.value = .6; n.connect(g).connect(ac.destination); n.start(t0);
+        const o = ac.createOscillator(), og = ac.createGain(); o.frequency.setValueAtTime(110, t0); o.frequency.exponentialRampToValueAtTime(30, t0 + .5);
+        og.gain.setValueAtTime(.5, t0); og.gain.exponentialRampToValueAtTime(.001, t0 + .5); o.connect(og).connect(ac.destination); o.start(t0); o.stop(t0 + .6);
+      } catch (e) {}
+      const o = document.createElement('div'); o.id = 'muskOv';
+      o.style.cssText = 'position:fixed;inset:0;z-index:9999;overflow:hidden;font-family:Georgia,serif;cursor:pointer;background:linear-gradient(#6a787b,#2d3538 56%,#3b2b20 56%,#1c130e);animation:moShake .5s 1.3s';
+      const slot = (n, t, s) => `<div style="width:min(20vw,86px);height:min(20vw,86px);border:2px solid ${s ? '#fff' : 'rgba(212,212,216,.6)'};border-radius:8px;background:rgba(0,0,0,.55);color:#fff;padding:4px 6px;box-sizing:border-box;font-size:min(3vw,13px);line-height:1.1"><div style="font-size:.8em;opacity:.8">${n}</div><div style="margin-top:min(6vw,26px);text-align:center">${t}</div></div>`;
+      o.innerHTML = `<style>@keyframes moShake{0%,100%{transform:none}20%{transform:translate(-8px,5px)}40%{transform:translate(7px,-6px)}60%{transform:translate(-5px,-3px)}80%{transform:translate(4px,4px)}}
+@keyframes moUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@keyframes moHp{from{width:100%;background:#3fbf3f}to{width:28%;background:#b91c1c}}
+@keyframes moFlash{0%{opacity:0}8%{opacity:.95}100%{opacity:0}}
+@keyframes moSmoke{from{opacity:.75;transform:scale(.3)}to{opacity:0;transform:scale(3.2) translateY(-40px)}}
+@keyframes moPop{0%{opacity:0;transform:scale(.3)}70%{transform:scale(1.15)}100%{opacity:1;transform:scale(1)}}</style>
+<div style="position:absolute;left:0;top:0;bottom:44%;width:16%;background:linear-gradient(90deg,#cfcfc8,#8d8d86)"></div>
+<div style="position:absolute;left:50%;top:50%;width:min(52vw,230px);transform:translate(-50%,-62%);opacity:0;animation:moUp .8s .2s forwards">
+<svg viewBox="0 0 120 220" style="width:100%;display:block"><rect x="40" y="8" width="40" height="46" fill="#111"/><circle cx="60" cy="6" r="5" fill="#243a6b"/><circle cx="60" cy="30" r="5" fill="#d6b656"/><rect x="44" y="54" width="32" height="28" fill="#e0b48a"/><rect x="14" y="90" width="20" height="46" fill="#1c2742"/><rect x="86" y="90" width="20" height="46" fill="#1c2742"/><rect x="34" y="84" width="52" height="60" fill="#1c2742"/><path d="M36 86L84 142M84 86L36 142" stroke="#e8e4d4" stroke-width="5"/><rect x="34" y="84" width="52" height="8" fill="#9b1c1c"/><rect x="38" y="146" width="20" height="56" fill="#e8e4d4"/><rect x="62" y="146" width="20" height="56" fill="#e8e4d4"/><rect x="36" y="200" width="24" height="12" fill="#111"/><rect x="60" y="200" width="24" height="12" fill="#111"/><rect x="14" y="132" width="20" height="14" fill="#e0b48a"/><path d="M104 36L22 196" stroke="#5a3a1e" stroke-width="5"/><path d="M104 36L110 14" stroke="#c9ced3" stroke-width="3"/></svg>
+<div style="position:absolute;left:50%;top:-16%;transform:translateX(-50%);background:#e6e6e6;color:#111;font:700 min(5vw,22px) sans-serif;padding:6px 18px;border-radius:14px;opacity:0;animation:moPop .4s 2.1s forwards">Win</div></div>
+<div style="position:absolute;inset:0;background:#fff;opacity:0;animation:moFlash .5s 1.3s"></div>
+<div style="position:absolute;left:50%;top:45%;width:40vmin;height:40vmin;margin:-20vmin;border-radius:50%;background:radial-gradient(#ddd,rgba(200,200,200,0) 70%);filter:blur(8px);opacity:0;animation:moSmoke 2.2s 1.35s"></div>
+<div style="position:absolute;left:0;right:0;bottom:3vh;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;animation:moUp .7s .1s forwards">
+<div style="text-align:center;color:#e8e4d4;text-shadow:0 2px 0 #000;margin-bottom:6px;opacity:0;animation:moUp .6s 2.7s forwards"><div style="font-size:min(6vw,26px);letter-spacing:.08em;font-weight:700">THÈME « MOUSQUET » DÉBLOQUÉ</div><div style="font-size:min(3.6vw,14px);opacity:.85;margin-top:4px">Activé ! Tu peux le changer dans 🎨 Décorations &amp; thèmes.</div></div>
+<div style="display:flex;gap:8px">${slot(1, 'Mousquet', 1)}${slot(2, 'Sword Bayonet')}${slot(3, 'Grenades')}</div>
+<div style="width:min(66vw,300px);height:22px;border:2px solid #000;background:#1a0b0b;border-radius:3px;position:relative"><div style="height:100%;width:28%;animation:moHp 1.2s .3s both"></div><span style="position:absolute;right:4px;top:-1px;font-size:16px;color:#fff;text-shadow:0 0 3px #000">✠</span></div></div>`;
+      document.body.appendChild(o);
+      o.onclick = () => o.remove();
+      setTimeout(() => { if (o.isConnected) o.remove(); }, 9000);
+    }
+    async function musketGive() {
+      if (!meKey) return;
+      const g = gameData[meKey] || {};
+      if (g.sMusket === true) { showSecretCard('🎖️', 'Déjà débloqué', 'Le thème « Mousquet » est déjà à toi (menu 🎨).'); return; }
+      const upd = { sMusket: true, theme: 'musket' }; if (g.stars === undefined) upd.stars = 0;
+      try { await db.ref('game/' + meKey).update(upd); showMusketScreen(); }
+      catch (e) { alert("Impossible d'enregistrer le secret : " + (e.code || e.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)"); }
+    }
   </script>
 </body>
 </html>
