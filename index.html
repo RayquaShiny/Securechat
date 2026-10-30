@@ -4087,6 +4087,10 @@ body.theme-fnaf #fnLurk2{display:block}
       const rain = svgUrl(200, 200, "<g stroke='#cfd8d4' stroke-opacity='.45' stroke-width='1'><path d='M20 10l-4 14M80 60l-4 14M150 20l-4 14M60 130l-4 14M120 100l-4 14M180 150l-4 14M30 180l-4 14'/></g>");
       const puffs = [8, 22, 38, 54, 70, 86].map((l, i) => `<i class="mu-sm" style="left:${l}%;animation-delay:${-10 + i * .12}s"></i>`).join('');
       const flashes = [10, 24, 40, 56, 72, 88].map((l, i) => `<i class="mu-fl" style="left:${l}%;bottom:${30 + (i % 2) * 2}%;animation-delay:${-10 + i * .12}s"></i>`).join('');
+      // Soldats animés : ils rechargent (baguette), épaulent, visent, tirent (flamme + fumée) puis recommencent
+      const sold = (x, bottom, hClamp, delay, op, mob) => `<div class="mu-s${mob ? ' mu-m' : ''}" style="left:${x}%;bottom:${bottom}%;height:${hClamp};opacity:${op};--d:${delay}s"><svg viewBox="0 0 90 100"><g class="bd"><rect x="26" y="62" width="7" height="30" fill="#d8d4c3"/><rect x="35" y="62" width="7" height="30" fill="#d8d4c3"/><rect x="25" y="88" width="9" height="10" rx="1" fill="#0d0e0e"/><rect x="35" y="88" width="9" height="10" rx="1" fill="#0d0e0e"/><rect x="24" y="32" width="20" height="33" rx="2" fill="#9a2326"/><path d="M26 34L42 62M42 34L26 62" stroke="#ece8d6" stroke-width="3"/><rect x="24" y="58" width="20" height="3" fill="#ece8d6"/><circle cx="34" cy="24" r="6.5" fill="#c4a68e"/><path d="M21 22L34 9L47 22L34 25Z" fill="#0d0e0e"/><path d="M34 38L36 54" stroke="#8a1f22" stroke-width="5" stroke-linecap="round"/><g class="mk"><rect x="4" y="53" width="24" height="4" rx="1.5" fill="#4a3322"/><rect x="26" y="53.6" width="40" height="2.4" fill="#8a8e92"/><path d="M66 53.4L78 54.8L66 56.2Z" fill="#c9ced3"/><g class="rr"><rect x="30" y="57" width="30" height="1.3" fill="#b9ac90"/></g><circle cx="34" cy="55" r="3" fill="#c4a68e"/><circle cx="48" cy="55" r="3" fill="#c4a68e"/><g class="fl"><circle cx="72" cy="55" r="7" fill="#ff9a3c"/><circle cx="72" cy="55" r="3.5" fill="#fff4c4"/><path d="M66 55L88 50M66 55L88 60M66 55L90 55" stroke="#ffd27a" stroke-width="1.6"/></g></g></g></svg><i class="sk"></i></div>`;
+      const nearRank = [0, 1, 2, 3, 4, 5, 6].map(i => sold(2 + i * 14.5, 20 + (i % 2) * 1.5, 'clamp(120px,24vh,230px)', (-(i * 4.3) % 14).toFixed(1), 1, i % 2)).join('');
+      const backRank = [0, 1, 2, 3, 4, 5, 6].map(i => sold(9 + i * 14.5, 27 + (i % 2), 'clamp(84px,16vh,150px)', (-(3 + i * 5.1) % 14).toFixed(1), .78, i % 2 === 0)).join('');
       const st = document.createElement('style');
       st.textContent = `
 body.theme-musket,body.theme-musket input,body.theme-musket textarea,body.theme-musket button{font-family:Georgia,"Times New Roman",serif!important}
@@ -4108,6 +4112,14 @@ body.theme-musket #muScene{display:block}
 #muScene .mu-fl{width:46px;height:46px;margin-left:-23px;border-radius:50%;opacity:0;background:radial-gradient(circle,#fff4c4,#ff9a3c 40%,transparent 70%);animation:muFl 14s linear infinite}
 #muScene .mu-flash{inset:0;opacity:0;background:radial-gradient(ellipse 90% 40% at 50% 70%,rgba(255,170,80,.45),transparent 70%);animation:muSkyFl 14s linear infinite;animation-delay:-10s}
 #muScene .mu-vig{inset:0;background:radial-gradient(ellipse 120% 95% at 50% 42%,transparent 52%,rgba(0,0,0,.6))}
+#muScene .mu-s{aspect-ratio:90/100;filter:brightness(.9)}
+#muScene .mu-s svg{width:100%;height:100%;display:block;overflow:visible}
+#muScene .mu-s .bd{animation:muBd 14s ease-in-out infinite;animation-delay:var(--d)}
+#muScene .mu-s .mk{transform-box:view-box;transform-origin:34px 55px;transform:rotate(-80deg);animation:muMk 14s ease-in-out infinite;animation-delay:var(--d)}
+#muScene .mu-s .rr{animation:muRr 14s ease-in-out infinite;animation-delay:var(--d)}
+#muScene .mu-s .fl{opacity:0;transform-box:view-box;animation:muFl 14s linear infinite;animation-delay:var(--d)}
+#muScene .mu-s .sk{position:absolute;left:62%;top:20%;width:90%;height:90%;border-radius:50%;opacity:0;background:radial-gradient(circle,rgba(238,242,238,.6),rgba(205,212,208,.25) 45%,transparent 68%);animation:muSk 14s ease-out infinite;animation-delay:var(--d)}
+@media(max-width:700px){#muScene .mu-s.mu-m{display:none}}
 html:has(body.theme-musket)::after{content:"";position:fixed;left:0;top:0;width:100%;height:calc(100% + 200px);z-index:61;pointer-events:none;opacity:.22;will-change:transform;background:${rain} 0 0/200px 200px;animation:muRain 1.6s linear infinite}
 body.theme-musket .bg-darkbg,body.theme-musket .bg-darkpanel{background-color:rgba(20,25,23,.9)!important}
 body.theme-musket #appContainer,body.theme-musket #appContainer>main,body.theme-musket main.bg-darkbg{background-color:transparent!important}
@@ -4146,13 +4158,17 @@ body.theme-musket #muCross{display:block}
 @keyframes muFog{from{transform:translateX(0)}to{transform:translateX(-33.3333%)}}
 @keyframes muRain{from{transform:translate3d(0,-200px,0)}to{transform:translate3d(0,0,0)}}
 @keyframes muPuff{0%,92%{opacity:0;transform:translateY(0) scale(.3)}94%{opacity:.75}100%{opacity:0;transform:translateY(-24vh) scale(1.7)}}
-@keyframes muFl{0%,92.5%{opacity:0}93%{opacity:1}95%{opacity:.25}96%,100%{opacity:0}}
 @keyframes muSkyFl{0%,92.5%{opacity:0}93.2%{opacity:.9}97%{opacity:.15}100%{opacity:0}}
+@keyframes muMk{0%,6%{transform:rotate(-80deg)}9%{transform:rotate(-88deg)}36%{transform:rotate(-88deg)}38%{transform:rotate(-80deg)}46%{transform:rotate(2deg)}60%{transform:rotate(.8deg)}78%{transform:rotate(-.6deg)}92.8%{transform:rotate(0deg)}93.4%{transform:rotate(-8deg)}96%{transform:rotate(-4deg)}98%{transform:rotate(-42deg)}100%{transform:rotate(-80deg)}}
+@keyframes muRr{0%,10%{transform:translateX(0)}13%{transform:translateX(16px)}16%{transform:translateX(0)}19%{transform:translateX(16px)}22%{transform:translateX(0)}25%{transform:translateX(16px)}28%{transform:translateX(0)}31%,100%{transform:translateX(0)}}
+@keyframes muBd{0%,92.8%{transform:translateX(0)}93.5%{transform:translateX(-3px)}96%,100%{transform:translateX(0)}}
+@keyframes muFl{0%,92.8%{opacity:0}93%{opacity:1}94.6%{opacity:.3}95.5%,100%{opacity:0}}
+@keyframes muSk{0%,92.8%{opacity:0;transform:translate(0,0) scale(.3)}93.3%{opacity:.85}100%{opacity:0;transform:translate(14%,-30%) scale(1.8)}}
 @media (prefers-reduced-motion:reduce){#muScene *,html:has(body.theme-musket)::after{animation:none!important}}`;
       document.head.appendChild(st);
       const cr = document.createElement('div'); cr.id = 'muCross'; document.body.appendChild(cr);
       const sc = document.createElement('div'); sc.id = 'muScene';
-      sc.innerHTML = '<div class="mu-sky"></div><div class="mu-sun"></div><div class="mu-trees"></div><div class="mu-far"></div><div class="mu-fog mu-fog1"></div><div class="mu-near"></div>' + flashes + puffs + '<div class="mu-mud"></div><div class="mu-hero"></div><div class="mu-fog mu-fog2"></div><div class="mu-flash"></div><div class="mu-vig"></div>';
+      sc.innerHTML = '<div class="mu-sky"></div><div class="mu-sun"></div><div class="mu-trees"></div><div class="mu-far"></div><div class="mu-fog mu-fog1"></div>' + backRank + nearRank + '<div class="mu-mud"></div><div class="mu-hero"></div><div class="mu-fog mu-fog2"></div><div class="mu-vig"></div>';
       document.body.insertBefore(sc, document.body.firstChild);
     })();
     function showMusketScreen() {
