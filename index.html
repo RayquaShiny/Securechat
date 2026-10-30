@@ -3707,6 +3707,257 @@
         overlay.classList.remove('hidden');
       }
     }
+    // ===== Secret FNAF : taper FNAF dans la console ou dans le terminal secret =====
+    // Survivre jusqu'à 6 h -> thème « FNAF » ; mourir -> décoration « Jumpscare »
+    (function () {
+      THEMES.push({ id: 'fnaf', name: 'Pizzeria', icon: '🐻', kind: 'secret', flag: 'sFnafTheme', bg: 'linear-gradient(120deg,#3b1d0b,#b45309,#fcd34d)' });
+      DECOS.push({ id: 'fnafdeco', name: 'Jumpscare', icon: '👁️', cls: 'deco-fnaf', kind: 'secret', flag: 'sFnafDeco' });
+      THEME_COLORS.fnaf = '#0b0705';
+      const P = (a) => a.join('');
+      const st = document.createElement('style');
+      st.textContent = P([
+        'body.theme-fnaf{background-color:#0b0705!important}',
+        'body.theme-fnaf::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;transform:translateZ(0);contain:strict;background:radial-gradient(ellipse at 50% -10%,rgba(250,204,21,.12),transparent 55%),radial-gradient(ellipse at 50% 120%,rgba(0,0,0,.8),transparent 60%),repeating-conic-gradient(rgba(255,255,255,.03) 0 25%,transparent 0 50%) 0 0/64px 64px}',
+        'body.theme-fnaf .bg-darkbg,body.theme-fnaf .bg-darkpanel{background-color:#0b0705!important}',
+        'body.theme-fnaf .bg-gray-950,body.theme-fnaf .bg-gray-900{background-color:#140d09!important}',
+        'body.theme-fnaf .bg-gray-800{background-color:#1f140d!important}',
+        'body.theme-fnaf .bg-gray-700,body.theme-fnaf .hover\\:bg-gray-800:hover,body.theme-fnaf .hover\\:bg-gray-700:hover{background-color:#34200f!important}',
+        'body.theme-fnaf .border-gray-800,body.theme-fnaf .border-gray-700,body.theme-fnaf .border-gray-800\\/60{border-color:rgba(217,119,6,.3)!important}',
+        'body.theme-fnaf .glass-panel{background:#140d09;border-color:rgba(217,119,6,.35)}',
+        'body.theme-fnaf .glass-panel,body.theme-fnaf .backdrop-blur-sm{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}',
+        'body.theme-fnaf .bg-brand-500,body.theme-fnaf .bg-brand-600,body.theme-fnaf .bg-brand-700{background-color:#b45309!important}',
+        'body.theme-fnaf .hover\\:bg-brand-500:hover,body.theme-fnaf .hover\\:bg-brand-600:hover{background-color:#d97706!important}',
+        'body.theme-fnaf .text-brand-300,body.theme-fnaf .text-brand-400,body.theme-fnaf .text-brand-500{color:#fcd34d!important}',
+        'body.theme-fnaf .bg-brand-500\\/10,body.theme-fnaf .bg-brand-500\\/20,body.theme-fnaf .hover\\:bg-brand-500\\/20,body.theme-fnaf .bg-brand-600\\/30{background-color:rgba(217,119,6,.25)!important}',
+        'body.theme-fnaf .border-brand-500,body.theme-fnaf .border-brand-500\\/20,body.theme-fnaf .border-brand-500\\/30,body.theme-fnaf .border-brand-500\\/50,body.theme-fnaf .focus\\:border-brand-500{border-color:rgba(252,211,77,.5)!important}',
+        'body.theme-fnaf header{border-bottom:1px solid rgba(252,211,77,.4)!important}',
+        'body.theme-fnaf h1,body.theme-fnaf h3{text-shadow:0 0 10px rgba(252,211,77,.45)}',
+        'body.theme-fnaf .msg-bubble.bg-brand-600{background:linear-gradient(135deg,#78350f,#b45309)!important}',
+        'body.theme-fnaf .msg-bubble.bg-gray-800{background:#1a110b!important;border-color:rgba(250,204,21,.25)!important}',
+        'body.theme-fnaf ::selection{background:#b45309;color:#fff}',
+        'body.theme-fnaf ::-webkit-scrollbar-thumb{background:#b45309}',
+        'body.theme-fnaf input:focus,body.theme-fnaf textarea:focus{border-color:#fcd34d!important;outline:none}',
+        'body.theme-fnaf .status-dot.bg-brand-500{background-color:#4ade80!important}',
+        'body.theme-fnaf .status-dot.bg-red-500{background-color:#ef4444!important}',
+        'body.theme-fnaf .status-dot.bg-blue-500{background-color:#3b82f6!important}',
+        '.deco-fnaf{position:relative;overflow:hidden;isolation:isolate;background:linear-gradient(90deg,#2b1608,#4a2a12)!important;border-color:#fcd34d!important;box-shadow:0 0 10px rgba(252,211,77,.3)}',
+        '.deco-fnaf::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;z-index:-1;background:repeating-conic-gradient(#fff 0 25%,#111 0 50%) 0 0/12px 12px}',
+        '.deco-fnaf::after{content:"";position:absolute;right:10px;top:50%;width:34px;height:8px;margin-top:-4px;pointer-events:none;background:radial-gradient(circle,#fff 0 3px,transparent 4px) 0 0/16px 8px;filter:drop-shadow(0 0 4px #fff);animation:fnBlink 4s steps(1) infinite}',
+        '.deco-fnaf p{color:#fde68a!important;font-weight:700}',
+        '.deco-fnaf .av{box-shadow:0 0 0 2px #fcd34d}',
+        '@keyframes fnBlink{0%,92%,100%{opacity:1}94%,98%{opacity:0}}',
+        '.fnb{position:absolute;display:flex;align-items:center;justify-content:center;border:2px solid #666;background:#1b1b1f;color:#ddd;font:700 12px ui-monospace,monospace;border-radius:8px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation}',
+        '.fnb.on{background:#7f1d1d;border-color:#f87171;color:#fff}.fnb.lt.on{background:#854d0e;border-color:#fde047}',
+        '.fnm{position:absolute;width:11%;height:9%;font-size:10px;border-color:#9ca3af;background:#0a0a0a;color:#9ca3af}.fnm.on{background:#14532d;border-color:#4ade80;color:#fff}'
+      ]);
+      document.head.appendChild(st);
+
+      // ---------- moteur ----------
+      const W = 960, H = 540, HOUR = 24, NAMES = { '1A': 'Show Stage', '1B': 'Dining Area', '1C': 'Pirate Cove', '2A': 'West Hall', '2B': 'W. Hall Corner', '3': 'Supply Closet', '4A': 'East Hall', '4B': 'E. Hall Corner', '5': 'Backstage', '6': 'Kitchen', '7': 'Restrooms' };
+      const MAP = { '1A': [44, 4], '1B': [42, 18], '1C': [8, 30], '5': [8, 14], '7': [76, 18], '6': [76, 32], '2A': [22, 52], '3': [6, 60], '2B': [22, 72], '4A': [60, 52], '4B': [60, 72] };
+      const G = {
+        B: { '1A': ['1B'], '1B': ['5', '2A'], '5': ['1B', '2A'], '2A': ['3', '2B', '1B'], '3': ['2A', '2B'], '2B': ['D', '2A'] },
+        C: { '1A': ['1B'], '1B': ['7', '6'], '7': ['1B', '6'], '6': ['7', '4A'], '4A': ['4B', '6'], '4B': ['D', '4A'] },
+        F: { '1A': ['1B'], '1B': ['7'], '7': ['6'], '6': ['4A'], '4A': ['4B'], '4B': ['D', '4A'] }
+      };
+      const RET = { B: '1B', C: '1B', F: '4A' }, IV = { F: 1.6, B: 2.7, C: 2.7, X: 2.7 };
+      const CALL = [[1, "« Allô ? Bienvenue pour ta première nuit chez Freddy Fazbear's Pizza. »"], [8, '« Garde un œil sur les caméras... et ferme les portes en cas de besoin. »'], [16, "« Surveille ton énergie. Bonne chance. »"]];
+      let s = null, ac = null, cv, c, noiseCv;
+
+      const tone = (f, d, ty, v, f2) => { try { const o = ac.createOscillator(), g = ac.createGain(); o.type = ty || 'sine'; o.frequency.setValueAtTime(f, ac.currentTime); if (f2) o.frequency.exponentialRampToValueAtTime(f2, ac.currentTime + d); g.gain.setValueAtTime(v || .15, ac.currentTime); g.gain.exponentialRampToValueAtTime(.001, ac.currentTime + d); o.connect(g).connect(ac.destination); o.start(); o.stop(ac.currentTime + d); } catch (e) {} };
+      const noise = (d, v) => { try { const b = ac.createBuffer(1, ac.sampleRate * d, ac.sampleRate), a = b.getChannelData(0); for (let i = 0; i < a.length; i++) a[i] = Math.random() * 2 - 1; const n = ac.createBufferSource(), g = ac.createGain(); n.buffer = b; g.gain.value = v; n.connect(g).connect(ac.destination); n.start(); } catch (e) {} };
+      const thud = () => tone(70, .25, 'sine', .4, 40);
+
+      function face(t, x, y, k, open) {
+        const col = { F: '#7a4a22', B: '#6b4fb8', C: '#e0b92e', X: '#9c3a22' }[t];
+        c.save(); c.translate(x, y); c.scale(k, k); c.fillStyle = col;
+        const el = (a, b, rx, ry) => { c.beginPath(); c.ellipse(a, b, rx, ry, 0, 0, 7); c.fill(); };
+        c.fillRect(-45, 40, 90, 80);
+        if (t === 'B') { el(-34, -95, 12, 42); el(34, -95, 12, 42); }
+        if (t === 'F') { el(-50, -42, 18, 18); el(50, -42, 18, 18); c.fillStyle = '#111'; c.fillRect(-26, -92, 52, 44); c.fillRect(-40, -52, 80, 8); c.fillStyle = col; }
+        if (t === 'X') { c.beginPath(); c.moveTo(-50, -30); c.lineTo(-40, -86); c.lineTo(-12, -44); c.moveTo(50, -30); c.lineTo(40, -86); c.lineTo(12, -44); c.fill(); }
+        if (t === 'C') { c.beginPath(); c.moveTo(-14, -48); c.lineTo(-4, -80); c.lineTo(2, -48); c.lineTo(10, -76); c.lineTo(16, -48); c.fill(); }
+        el(0, 0, 56, 48);
+        c.fillStyle = t === 'C' ? '#f59e0b' : '#c7a07a'; el(0, 24, t === 'X' ? 42 : 32, 20);
+        c.fillStyle = '#fff'; el(-21, -8, 11, 11); el(21, -8, 11, 11);
+        c.fillStyle = '#000'; el(-21, -8, 3.5, 3.5); el(21, -8, 3.5, 3.5);
+        if (open) { c.fillStyle = '#300'; el(0, 28, 26, 16); c.fillStyle = '#fff'; for (let i = -22; i < 24; i += 9) c.fillRect(i, 14, 6, 8); }
+        else { c.fillStyle = '#222'; c.fillRect(-14, 30, 28, 3); }
+        if (t === 'B' || t === 'F') { c.fillStyle = '#b91c1c'; c.fillRect(-18, 58, 36, 12); }
+        c.restore();
+      }
+      const eyes = (x, y, k) => { c.fillStyle = '#fff'; c.shadowColor = '#fff'; c.shadowBlur = 12; c.beginPath(); c.arc(x - 14 * k, y, 5 * k, 0, 7); c.arc(x + 14 * k, y, 5 * k, 0, 7); c.fill(); c.shadowBlur = 0; };
+      const atDoor = (i) => i === 0 ? s.pos.B === 'D' : s.pos.C === 'D';
+      const doorBusy = (i) => i === 0 ? s.pos.B === 'D' : (s.pos.C === 'D' || s.pos.F === 'D');
+      const occupied = (r) => ['F', 'B', 'C'].some(k => s.pos[k] === r);
+      const usage = () => 1 + s.door[0] + s.door[1] + s.light[0] + s.light[1] + (s.cam ? 1 : 0);
+
+      function hall(i) {
+        const x = i ? 770 : 0, w = 190;
+        c.fillStyle = s.light[i] ? '#4a4a55' : '#020203'; c.fillRect(x, 60, w, 310);
+        if (s.light[i]) { c.fillStyle = '#2a2a33'; c.fillRect(x, 330, w, 40); if (atDoor(i)) face(i ? 'C' : 'B', x + w / 2, 200, 1.5, 0); }
+        else if (s.out && i === 0 && s.ot > 2 && ((s.ot * 2 | 0) % 2 === 0)) eyes(x + w / 2, 220, 2);
+        if (s.door[i]) { c.fillStyle = '#6b6f78'; c.fillRect(x, 60, w, 310); c.fillStyle = '#4b4f58'; for (let y = 70; y < 370; y += 24) c.fillRect(x, y, w, 4); }
+      }
+      function drawOffice() {
+        c.fillStyle = '#08080b'; c.fillRect(0, 0, W, H);
+        c.fillStyle = '#15151c'; c.fillRect(190, 60, 580, 310);
+        c.fillStyle = '#2b2b38'; c.fillRect(250, 100, 90, 120); c.fillRect(620, 100, 90, 120);
+        c.fillStyle = '#a16207'; c.fillRect(262, 112, 66, 10); c.fillRect(632, 112, 66, 10);
+        hall(0); hall(1);
+        c.fillStyle = '#1d1510'; c.fillRect(150, 390, 660, 150);
+        c.fillStyle = '#0d0d10'; c.fillRect(430, 330, 100, 60);
+        c.save(); c.translate(600, 350); c.rotate(s.t * 9); c.fillStyle = '#555'; for (let i = 0; i < 3; i++) { c.rotate(2.09); c.fillRect(0, -4, 34, 8); } c.restore();
+        if (!s.out && Math.random() < .04) { c.fillStyle = 'rgba(0,0,0,.45)'; c.fillRect(0, 0, W, H); }
+        if (s.out) { c.fillStyle = 'rgba(0,0,0,.82)'; c.fillRect(0, 0, W, H); if (s.ot > 2 && s.ot < 3.2 + 0) {} if (s.black) { c.fillStyle = '#000'; c.fillRect(0, 0, W, H); } else if (s.ot > 2 && (s.ot * 2 | 0) % 2 === 0) { eyes(95, 220, 2); } }
+      }
+      function drawCam() {
+        const r = s.sel, base = { '1A': '#1c1c24', '1B': '#1f241f', '1C': '#241a24', '6': '#000' }[r] || '#1a2020';
+        c.fillStyle = base; c.fillRect(0, 0, W, H);
+        if (r === '6') { c.fillStyle = '#9ca3af'; c.font = '28px monospace'; c.textAlign = 'center'; c.fillText('AUDIO ONLY', W / 2, H / 2); c.textAlign = 'left'; return; }
+        c.strokeStyle = 'rgba(255,255,255,.08)'; c.lineWidth = 2;
+        for (let i = 0; i <= 8; i++) { c.beginPath(); c.moveTo(W / 2, 200); c.lineTo(i * 120, H); c.stroke(); }
+        if (r === '1A') { c.fillStyle = '#3b2a4a'; c.fillRect(220, 250, 520, 40); c.fillStyle = '#5a1020'; c.fillRect(160, 40, 80, 250); c.fillRect(720, 40, 80, 250); }
+        if (r === '1B') { c.fillStyle = '#4b3a2a'; [[120, 330], [420, 360], [700, 320]].forEach(a => c.fillRect(a[0], a[1], 140, 20)); }
+        if (r === '1C') {
+          c.fillStyle = '#6d2a7a'; const o = s.xs * 55; c.fillRect(260, 30, 190 - o, 400); c.fillRect(510 + o, 30, 190 - o, 400);
+          if (s.xs > 0 && s.xs < 3 && !s.run) face('X', 480, 250, 1.1 + s.xs * .15, 0);
+          if (s.xs === 3 && !s.run) face('X', 480, 230, 1.8, 0);
+          if (s.xs === 3 && s.run) { c.fillStyle = '#fff'; c.font = '18px monospace'; c.fillText('Sorry! Out of order', 380, 400); }
+          else if (s.xs === 0) { c.fillStyle = '#fbbf24'; c.font = '16px monospace'; c.fillText('PIRATE COVE', 410, 70); }
+        }
+        const px = { F: 480, B: 320, C: 650 };
+        ['B', 'C', 'F'].forEach(k => { if (s.pos[k] === r) face(k, px[k], 260, 1.6, 0); });
+        if (r === '2A' && s.run && s.rt < 1.6) face('X', 480 - 0, 250, 1.7, 1);
+      }
+      function noiseFx(a) { const x = noiseCv.getContext('2d'), d = x.createImageData(96, 54); for (let i = 0; i < d.data.length; i += 4) { const v = Math.random() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } x.putImageData(d, 0, 0); c.globalAlpha = a; c.drawImage(noiseCv, 0, 0, W, H); c.globalAlpha = 1; }
+      function drawScare() {
+        const o = s.over, k = Math.min(1, o.t / .5); c.fillStyle = '#000'; c.fillRect(0, 0, W, H);
+        if (o.t < 1.1) face(o.k === 'X' ? 'X' : o.k, W / 2 + (Math.random() - .5) * 40, 200 + (Math.random() - .5) * 30, 2 + k * 5, 1);
+        noiseFx(.15);
+      }
+      function draw() {
+        if (s.over) return drawScare();
+        s.cam ? drawCam() : drawOffice();
+        if (s.cam) { if (s.fl > 0) noiseFx(.5); noiseFx(.08); c.fillStyle = 'rgba(0,0,0,.18)'; for (let y = 0; y < H; y += 4) c.fillRect(0, y, W, 1); c.fillStyle = '#e5e7eb'; c.font = '20px monospace'; c.fillText('CAM ' + s.sel + ' — ' + NAMES[s.sel], 30, 40); if ((s.t | 0) % 2) { c.fillStyle = '#ef4444'; c.beginPath(); c.arc(W - 50, 36, 8, 0, 7); c.fill(); } }
+        c.fillStyle = 'rgba(0,0,0,.35)'; const vg = c.createRadialGradient(W / 2, H / 2, 200, W / 2, H / 2, 600); vg.addColorStop(0, 'transparent'); vg.addColorStop(1, 'rgba(0,0,0,.7)'); c.fillStyle = vg; c.fillRect(0, 0, W, H);
+      }
+
+      function hud() {
+        const h = Math.min(5, s.hr), cl = h === 0 ? 12 : h, call = CALL.filter(a => s.t >= a[0] && s.t < a[0] + 6.5).pop();
+        document.getElementById('fnH').innerHTML = `<div>Énergie : ${Math.ceil(s.pw)}%</div><div>Usage : ${'▮'.repeat(Math.min(5, usage()))}</div>`;
+        document.getElementById('fnT').innerHTML = `${cl} AM<br><small>Nuit 3</small>`;
+        document.getElementById('fnC').textContent = call && !s.over ? call[1] : '';
+        const set = (id, on) => document.getElementById(id).classList.toggle('on', !!on);
+        set('fnD0', s.door[0]); set('fnD1', s.door[1]); set('fnL0', s.light[0]); set('fnL1', s.light[1]);
+        Object.keys(MAP).forEach(k => set('fnm' + k, s.sel === k));
+        ['fnD0', 'fnD1', 'fnL0', 'fnL1'].forEach(id => document.getElementById(id).style.display = s.cam || s.out ? 'none' : 'flex');
+        document.getElementById('fnMap').style.display = s.cam ? 'block' : 'none';
+      }
+      function scare(k) { if (s.over) return; s.over = { k, t: 0 }; s.cam = 0; noise(1, .5); tone(300, 1, 'sawtooth', .35, 900); tone(120, 1, 'square', .3, 700); }
+      function oppo(k) {
+        if (Math.random() * 20 >= s.ai[k]) return;
+        if (k === 'X') { if (s.run) return; if (s.cam && s.sel === '1C') return; if (s.xs < 3) s.xs++; else { s.run = 1; s.rt = 0; } return; }
+        const p = s.pos[k], side = k === 'B' ? 0 : 1;
+        if (p === 'D') { if (k === 'F' && s.cam) return; if (s.door[side]) { s.pos[k] = RET[k]; thud(); } else scare(k); return; }
+        if (k === 'F' && s.cam && s.sel === p) return;
+        const ns = G[k][p], nx = ns[Math.random() * ns.length | 0];
+        if (nx === 'D' ? doorBusy(side) : occupied(nx)) return;
+        s.pos[k] = nx;
+        if (nx === 'D') thud(); else if (k === 'F') tone(200, .5, 'square', .08, 120);
+        else if (k === 'C' && nx === '6') tone(500, .15, 'square', .1);
+      }
+      function update(dt) {
+        if (s.over) { s.over.t += dt; if (s.over.t > 1.4) finish(false); return; }
+        s.t += dt; s.fl -= dt;
+        const hr = s.t / HOUR | 0;
+        if (hr > s.hr) { s.hr = hr; if (hr >= 6) return finish(true); if (hr === 2) s.ai.B++; if (hr === 3 || hr === 4) { s.ai.B++; s.ai.C++; s.ai.X++; } }
+        if (!s.out) {
+          s.pw -= dt * usage() / 3.2;
+          if (s.pw <= 0) { s.pw = 0; s.out = 1; s.door = [0, 0]; s.light = [0, 0]; s.cam = 0; s.ot = 0; s.oT = 6 + Math.random() * 5; s.nt = 0; }
+        } else {
+          s.ot += dt; s.nt += dt;
+          if (s.ot > 3 && !s.black && s.nt > .4) { s.nt = 0; tone([523, 659, 784, 659][(s.ot * 2.5 | 0) % 4], .3, 'triangle', .08); }
+          if (s.ot > s.oT && !s.black) { s.black = 1; s.bt = 0; }
+          if (s.black) { s.bt += dt; if (s.bt > 1.6) scare('F'); }
+          return;
+        }
+        for (const k of ['F', 'B', 'C', 'X']) { s.tm[k] += dt; if (s.tm[k] >= IV[k]) { s.tm[k] = 0; oppo(k); } }
+        if (s.run) {
+          s.rt += dt;
+          if (s.rt >= 4.2) {
+            if (s.door[0]) { thud(); setTimeout(thud, 180); s.pw = Math.max(0, s.pw - (1 + 5 * s.hit)); s.hit++; s.run = 0; s.xs = 1 + (Math.random() * 2 | 0); }
+            else scare('X');
+          }
+        }
+        if (s.pos.C === '6' && s.cam && s.sel === '6' && Math.random() < .02) tone(700, .12, 'square', .1);
+        hud();
+      }
+      function tick(ts) {
+        if (!s || s.end) return;
+        const dt = Math.min(.05, (ts - s.last) / 1000 || 0); s.last = ts;
+        update(dt); if (s && !s.end) { draw(); if (s.out || s.over) hud(); s.raf = requestAnimationFrame(tick); }
+      }
+
+      async function unlock(win) {
+        const flag = win ? 'sFnafTheme' : 'sFnafDeco', g = gameData[meKey] || {};
+        if (g[flag] === true) return win ? 'Thème « Pizzeria » déjà débloqué.' : 'Décoration « Jumpscare » déjà débloquée.';
+        const upd = { [flag]: true }; if (win) upd.theme = 'fnaf'; if (g.stars === undefined) upd.stars = 0;
+        try {
+          await db.ref('game/' + meKey).update(upd);
+          showSecretCard(win ? '🐻' : '👁️', win ? '6 AM ! Tu as survécu' : 'Tu t\'es fait avoir...', win ? 'Thème d\'application « Pizzeria » débloqué et activé ! (menu 🎨)' : 'Décoration secrète « Jumpscare » débloquée ! Tu la trouveras dans le menu 🎨, tout en bas (Secrets).');
+          return win ? 'Thème « Pizzeria » débloqué !' : 'Décoration « Jumpscare » débloquée !';
+        } catch (e) { return 'Impossible d\'enregistrer : ' + (e.code || e.message) + ' (règles Firebase à jour ?)'; }
+      }
+      async function finish(win) {
+        if (s.end) return; s.end = 1; cancelAnimationFrame(s.raf);
+        const o = document.getElementById('fnO'); o.style.display = 'flex';
+        o.innerHTML = win ? '<div style="font-size:7vmin;color:#fde68a">5 AM → 6 AM</div><div style="margin-top:2vmin">Tu as survécu à la nuit !</div>' : '<div style="font-size:7vmin;color:#ef4444">GAME OVER</div>';
+        const m = document.createElement('div'); m.style.cssText = 'margin-top:2vmin;font-size:2.4vmin;opacity:.85;text-align:center;max-width:80%'; m.textContent = '...'; o.appendChild(m);
+        m.textContent = await unlock(win);
+        const b = document.createElement('button'); b.className = 'fnb'; b.style.cssText = 'position:static;margin-top:3vmin;padding:10px 22px;font-size:16px'; b.textContent = 'Fermer'; b.onclick = quit; o.appendChild(b);
+      }
+      function quit() { if (s) { s.end = 1; cancelAnimationFrame(s.raf); } s = null; window.removeEventListener('resize', fit); window.removeEventListener('keydown', keys); const w = document.getElementById('fnW'); if (w) w.remove(); }
+      function fit() {
+        const w = document.getElementById('fnW'), S = document.getElementById('fnS'); if (!w) return;
+        const iw = innerWidth, ih = innerHeight, port = ih > iw, A = port ? ih : iw, B = port ? iw : ih;
+        w.style.width = A + 'px'; w.style.height = B + 'px'; w.style.transformOrigin = '0 0'; w.style.transform = port ? `translateX(${iw}px) rotate(90deg)` : 'none';
+        const fw = Math.min(A, B * 16 / 9), fh = fw * 9 / 16; S.style.width = fw + 'px'; S.style.height = fh + 'px'; S.style.left = (A - fw) / 2 + 'px'; S.style.top = (B - fh) / 2 + 'px';
+      }
+      const tog = (a, i) => { if (!s || s.over || s.out || s.end) return; if (a === 'd') s.door[i] ^= 1; else { const v = s.light[i] ^ 1; s.light = [0, 0]; s.light[i] = v; if (v) tone(90, .2, 'sawtooth', .05); } tone(a === 'd' ? 120 : 400, .1, 'square', .05); hud(); };
+      const cam = () => { if (!s || s.over || s.out || s.end) return; s.cam ^= 1; s.fl = .35; if (s.cam) s.light = [0, 0]; tone(250, .12, 'triangle', .07); hud(); };
+      function keys(e) { const k = e.key.toLowerCase(); if (k === ' ') { e.preventDefault(); cam(); } else if (k === 'q') tog('d', 0); else if (k === 'a') tog('l', 0); else if (k === 'e') tog('d', 1); else if (k === 'd') tog('l', 1); }
+
+      function start() {
+        if (!meKey) return "Connecte-toi d'abord.";
+        if (document.getElementById('fnW')) return '';
+        try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); ac.resume(); } catch (e) {}
+        const w = document.createElement('div'); w.id = 'fnW'; w.style.cssText = 'position:fixed;left:0;top:0;z-index:9500;background:#000;overflow:hidden;font-family:ui-monospace,Menlo,Consolas,monospace;color:#e5e7eb';
+        const mp = Object.keys(MAP).map(k => `<div class="fnb fnm" id="fnm${k}" data-c="${k}" style="left:${MAP[k][0] + 20}%;top:${MAP[k][1] + 12}%">${k}</div>`).join('');
+        w.innerHTML = `<div id="fnS" style="position:absolute"><canvas width="${W}" height="${H}" style="width:100%;height:100%;display:block"></canvas>
+          <div id="fnH" style="position:absolute;left:2%;bottom:3%;font-size:2.6vmin;text-shadow:0 0 4px #000"></div>
+          <div id="fnT" style="position:absolute;right:2%;top:3%;font-size:3.4vmin;text-align:right;text-shadow:0 0 4px #000"></div>
+          <div id="fnC" style="position:absolute;left:12%;right:12%;top:3%;text-align:center;font-size:2.1vmin;color:#fde68a;text-shadow:0 0 4px #000"></div>
+          <div class="fnb" id="fnX" style="left:1%;top:1%;width:5%;height:7%;opacity:.6">✕</div>
+          <div class="fnb" id="fnD0" style="left:2%;top:30%;width:9%;height:12%">PORTE</div><div class="fnb lt" id="fnL0" style="left:2%;top:46%;width:9%;height:12%">LUMIÈRE</div>
+          <div class="fnb" id="fnD1" style="right:2%;top:30%;width:9%;height:12%">PORTE</div><div class="fnb lt" id="fnL1" style="right:2%;top:46%;width:9%;height:12%">LUMIÈRE</div>
+          <div class="fnb" id="fnCam" style="left:30%;width:40%;bottom:2%;height:9%;font-size:14px">▲ CAMÉRA</div>
+          <div id="fnMap" style="display:none;position:absolute;inset:0;pointer-events:none"><div style="pointer-events:auto">${mp}</div></div>
+          <div id="fnO" style="display:none;position:absolute;inset:0;background:#000;flex-direction:column;align-items:center;justify-content:center;color:#fff"></div></div>`;
+        document.body.appendChild(w);
+        cv = w.querySelector('canvas'); c = cv.getContext('2d'); noiseCv = document.createElement('canvas'); noiseCv.width = 96; noiseCv.height = 54;
+        s = { t: 0, hr: 0, pw: 100, door: [0, 0], light: [0, 0], cam: 0, sel: '1A', fl: 0, pos: { F: '1A', B: '1A', C: '1A' }, xs: 0, run: 0, rt: 0, hit: 0, ai: { F: 2, B: 4, C: 4, X: 3 }, tm: { F: 0, B: 0, C: 0, X: 0 }, out: 0, over: null, end: 0, last: performance.now() };
+        const $ = (id) => document.getElementById(id);
+        const press = (id, f) => { const e = $(id); e.addEventListener('pointerdown', (ev) => { ev.preventDefault(); try { ac.resume(); } catch (x) {} f(); }); };
+        press('fnD0', () => tog('d', 0)); press('fnD1', () => tog('d', 1)); press('fnL0', () => tog('l', 0)); press('fnL1', () => tog('l', 1)); press('fnCam', cam); press('fnX', quit);
+        w.querySelectorAll('[data-c]').forEach(e => e.addEventListener('pointerdown', (ev) => { ev.preventDefault(); if (s && !s.over) { s.sel = e.dataset.c; s.fl = .3; tone(300, .08, 'square', .05); hud(); } }));
+        window.addEventListener('resize', fit); window.addEventListener('keydown', keys); fit(); hud();
+        s.raf = requestAnimationFrame(tick);
+        return 'Les lumières s\'éteignent...';
+      }
+      TERM_COMMANDS.fnaf = async () => { const r = start(); if (document.getElementById('termOverlay')) document.getElementById('termOverlay').remove(); return r; };
+      ['FNAF', 'fnaf'].forEach(n => { try { Object.defineProperty(window, n, { configurable: true, get() { const r = !meKey ? "Connecte-toi d'abord." : "Les lumières s'éteignent..."; setTimeout(start, 0); return r; } }); } catch (e) {} });
+    })();
   </script>
 </body>
 </html>
