@@ -758,7 +758,7 @@
             <li>Fiche de profil : touche la photo d'un membre</li>
             <li>De nouveaux secrets à découvrir…</li>
             <li>Tous les thèmes améliorés : décors animés légers, en-têtes et boutons retravaillés</li>
-            <li>Thèmes de saison (Halloween, Noël, Saint-Valentin, Été) : imposés pendant leur période, choix libre le reste de l'année</li>
+            <li>Thèmes de saison (Halloween, Noël, Saint-Valentin, Été) : actifs pendant leur période, avec une option pour les désactiver</li>
             <li>Décoration « 1 semaine » pour tous les participants</li>
           </ul>
         </div>
@@ -1539,6 +1539,14 @@
       return md >= t.season.from[0] * 100 + t.season.from[1] && md <= t.season.to[0] * 100 + t.season.to[1];
     }
     function seasonNow() { return THEMES.find(inSeason) || null; }
+    // Option : désactiver le thème de saison en cours (préférence locale, par compte, sur cet appareil)
+    function seasonOptOut() { try { return !!meKey && localStorage.getItem('seasonOff:' + meKey) === '1'; } catch (e) { return false; } }
+    // Thème de saison réellement imposé : il y en a un ET la personne ne l'a pas désactivé
+    function seasonForced() { return seasonOptOut() ? null : seasonNow(); }
+    function setSeasonOptOut(off) {
+      try { if (off) localStorage.setItem('seasonOff:' + meKey, '1'); else localStorage.removeItem('seasonOff:' + meKey); } catch (e) {}
+      applyTheme(); renderDecoModal();
+    }
     // Thème réellement affiché : celui que tu as équipé ; sinon le thème de saison ; « classic » désactive tout
     // Un cosmétique qui n'est plus obtenable n'est visible que par ceux qui l'ont déjà
     function themeObtainable(t) {
@@ -1551,7 +1559,7 @@
     function activeTheme() {
       if (!meKey) return null;
       if (typeof ownerPreview !== 'undefined' && ownerPreview.theme) { const pt = THEMES.find(x => x.id === ownerPreview.theme); if (pt) return pt; }
-      const sn = seasonNow();
+      const sn = seasonForced();
       if (sn) return sn;
       return themeFor(meKey) || null;
     }
@@ -1602,8 +1610,8 @@
     }
     async function equipTheme(id) {
       if (!meKey) return;
-      const sn = seasonNow();
-      if (sn) { alert('Le thème « ' + sn.name + ' » est imposé jusqu\'au ' + seasonEnd(sn) + ' : impossible de changer de thème pendant la période de saison.'); return; }
+      const sn = seasonForced();
+      if (sn) { alert('Le thème « ' + sn.name + ' » est imposé jusqu\'au ' + seasonEnd(sn) + ' : impossible de changer de thème tant que tu ne le désactives pas (menu 🎨).'); return; }
       const g = gameData[meKey];
       let val;
       if (id === 'auto') val = null;
@@ -2013,14 +2021,13 @@
           ${o.owned ? (o.locked ? '<span class="text-[10px] text-gray-500 shrink-0">🔒 Saison</span>' : `<button type="button" ${o.attr} class="px-2.5 py-1 rounded-lg text-[11px] ${o.eq ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${o.eq ? 'Retirer' : 'Équiper'}</button>`) : ''}</div>`;
       const secrets = [
         ...DECOS.filter(d => d.kind === 'secret').map(d => ({ kind: 'Décoration', owned: ownsDeco(meKey, d), eq: !!cur && cur.id === d.id, icon: d.icon, name: d.name, cls: d.cls, attr: `data-equip="${d.id}"` })),
-        ...THEMES.filter(t => t.kind === 'secret' && (ownsTheme(meKey, t) || themeObtainable(t))).map(t => ({ kind: "Thème d'application", owned: ownsTheme(meKey, t), eq: !!curTh && curTh.id === t.id, locked: !!seasonNow(), hint: t.season ? 'Thème de saison : à trouver pendant sa période' : '', icon: t.icon, name: t.name, bg: t.bg, attr: `data-theme="${t.id}"` }))
+        ...THEMES.filter(t => t.kind === 'secret' && (ownsTheme(meKey, t) || themeObtainable(t))).map(t => ({ kind: "Thème d'application", owned: ownsTheme(meKey, t), eq: !!curTh && curTh.id === t.id, locked: !!seasonForced(), hint: t.season ? 'Thème de saison : à trouver pendant sa période' : '', icon: t.icon, name: t.name, bg: t.bg, attr: `data-theme="${t.id}"` }))
       ];
-      const seasonT = seasonNow();
+      const seasonT = seasonNow(), seasonOn = !!seasonT && !seasonOptOut();
       const themeMode = curTh ? curTh.id : 'auto';
       const thRow = (id, icon, name, sub) => `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800"><div class="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-sm shrink-0">${icon}</div><div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100 truncate">${name}</p><p class="text-[10px] text-gray-400">${sub}</p></div><button type="button" data-theme="${id}" class="px-2.5 py-1 rounded-lg text-[11px] ${themeMode === id ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${themeMode === id ? 'Actif ✓' : 'Choisir'}</button></div>`;
-      const themeChoiceHtml = seasonT
-        ? `<div class="space-y-2"><p class="font-semibold text-white">Thème de l'application</p><div class="p-3 rounded-xl border border-amber-500/30 bg-amber-500/10 text-[11px] text-amber-100 leading-relaxed">${seasonT.icon} <b>${esc(seasonT.name)}</b> est actif pour tout le monde jusqu'au ${seasonEnd(seasonT)}. Le thème est verrouillé pendant la période de saison, tu pourras de nouveau choisir ensuite.</div></div>`
-        : `<div class="space-y-2"><p class="font-semibold text-white">Thème de l'application</p>${thRow('auto', '🌑', 'Classique', 'Aucun thème. Tes thèmes débloqués sont dans Secrets, tout en bas.')}</div>`;
+      const seasonToggle = seasonT ? `<div class="p-3 rounded-xl border border-amber-500/30 bg-amber-500/10 text-[11px] text-amber-100 leading-relaxed flex items-center gap-3"><div class="flex-1 min-w-0">${seasonT.icon} <b>Thème de saison : ${esc(seasonT.name)}</b><br>${seasonOn ? `Actif jusqu'au ${seasonEnd(seasonT)}. Tu peux le désactiver si tu préfères ton thème habituel.` : `Désactivé sur cet appareil. Il reste disponible jusqu'au ${seasonEnd(seasonT)}.`}</div><button type="button" data-season-toggle class="px-2.5 py-1 rounded-lg text-[11px] shrink-0 ${seasonOn ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${seasonOn ? 'Désactiver' : 'Activer'}</button></div>` : '';
+      const themeChoiceHtml = `<div class="space-y-2"><p class="font-semibold text-white">Thème de l'application</p>${seasonToggle}${seasonOn ? '' : thRow('auto', '🌑', 'Classique', 'Aucun thème. Tes thèmes débloqués sont dans Secrets, tout en bas.')}</div>`;
       const secretsHtml = `<div class="space-y-2"><p class="font-semibold text-white">🤫 Secrets <span class="text-[10px] font-normal text-gray-400">${secrets.filter(x => x.owned).length}/${secrets.length} trouvés</span></p>${secrets.map(secRow).join('')}</div>`;
       body.innerHTML = `
         <div class="space-y-2">
@@ -2052,6 +2059,7 @@
       body.querySelectorAll('[data-avatar-pick]').forEach(b => { b.onclick = pickAvatar; });
       body.querySelectorAll('[data-avatar-clear]').forEach(b => { b.onclick = clearAvatar; });
       body.querySelectorAll('[data-theme]').forEach(b => { b.onclick = () => equipTheme(b.dataset.theme); });
+      body.querySelectorAll('[data-season-toggle]').forEach(b => { b.onclick = () => setSeasonOptOut(!seasonOptOut()); });
     }
     async function equipDeco(id) {
       const d = DECOS.find(x => x.id === id);
@@ -4067,42 +4075,50 @@ body.theme-fnaf #fnLurk2{display:block}
     THEME_COLORS.musket = '#12171a';
     (function () {
       const cross = 'url("data:image/svg+xml,' + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M38 6h24l4 26 28 4v28l-28 4-4 26H38l-4-26-28-4V36l28-4z' fill='#e8e4d4' stroke='#0a0a0a' stroke-width='5' stroke-linejoin='round'/><path d='M44 20h12v24h24v12H56v24H44V56H20V44h24z' fill='#0a0a0a'/></svg>") + '")';
+      let sol = ''; for (let i = 0; i < 9; i++) { sol += `<g transform='translate(${14 + i * 40} ${i % 2 ? 5 : 0})'><rect x='-5' y='24' width='10' height='15'/><rect x='-3' y='20' width='6' height='5'/><rect x='-6' y='39' width='12' height='27'/><rect x='-5' y='66' width='4' height='22'/><rect x='1' y='66' width='4' height='22'/><rect x='8' y='8' width='2' height='80'/><path d='M8 8l1-10 1 10z'/></g>`; }
+      const line = 'url("data:image/svg+xml,' + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='360' height='90' viewBox='0 0 360 90'><g fill='#06090b' fill-opacity='.55'>" + sol + "</g></svg>") + '")';
       const st = document.createElement('style');
       st.textContent = `
 body.theme-musket,body.theme-musket input,body.theme-musket textarea,body.theme-musket button{font-family:Georgia,"Times New Roman",serif!important}
 body.theme-musket{background-color:#12171a!important}
-body.theme-musket::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;transform:translateZ(0);contain:strict;background:linear-gradient(90deg,rgba(225,225,218,.08) 0 38px,transparent 90px),linear-gradient(270deg,rgba(225,225,218,.08) 0 38px,transparent 90px),radial-gradient(ellipse 80% 40% at 30% 0%,rgba(160,180,185,.22),transparent 70%),radial-gradient(ellipse 70% 35% at 80% 5%,rgba(140,160,168,.18),transparent 70%),linear-gradient(180deg,transparent 72%,rgba(70,42,26,.55)),linear-gradient(180deg,#1d2528,#12171a)}
-body.theme-musket::after{content:"";position:fixed;top:0;left:0;width:200%;height:100%;z-index:60;pointer-events:none;background:radial-gradient(ellipse 22% 18% at 10% 70%,rgba(205,215,215,.07),transparent),radial-gradient(ellipse 18% 14% at 35% 40%,rgba(205,215,215,.06),transparent),radial-gradient(ellipse 24% 16% at 60% 80%,rgba(205,215,215,.07),transparent),radial-gradient(ellipse 20% 15% at 85% 30%,rgba(205,215,215,.06),transparent);animation:muFog 70s linear infinite}
+body.theme-musket::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;transform:translateZ(0);contain:strict;background:${line} left bottom/360px 90px repeat-x,radial-gradient(ellipse 120% 90% at 50% 40%,transparent 55%,rgba(0,0,0,.55)),linear-gradient(90deg,rgba(225,225,218,.08) 0 38px,transparent 90px),linear-gradient(270deg,rgba(225,225,218,.08) 0 38px,transparent 90px),radial-gradient(ellipse 80% 40% at 30% 0%,rgba(160,180,185,.24),transparent 70%),radial-gradient(ellipse 70% 35% at 80% 5%,rgba(140,160,168,.2),transparent 70%),radial-gradient(ellipse 60% 22% at 15% 100%,rgba(255,140,50,.16),transparent 70%),linear-gradient(180deg,transparent 70%,rgba(70,42,26,.6)),linear-gradient(180deg,#232c30,#12171a)}
+body.theme-musket::after{content:"";position:fixed;top:0;left:0;width:200%;height:100%;z-index:60;pointer-events:none;background:radial-gradient(ellipse 22% 18% at 10% 70%,rgba(205,215,215,.08),transparent),radial-gradient(ellipse 18% 14% at 35% 40%,rgba(205,215,215,.06),transparent),radial-gradient(ellipse 24% 16% at 60% 80%,rgba(205,215,215,.08),transparent),radial-gradient(ellipse 20% 15% at 85% 30%,rgba(205,215,215,.06),transparent);animation:muFog 70s linear infinite}
+html:has(body.theme-musket)::after{content:"";position:fixed;left:0;top:0;width:100%;height:calc(100% + 260px);z-index:61;pointer-events:none;opacity:.55;will-change:transform;background-image:radial-gradient(2px 2px at 30px 40px,#ffb347,transparent),radial-gradient(1.5px 1.5px at 120px 150px,#ff8a3d,transparent),radial-gradient(2px 2px at 200px 90px,#ffd27a,transparent),radial-gradient(1.5px 1.5px at 60px 220px,#ff9d4d,transparent),radial-gradient(1.5px 1.5px at 230px 200px,#ffc266,transparent);background-size:260px 260px;animation:muEmber 28s linear infinite}
 body.theme-musket .bg-darkbg,body.theme-musket .bg-darkpanel{background-color:#12171a!important}
 body.theme-musket .bg-gray-950,body.theme-musket .bg-gray-900{background-color:#161c20!important}
 body.theme-musket .bg-gray-800{background-color:#1e262b!important}
-body.theme-musket .bg-gray-700,body.theme-musket .hover\\:bg-gray-800:hover,body.theme-musket .hover\\:bg-gray-700:hover{background-color:#2a343a!important}
+body.theme-musket .bg-gray-700{background-color:#2a343a!important}
+body.theme-musket .hover\\:bg-gray-800:hover,body.theme-musket .hover\\:bg-gray-700:hover{background-color:#2a343a!important}
 body.theme-musket .border-gray-800,body.theme-musket .border-gray-700,body.theme-musket .border-gray-800\\/60{border-color:rgba(212,212,216,.28)!important}
-body.theme-musket .glass-panel{background:rgba(22,28,32,.96);border:2px solid rgba(212,212,216,.5);border-radius:10px;box-shadow:0 0 0 1px #000,inset 0 0 26px rgba(0,0,0,.55),0 8px 24px rgba(0,0,0,.5);-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+body.theme-musket .glass-panel{background:linear-gradient(180deg,rgba(30,38,43,.98),rgba(20,26,30,.98));border:2px solid rgba(214,182,86,.55);border-radius:10px;box-shadow:0 0 0 1px #000,0 0 0 4px rgba(20,26,30,.9),0 0 0 5px rgba(212,212,216,.25),inset 0 0 26px rgba(0,0,0,.55),0 10px 28px rgba(0,0,0,.6);-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 body.theme-musket .backdrop-blur-sm{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
-body.theme-musket .bg-brand-500,body.theme-musket .bg-brand-600,body.theme-musket .bg-brand-700{background-color:#243a6b!important}
+body.theme-musket .bg-brand-500,body.theme-musket .bg-brand-600,body.theme-musket .bg-brand-700{background-color:#243a6b!important;background-image:linear-gradient(180deg,rgba(255,255,255,.12),transparent 55%);border:1px solid rgba(214,182,86,.5);text-shadow:0 1px 0 #000}
 body.theme-musket .hover\\:bg-brand-500:hover,body.theme-musket .hover\\:bg-brand-600:hover{background-color:#2f4a86!important}
 body.theme-musket .text-brand-300,body.theme-musket .text-brand-400,body.theme-musket .text-brand-500{color:#e0c978!important}
 body.theme-musket .bg-brand-500\\/10,body.theme-musket .bg-brand-500\\/20,body.theme-musket .hover\\:bg-brand-500\\/20,body.theme-musket .bg-brand-600\\/30{background-color:rgba(36,58,107,.45)!important}
 body.theme-musket .border-brand-500,body.theme-musket .border-brand-500\\/20,body.theme-musket .border-brand-500\\/30,body.theme-musket .border-brand-500\\/50,body.theme-musket .focus\\:border-brand-500{border-color:rgba(224,201,120,.55)!important}
-body.theme-musket header{border-bottom:7px solid!important;border-image:linear-gradient(90deg,#3fbf3f 0 64%,#241012 64% 100%) 7!important;box-shadow:0 6px 20px rgba(0,0,0,.5)}
-body.theme-musket h1,body.theme-musket h3{color:#e8e4d4;letter-spacing:.05em;text-shadow:0 2px 0 #000,0 0 10px rgba(224,201,120,.25)}
+body.theme-musket header{background-image:linear-gradient(90deg,rgba(36,58,107,.55),rgba(155,28,28,.28))!important;border-bottom:7px solid!important;border-image:linear-gradient(90deg,#3fbf3f 0 64%,#241012 64% 100%) 7!important;box-shadow:0 6px 20px rgba(0,0,0,.55),0 1px 0 rgba(214,182,86,.5)}
+body.theme-musket h1,body.theme-musket h3{color:#e8e4d4;letter-spacing:.06em;text-shadow:0 2px 0 #000,0 0 12px rgba(224,201,120,.3)}
 body.theme-musket .msg-bubble{border-radius:6px!important}
-body.theme-musket .msg-bubble.bg-brand-600{background:linear-gradient(115deg,transparent 0 44%,rgba(232,228,212,.17) 44% 51%,transparent 51%),linear-gradient(135deg,#1a2a52,#2c4175)!important;border:1px solid rgba(232,228,212,.45)!important;box-shadow:0 2px 0 #000,0 0 14px rgba(44,65,117,.45)!important}
-body.theme-musket .msg-bubble.bg-gray-800{background:#1b2226!important;border:1px solid rgba(212,212,216,.25)!important;border-left:4px solid #a11d1d!important;box-shadow:0 2px 0 #000!important}
+body.theme-musket .msg-bubble.bg-brand-600{background:radial-gradient(circle at calc(100% - 9px) 28%,#e0c978 2.4px,#8a6d1f 3px,transparent 3.6px),radial-gradient(circle at calc(100% - 9px) 50%,#e0c978 2.4px,#8a6d1f 3px,transparent 3.6px),radial-gradient(circle at calc(100% - 9px) 72%,#e0c978 2.4px,#8a6d1f 3px,transparent 3.6px),linear-gradient(115deg,transparent 0 44%,rgba(232,228,212,.17) 44% 51%,transparent 51%),linear-gradient(135deg,#1a2a52,#2c4175)!important;border:1px solid rgba(232,228,212,.45)!important;box-shadow:0 2px 0 #000,0 0 14px rgba(44,65,117,.5)!important}
+body.theme-musket .msg-bubble.bg-gray-800{background:linear-gradient(90deg,rgba(161,29,29,.18),transparent 30%),#1b2226!important;border:1px solid rgba(212,212,216,.25)!important;border-left:4px solid #a11d1d!important;box-shadow:0 2px 0 #000!important}
+body.theme-musket input,body.theme-musket textarea{background-color:#0e1316!important;border-color:rgba(212,212,216,.3)!important;box-shadow:inset 0 2px 6px rgba(0,0,0,.6)}
 body.theme-musket button{transition:transform .12s,box-shadow .12s}
 body.theme-musket button:hover{box-shadow:0 0 0 1px rgba(232,228,212,.5)}
 body.theme-musket button:active{transform:scale(.96)}
 body.theme-musket ::selection{background:#243a6b;color:#fff}
-body.theme-musket ::-webkit-scrollbar-thumb{background:#59656b!important;border-radius:3px}
-body.theme-musket input:focus,body.theme-musket textarea:focus{border-color:#e0c978!important;box-shadow:0 0 0 2px rgba(224,201,120,.3)!important;outline:none}
-body.theme-musket .status-dot.bg-brand-500{background-color:#3fbf3f!important}
-body.theme-musket .status-dot.bg-red-500{background-color:#ef4444!important}
-body.theme-musket .status-dot.bg-blue-500{background-color:#3b82f6!important}
-#muCross{display:none;position:fixed;right:14px;bottom:14px;width:64px;height:64px;z-index:59;pointer-events:none;opacity:.16;background:${cross} center/contain no-repeat}
+body.theme-musket ::-webkit-scrollbar{width:9px;height:9px}
+body.theme-musket ::-webkit-scrollbar-track{background:rgba(0,0,0,.35)}
+body.theme-musket ::-webkit-scrollbar-thumb{background:linear-gradient(90deg,#6b5a2a,#d6b656)!important;border-radius:3px}
+body.theme-musket input:focus,body.theme-musket textarea:focus{border-color:#e0c978!important;box-shadow:0 0 0 2px rgba(224,201,120,.3),inset 0 2px 6px rgba(0,0,0,.6)!important;outline:none}
+body.theme-musket .status-dot.bg-brand-500{background-color:#3fbf3f!important;background-image:none!important;border:0}
+body.theme-musket .status-dot.bg-red-500{background-color:#ef4444!important;background-image:none!important;border:0}
+body.theme-musket .status-dot.bg-blue-500{background-color:#3b82f6!important;background-image:none!important;border:0}
+#muCross{display:none;position:fixed;right:14px;bottom:14px;width:64px;height:64px;z-index:59;pointer-events:none;opacity:.2;background:${cross} center/contain no-repeat}
 body.theme-musket #muCross{display:block}
 @keyframes muFog{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media (prefers-reduced-motion:reduce){body.theme-musket::after{animation:none}}`;
+@keyframes muEmber{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-260px,0)}}
+@media (prefers-reduced-motion:reduce){body.theme-musket::after,html:has(body.theme-musket)::after{animation:none}}`;
       document.head.appendChild(st);
       const cr = document.createElement('div'); cr.id = 'muCross'; document.body.appendChild(cr);
     })();
