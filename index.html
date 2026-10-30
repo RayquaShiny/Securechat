@@ -4075,20 +4075,40 @@ body.theme-fnaf #fnLurk2{display:block}
     THEME_COLORS.musket = '#171c1b';
     (function () {
       const cross = 'url("data:image/svg+xml,' + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g stroke-linecap='round'><path d='M14 86L84 16M86 86L16 16' stroke='#e8e4d4' stroke-width='5'/><path d='M14 86L32 68M86 86L68 68' stroke='#8f2a28' stroke-width='10'/><path d='M84 16L92 8M16 16L8 8' stroke='#c9ced3' stroke-width='3'/></g></svg>") + '")';
-      // Soldats en habit rouge (tricorne, buffleteries croisées) : une ligne proche et une ligne lointaine noyée dans la brume
+      const svgUrl = (w, h, inner) => 'url("data:image/svg+xml,' + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='" + w + "' height='" + h + "' viewBox='0 0 " + w + " " + h + "'>" + inner + "</svg>") + '")';
+      // Soldat en habit rouge : tricorne, buffleteries blanches croisées, mousquet
       const soldier = (x, y, coat, belt) => `<g transform='translate(${x} ${y})'><path d='M-9 26L0 18L9 26L0 29Z' fill='#0c0d0d'/><rect x='-4' y='28' width='8' height='7' fill='#c9a88a'/><rect x='-6' y='35' width='12' height='28' fill='${coat}'/><path d='M-5 36L5 60M5 36L-5 60' stroke='${belt}' stroke-width='2.2'/><rect x='-5' y='63' width='4.5' height='24' fill='#cfcbbb'/><rect x='.5' y='63' width='4.5' height='24' fill='#cfcbbb'/><rect x='-5' y='80' width='4.5' height='8' fill='#0c0d0d'/><rect x='.5' y='80' width='4.5' height='8' fill='#0c0d0d'/><rect x='8' y='6' width='1.8' height='82' fill='#2a2018'/><path d='M8 6l.9-9 .9 9z' fill='#c9ced3'/></g>`;
       const rank = (n, step, coat, belt, jitter) => { let o = ''; for (let i = 0; i < n; i++) o += soldier(14 + i * step, (i % 3) * jitter, coat, belt); return o; };
-      const svgUrl = (w, h, inner) => 'url("data:image/svg+xml,' + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='" + w + "' height='" + h + "' viewBox='0 0 " + w + " " + h + "'>" + inner + "</svg>") + '")';
-      const lineNear = svgUrl(420, 92, "<g opacity='.62'>" + rank(9, 46, '#8f2a28', '#e8e4d4', 3) + "</g>");
-      const lineFar = svgUrl(300, 92, "<g opacity='.3'>" + rank(10, 30, '#8f2a28', '#e8e4d4', 2) + "</g>");
-      const drizzle = svgUrl(200, 200, "<g stroke='#cfd8d4' stroke-opacity='.45' stroke-width='1'><path d='M20 10l-4 14M80 60l-4 14M150 20l-4 14M60 130l-4 14M120 100l-4 14M180 150l-4 14M30 180l-4 14'/></g>");
+      const near = svgUrl(420, 94, "<g>" + rank(9, 46, '#8f2a28', '#e8e4d4', 3) + "</g>");
+      const far = svgUrl(300, 94, "<g opacity='.8'>" + rank(10, 30, '#7a2a29', '#cfcbbb', 2) + "</g>");
+      const trees = svgUrl(520, 160, "<g fill='#38433f'><ellipse cx='40' cy='120' rx='56' ry='44'/><ellipse cx='120' cy='104' rx='40' ry='58'/><ellipse cx='210' cy='126' rx='64' ry='36'/><ellipse cx='300' cy='110' rx='46' ry='52'/><ellipse cx='390' cy='122' rx='58' ry='40'/><ellipse cx='470' cy='108' rx='42' ry='56'/></g><rect y='140' width='520' height='20' fill='#38433f'/>");
+      const mud = svgUrl(400, 240, "<g fill='#d4dcd8' fill-opacity='.32'><ellipse cx='70' cy='60' rx='60' ry='7'/><ellipse cx='250' cy='110' rx='90' ry='9'/><ellipse cx='350' cy='40' rx='38' ry='5'/><ellipse cx='130' cy='190' rx='110' ry='11'/><ellipse cx='330' cy='205' rx='50' ry='7'/></g><g fill='#17120b' fill-opacity='.5'><ellipse cx='200' cy='30' rx='24' ry='5'/><ellipse cx='20' cy='140' rx='30' ry='6'/><ellipse cx='290' cy='160' rx='26' ry='5'/></g><g stroke='#4d5a30' stroke-opacity='.7' stroke-width='2' stroke-linecap='round'><path d='M40 100l-3-9M44 100l2-8M300 70l-3-9M304 70l2-8M180 150l-3-9M184 150l2-8M360 190l-3-9M100 220l-3-9M104 220l2-8'/></g>");
+      const hero = svgUrl(200, 420, "<g><rect x='56' y='226' width='88' height='128' fill='#d9d5c4'/><rect x='100' y='226' width='2' height='128' fill='#9d9a8b'/><rect x='54' y='350' width='38' height='64' rx='4' fill='#0e0f0f'/><rect x='108' y='350' width='38' height='64' rx='4' fill='#0e0f0f'/><path d='M62 112Q100 100 138 112L152 232L48 232Z' fill='#9a2326'/><path d='M62 112Q100 100 138 112L150 140Q100 128 50 140Z' fill='#7e1a1d'/><path d='M70 108L134 230M130 108L66 230' stroke='#ece8d6' stroke-width='12'/><rect x='50' y='212' width='100' height='10' fill='#ece8d6'/><circle cx='100' cy='170' r='6' fill='#d6b656'/><rect x='34' y='186' width='22' height='34' rx='2' fill='#161616'/><path d='M44 252L174 8' stroke='#3a2a1c' stroke-width='8' stroke-linecap='round'/><path d='M124 138L174 8' stroke='#7a7e82' stroke-width='4' stroke-linecap='round'/><path d='M64 120L44 196L62 252L82 246L70 200L84 130Z' fill='#8a1f22'/><path d='M136 118L152 176L108 206L98 190L124 168L118 126Z' fill='#8a1f22'/><circle cx='88' cy='204' r='8' fill='#c4a68e'/><circle cx='60' cy='252' r='8' fill='#c4a68e'/><rect x='86' y='96' width='28' height='10' fill='#111'/><ellipse cx='100' cy='80' rx='17' ry='21' fill='#c4a68e'/><path d='M40 60L100 24L160 60L100 74Z' fill='#0d0e0e'/><path d='M40 60L100 74L160 60' stroke='#2b2d2d' stroke-width='3' fill='none'/><circle cx='100' cy='50' r='5' fill='#8f2124'/></g>");
+      const rain = svgUrl(200, 200, "<g stroke='#cfd8d4' stroke-opacity='.45' stroke-width='1'><path d='M20 10l-4 14M80 60l-4 14M150 20l-4 14M60 130l-4 14M120 100l-4 14M180 150l-4 14M30 180l-4 14'/></g>");
+      const puffs = [8, 22, 38, 54, 70, 86].map((l, i) => `<i class="mu-sm" style="left:${l}%;animation-delay:${-10 + i * .12}s"></i>`).join('');
+      const flashes = [10, 24, 40, 56, 72, 88].map((l, i) => `<i class="mu-fl" style="left:${l}%;bottom:${30 + (i % 2) * 2}%;animation-delay:${-10 + i * .12}s"></i>`).join('');
       const st = document.createElement('style');
       st.textContent = `
 body.theme-musket,body.theme-musket input,body.theme-musket textarea,body.theme-musket button{font-family:Georgia,"Times New Roman",serif!important}
 body.theme-musket{background-color:#171c1b!important}
-body.theme-musket::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;transform:translateZ(0);contain:strict;background:${lineNear} left bottom 6px/420px 92px repeat-x,linear-gradient(180deg,transparent 80%,rgba(66,52,34,.9) 91%,rgba(40,31,21,.98)),radial-gradient(ellipse 30% 3% at 25% 96%,rgba(170,180,176,.25),transparent),radial-gradient(ellipse 24% 2.5% at 70% 93%,rgba(170,180,176,.2),transparent),linear-gradient(180deg,transparent 52%,rgba(185,195,190,.22) 72%,transparent 86%),${lineFar} left bottom 74px/300px 92px repeat-x,radial-gradient(ellipse 120% 90% at 50% 40%,transparent 55%,rgba(0,0,0,.5)),radial-gradient(ellipse 90% 45% at 40% 0%,rgba(190,200,196,.3),transparent 70%),linear-gradient(180deg,#59635f,#3a4341 38%,#262d2b)}
-body.theme-musket::after{content:"";position:fixed;top:0;left:0;width:200%;height:100%;z-index:60;pointer-events:none;background:radial-gradient(ellipse 22% 18% at 10% 70%,rgba(215,222,218,.1),transparent),radial-gradient(ellipse 18% 14% at 35% 40%,rgba(215,222,218,.08),transparent),radial-gradient(ellipse 24% 16% at 60% 80%,rgba(215,222,218,.1),transparent),radial-gradient(ellipse 20% 15% at 85% 30%,rgba(215,222,218,.08),transparent);animation:muFog 80s linear infinite}
-html:has(body.theme-musket)::after{content:"";position:fixed;left:0;top:0;width:100%;height:calc(100% + 200px);z-index:61;pointer-events:none;opacity:.22;will-change:transform;background:${drizzle} 0 0/200px 200px;animation:muRain 1.6s linear infinite}
+#muScene{display:none;position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;contain:strict;transform:translateZ(0);background:#3a4341}
+body.theme-musket #muScene{display:block}
+#muScene>*{position:absolute;pointer-events:none}
+#muScene .mu-sky{inset:0;background:linear-gradient(180deg,#6a746f,#4d5754 40%,#343c3a 70%,#262c29)}
+#muScene .mu-sun{left:50%;top:6%;width:80vmax;height:50vmax;margin-left:-40vmax;background:radial-gradient(ellipse,rgba(230,236,230,.34),transparent 62%)}
+#muScene .mu-trees{left:0;right:0;bottom:26%;height:150px;opacity:.55;background:${trees} left bottom/520px 150px repeat-x}
+#muScene .mu-far{left:0;right:0;bottom:26%;height:72px;opacity:.5;background:${far} left bottom/230px 72px repeat-x}
+#muScene .mu-near{left:0;right:0;bottom:21%;height:138px;opacity:.82;background:${near} left bottom/630px 138px repeat-x}
+#muScene .mu-fog{left:0;top:30%;width:300%;height:46%;background:radial-gradient(ellipse 50% 40% at 50% 55%,rgba(215,222,218,.34),transparent 72%) 0 0/33.3333% 100% repeat-x}
+#muScene .mu-fog1{animation:muFog 90s linear infinite}
+#muScene .mu-fog2{top:55%;height:40%;opacity:.8;animation:muFog 55s linear infinite reverse}
+#muScene .mu-mud{left:0;right:0;bottom:0;height:27%;background:${mud} 0 0/400px 240px repeat,linear-gradient(180deg,#4a4030,#33291b 40%,#1f180f)}
+#muScene .mu-hero{right:2vw;bottom:-3vh;height:74vh;width:36vh;opacity:.5;filter:brightness(.82) saturate(.85);background:${hero} right bottom/contain no-repeat}
+#muScene .mu-sm{bottom:30%;width:24vmax;height:24vmax;margin-left:-12vmax;border-radius:50%;opacity:0;background:radial-gradient(circle,rgba(236,240,236,.55),rgba(205,212,208,.22) 45%,transparent 68%);animation:muPuff 14s ease-out infinite}
+#muScene .mu-fl{width:46px;height:46px;margin-left:-23px;border-radius:50%;opacity:0;background:radial-gradient(circle,#fff4c4,#ff9a3c 40%,transparent 70%);animation:muFl 14s linear infinite}
+#muScene .mu-flash{inset:0;opacity:0;background:radial-gradient(ellipse 90% 40% at 50% 70%,rgba(255,170,80,.45),transparent 70%);animation:muSkyFl 14s linear infinite;animation-delay:-10s}
+#muScene .mu-vig{inset:0;background:radial-gradient(ellipse 120% 95% at 50% 42%,transparent 52%,rgba(0,0,0,.6))}
+html:has(body.theme-musket)::after{content:"";position:fixed;left:0;top:0;width:100%;height:calc(100% + 200px);z-index:61;pointer-events:none;opacity:.22;will-change:transform;background:${rain} 0 0/200px 200px;animation:muRain 1.6s linear infinite}
 body.theme-musket .bg-darkbg,body.theme-musket .bg-darkpanel{background-color:#161b1a!important}
 body.theme-musket .bg-gray-950,body.theme-musket .bg-gray-900{background-color:#1a201e!important}
 body.theme-musket .bg-gray-800{background-color:#232a27!important}
@@ -4102,8 +4122,8 @@ body.theme-musket .hover\\:bg-brand-500:hover,body.theme-musket .hover\\:bg-bran
 body.theme-musket .text-brand-300,body.theme-musket .text-brand-400,body.theme-musket .text-brand-500{color:#e3cf8e!important}
 body.theme-musket .bg-brand-500\\/10,body.theme-musket .bg-brand-500\\/20,body.theme-musket .hover\\:bg-brand-500\\/20,body.theme-musket .bg-brand-600\\/30{background-color:rgba(143,33,36,.4)!important}
 body.theme-musket .border-brand-500,body.theme-musket .border-brand-500\\/20,body.theme-musket .border-brand-500\\/30,body.theme-musket .border-brand-500\\/50,body.theme-musket .focus\\:border-brand-500{border-color:rgba(227,207,142,.55)!important}
-body.theme-musket header{background-image:linear-gradient(90deg,rgba(143,33,36,.45),rgba(60,72,64,.3))!important;border-bottom:7px solid!important;border-image:linear-gradient(90deg,#3fbf3f 0 64%,#241012 64% 100%) 7!important;box-shadow:0 6px 20px rgba(0,0,0,.55),0 1px 0 rgba(214,190,120,.5)}
-body.theme-musket h1,body.theme-musket h3{color:#ece8d6;letter-spacing:.06em;text-shadow:0 2px 0 #000,0 0 12px rgba(227,207,142,.28)}
+body.theme-musket header{background-image:linear-gradient(90deg,rgba(143,33,36,.5),rgba(60,72,64,.3))!important;border-bottom:7px solid!important;border-image:linear-gradient(90deg,#3fbf3f 0 64%,#241012 64% 100%) 7!important;box-shadow:0 6px 20px rgba(0,0,0,.55),0 1px 0 rgba(214,190,120,.5)}
+body.theme-musket h1,body.theme-musket h3{color:#ece8d6;letter-spacing:.07em;font-variant:small-caps;text-shadow:0 2px 0 #000,0 0 12px rgba(227,207,142,.28)}
 body.theme-musket .msg-bubble{border-radius:6px!important}
 body.theme-musket .msg-bubble.bg-brand-600{background:radial-gradient(circle at calc(100% - 9px) 28%,#e3cf8e 2.4px,#8a6d1f 3px,transparent 3.6px),radial-gradient(circle at calc(100% - 9px) 50%,#e3cf8e 2.4px,#8a6d1f 3px,transparent 3.6px),radial-gradient(circle at calc(100% - 9px) 72%,#e3cf8e 2.4px,#8a6d1f 3px,transparent 3.6px),linear-gradient(60deg,transparent 0 46%,rgba(236,232,214,.2) 46% 52%,transparent 52%),linear-gradient(120deg,transparent 0 46%,rgba(236,232,214,.2) 46% 52%,transparent 52%),linear-gradient(135deg,#7a1b1e,#a82a2d)!important;border:1px solid rgba(236,232,214,.5)!important;box-shadow:0 2px 0 #000,0 0 14px rgba(143,33,36,.45)!important}
 body.theme-musket .msg-bubble.bg-gray-800{background:linear-gradient(90deg,rgba(236,232,214,.1),transparent 30%),#1e2522!important;border:1px solid rgba(205,208,196,.25)!important;border-left:4px solid #d8d4c0!important;box-shadow:0 2px 0 #000!important}
@@ -4121,11 +4141,17 @@ body.theme-musket .status-dot.bg-red-500{background-color:#ef4444!important;back
 body.theme-musket .status-dot.bg-blue-500{background-color:#3b82f6!important;background-image:none!important;border:0}
 #muCross{display:none;position:fixed;right:14px;bottom:14px;width:64px;height:64px;z-index:59;pointer-events:none;opacity:.22;background:${cross} center/contain no-repeat}
 body.theme-musket #muCross{display:block}
-@keyframes muFog{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes muFog{from{transform:translateX(0)}to{transform:translateX(-33.3333%)}}
 @keyframes muRain{from{transform:translate3d(0,-200px,0)}to{transform:translate3d(0,0,0)}}
-@media (prefers-reduced-motion:reduce){body.theme-musket::after,html:has(body.theme-musket)::after{animation:none}}`;
+@keyframes muPuff{0%,92%{opacity:0;transform:translateY(0) scale(.3)}94%{opacity:.75}100%{opacity:0;transform:translateY(-24vh) scale(1.7)}}
+@keyframes muFl{0%,92.5%{opacity:0}93%{opacity:1}95%{opacity:.25}96%,100%{opacity:0}}
+@keyframes muSkyFl{0%,92.5%{opacity:0}93.2%{opacity:.9}97%{opacity:.15}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){#muScene *,html:has(body.theme-musket)::after{animation:none!important}}`;
       document.head.appendChild(st);
       const cr = document.createElement('div'); cr.id = 'muCross'; document.body.appendChild(cr);
+      const sc = document.createElement('div'); sc.id = 'muScene';
+      sc.innerHTML = '<div class="mu-sky"></div><div class="mu-sun"></div><div class="mu-trees"></div><div class="mu-far"></div><div class="mu-fog mu-fog1"></div><div class="mu-near"></div>' + flashes + puffs + '<div class="mu-hero"></div><div class="mu-fog mu-fog2"></div><div class="mu-mud"></div><div class="mu-flash"></div><div class="mu-vig"></div>';
+      document.body.insertBefore(sc, document.body.firstChild);
     })();
     function showMusketScreen() {
       const old = document.getElementById('muskOv'); if (old) old.remove();
