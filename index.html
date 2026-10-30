@@ -3797,9 +3797,23 @@ body.theme-fnaf #fnLurk{display:block}
 @keyframes fnSweep{0%{left:-70px}60%,100%{left:110%}}
 @keyframes fnPeek{0%,68%{transform:translateY(115%) scale(1)}76%{transform:translateY(8%)}80%{transform:translateY(0) scale(1.05)}82%{transform:translateY(-4%) scale(1.7)}85%{transform:translateY(0) scale(1)}92%{transform:translateY(0)}100%{transform:translateY(115%)}}
 @keyframes fnRing{0%,100%{box-shadow:0 0 0 2px #fcd34d,0 0 6px rgba(220,38,38,.4)}50%{box-shadow:0 0 0 2px #fde68a,0 0 14px rgba(239,68,68,.9)}}
-@media (prefers-reduced-motion:reduce){.deco-fnaf::before,.deco-fnaf::after,.deco-fnaf .av,#fnLurk,body.theme-fnaf::after{animation:none}}`;
+body.theme-fnaf ::-webkit-scrollbar{width:9px}
+body.theme-fnaf ::-webkit-scrollbar-track{background:#0b0705}
+body.theme-fnaf ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#fcd34d,#b45309)!important;border-radius:6px;border:1px solid #0b0705}
+body.theme-fnaf button{transition:transform .15s,box-shadow .15s,background-color .15s}
+body.theme-fnaf button:hover{box-shadow:0 0 14px rgba(252,211,77,.35)}
+body.theme-fnaf button:active{transform:scale(.96)}
+body.theme-fnaf input:focus,body.theme-fnaf textarea:focus{box-shadow:0 0 0 2px rgba(252,211,77,.4),0 0 16px rgba(252,211,77,.25)!important}
+body.theme-fnaf .hover\\:bg-gray-800:hover{box-shadow:inset 3px 0 0 #fcd34d}
+body.theme-fnaf .msg-bubble{transition:filter .2s}
+body.theme-fnaf .msg-bubble:hover{filter:brightness(1.12)}
+#fnLurk2{display:none;position:fixed;right:3vw;bottom:14px;width:70px;height:26px;z-index:59;pointer-events:none;opacity:0;background:radial-gradient(ellipse 9px 5px at 22px 13px,#e9d5ff 0 40%,#c026d3 70%,transparent 100%),radial-gradient(ellipse 9px 5px at 48px 13px,#e9d5ff 0 40%,#c026d3 70%,transparent 100%);filter:drop-shadow(0 0 7px #c026d3);animation:fnLurk2 19s infinite}
+body.theme-fnaf #fnLurk2{display:block}
+@keyframes fnLurk2{0%,40%{opacity:0}42%,46%{opacity:.9}47%{opacity:0}49%,53%{opacity:.9}55%,100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.deco-fnaf::before,.deco-fnaf::after,.deco-fnaf .av,#fnLurk,#fnLurk2,body.theme-fnaf::after{animation:none}}`;
       document.head.appendChild(st2);
       const lk = document.createElement('div'); lk.id = 'fnLurk'; document.body.appendChild(lk);
+      const lk2 = document.createElement('div'); lk2.id = 'fnLurk2'; document.body.appendChild(lk2);
 
       const rg = (x, y, r0, r1, a) => { const g = c.createRadialGradient(x, y, r0, x, y, r1); a.forEach(v => g.addColorStop(v[0], v[1])); return g; };
       const lg = (x0, y0, x1, y1, a) => { const g = c.createLinearGradient(x0, y0, x1, y1); a.forEach(v => g.addColorStop(v[0], v[1])); return g; };
