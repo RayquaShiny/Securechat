@@ -621,40 +621,86 @@
   </div>
 
   <!-- PANNEAU ADMIN -->
-  <div id="adminModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="w-full max-w-md glass-panel p-6 rounded-2xl border border-amber-500/20 space-y-4 max-h-[85vh] overflow-y-auto">
-      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-        <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2"><i data-lucide="user-cog" class="w-4 h-4"></i><span>Gestionnaire des Comptes</span></h3>
-        <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+  <div id="adminModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4" onclick="if(event.target===this)closeAdminModal()">
+    <div class="w-full max-w-2xl glass-panel rounded-2xl border border-amber-500/20 flex flex-col max-h-[90vh] overflow-hidden">
+      <div class="px-4 sm:px-5 pt-4 pb-3 border-b border-gray-800 shrink-0 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2"><i data-lucide="user-cog" class="w-4 h-4"></i><span>Centre d'administration</span></h3>
+          <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white" title="Fermer"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <div id="adminStats" class="grid grid-cols-4 gap-2"></div>
+        <div id="adminTabs" class="flex gap-1 overflow-x-auto pb-1">
+          <button data-tab="users" onclick="adminSetTab('users')">Comptes</button>
+          <button data-tab="create" data-owner="1" onclick="adminSetTab('create')">Créer</button>
+          <button data-tab="roles" data-owner="1" onclick="adminSetTab('roles')">Rôles</button>
+          <button data-tab="banned" onclick="adminSetTab('banned')">Bannis</button>
+          <button data-tab="log" onclick="adminSetTab('log')">Journal</button>
+        </div>
       </div>
-      <form id="createUserForm" onsubmit="handleCreateUser(event)" class="space-y-3">
-        <div><label class="block text-xs text-gray-400 mb-1">Identifiant</label>
-          <input type="text" id="newUsername" required placeholder="ex: alex" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500"></div>
-        <div><label class="block text-xs text-gray-400 mb-1">Nom d'affichage</label>
-          <input type="text" id="newDisplayName" required placeholder="ex: Alex M." class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500"></div>
-        <div><label class="block text-xs text-gray-400 mb-1">Mot de passe</label>
-          <input type="password" id="newPassword" required placeholder="••••••••" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500"></div>
-        <div><label class="block text-xs text-gray-400 mb-1">Rôle</label>
-          <select id="newRole" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
-            <option value="b:Membre">Membre</option>
-            <option value="b:Ami">Ami</option>
-            <option value="b:Admin">Admin (modérateur)</option>
-            <option value="b:Testeur">Testeur (modérateur)</option>
-          </select></div>
-        <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs rounded-xl transition">Créer le Compte</button>
-      </form>
-      <div id="rolesManager" class="hidden pt-3 border-t border-gray-800 space-y-2">
-        <p class="text-[11px] font-bold text-gray-400 uppercase">Rôles personnalisés</p>
-        <form onsubmit="handleCreateRole(event)" class="flex items-center gap-2">
-          <input type="text" id="newRoleName" maxlength="24" required placeholder="ex: VIP" class="flex-1 min-w-0 py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
-          <input type="color" id="newRoleColor" value="#a855f7" class="w-9 h-9 p-0.5 bg-gray-900 border border-gray-700 rounded-lg cursor-pointer">
-          <button type="submit" class="px-3 py-2 bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs rounded-xl transition">Créer</button>
-        </form>
-        <div id="rolesList" class="flex flex-wrap gap-2"></div>
-      </div>
-      <div class="pt-3 border-t border-gray-800">
-        <p class="text-[11px] font-bold text-gray-400 uppercase mb-2">Comptes enregistrés</p>
-        <div id="adminUsersList" class="space-y-2 text-xs max-h-48 overflow-y-auto"></div>
+
+      <div class="flex-1 overflow-y-auto p-4 sm:p-5">
+        <section id="adminTab-users" class="space-y-3">
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input id="adminSearch" type="search" oninput="renderAdminUsers()" placeholder="Rechercher un compte…" class="flex-1 min-w-0 py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
+            <div id="adminFilters" class="flex gap-1 shrink-0"></div>
+          </div>
+          <p id="adminCount" class="text-[11px] text-gray-500"></p>
+          <div id="adminUsersList" class="space-y-2 text-xs"></div>
+        </section>
+
+        <section id="adminTab-create" class="hidden space-y-4">
+          <form id="createUserForm" onsubmit="handleCreateUser(event)" class="space-y-3">
+            <div>
+              <label class="block text-xs text-gray-400 mb-1">Identifiant</label>
+              <input type="text" id="newUsername" required autocomplete="off" oninput="adminCheckUsername()" placeholder="ex: alex" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
+              <p id="newUsernameHint" class="mt-1 text-[11px] text-gray-500">2 à 30 caractères : lettres minuscules, chiffres, - ou _.</p>
+            </div>
+            <div>
+              <label class="block text-xs text-gray-400 mb-1">Nom d'affichage</label>
+              <input type="text" id="newDisplayName" required placeholder="ex: Alex M." class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
+            </div>
+            <div>
+              <label class="block text-xs text-gray-400 mb-1">Mot de passe</label>
+              <div class="flex gap-2">
+                <input type="password" id="newPassword" required minlength="6" autocomplete="new-password" placeholder="6 caractères minimum" class="flex-1 min-w-0 py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
+                <button type="button" id="newPassToggle" onclick="adminTogglePass()" class="px-3 py-2 text-[11px] rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 transition">Afficher</button>
+                <button type="button" onclick="adminGenPass()" class="px-3 py-2 text-[11px] rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 transition">Générer</button>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs text-gray-400 mb-1">Rôle</label>
+              <select id="newRole" class="w-full py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
+                <option value="b:Membre">Membre</option>
+                <option value="b:Ami">Ami</option>
+                <option value="b:Admin">Admin (modérateur)</option>
+                <option value="b:Testeur">Testeur (modérateur)</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs rounded-xl transition disabled:opacity-50">Créer le compte</button>
+          </form>
+          <div id="createdCard" class="hidden"></div>
+        </section>
+
+        <section id="adminTab-roles" class="hidden">
+          <div id="rolesManager" class="space-y-3">
+            <p class="text-[11px] text-gray-400">Crée des rôles colorés, puis attribue-les depuis l'onglet Comptes.</p>
+            <form onsubmit="handleCreateRole(event)" class="flex items-center gap-2">
+              <input type="text" id="newRoleName" maxlength="24" required oninput="adminRolePreview()" placeholder="ex: VIP" class="flex-1 min-w-0 py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500">
+              <input type="color" id="newRoleColor" value="#a855f7" oninput="adminRolePreview()" class="w-9 h-9 p-0.5 bg-gray-900 border border-gray-700 rounded-lg cursor-pointer">
+              <button type="submit" class="px-3 py-2 bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs rounded-xl transition">Créer</button>
+            </form>
+            <div class="flex items-center gap-2 text-[11px] text-gray-500"><span>Aperçu :</span><span id="rolePreview"></span></div>
+            <div id="rolesList" class="flex flex-wrap gap-2"></div>
+          </div>
+        </section>
+
+        <section id="adminTab-banned" class="hidden">
+          <div id="adminBannedList" class="space-y-2 text-xs"></div>
+        </section>
+
+        <section id="adminTab-log" class="hidden">
+          <div id="adminLogList" class="space-y-2 text-xs"></div>
+        </section>
       </div>
     </div>
   </div>
@@ -2139,7 +2185,7 @@
       ids.forEach(id => {
         const wrap = document.createElement('span');
         wrap.className = 'inline-flex items-center gap-1';
-        wrap.innerHTML = customBadgeHtml({ customRole: id }, 'text-[10px]') + '<button class="text-red-400 hover:text-red-300 text-xs" title="Supprimer ce rôle">✕</button>';
+        wrap.innerHTML = customBadgeHtml({ customRole: id }, 'text-[10px]') + '<span class="text-[10px] text-gray-500">×' + Object.values(accounts).filter(a => a && a.customRole === id).length + '</span><button class="text-red-400 hover:text-red-300 text-xs" title="Supprimer ce rôle">✕</button>';
         wrap.querySelector('button').onclick = () => deleteRole(id);
         el.appendChild(wrap);
       });
@@ -2502,16 +2548,259 @@
       try { await auth.signOut(); } catch (e) {}
     }
 
+    // ===== Centre d'administration : onglets, stats, sanctions rapides, bannis, journal =====
+    const ABTN = 'px-2.5 py-1.5 text-[11px] rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 transition';
+    const ADMIN_TABS = ['users', 'create', 'roles', 'banned', 'log'];
+    const ADMIN_OWNER_TABS = ['create', 'roles'];
+    let adminTab = 'users', adminFilter = 'all', adminTimer = null;
+    const adminOpen = new Set();
+    const isOwnerMe = () => !!(currentUser && currentUser.role === 'Owner');
+
     function openAdminModal() {
-      if (currentUser && (isStaffRole(currentUser.role))) {
-        document.getElementById('adminModal').classList.remove('hidden');
-        document.getElementById('createUserForm').classList.toggle('hidden', currentUser.role !== 'Owner');
-        document.getElementById('rolesManager').classList.toggle('hidden', currentUser.role !== 'Owner');
-        renderRolesList();
-        updateAdminUsersList();
-      }
+      if (!currentUser || !isStaffRole(currentUser.role)) return;
+      document.getElementById('adminModal').classList.remove('hidden');
+      renderRolesList();
+      adminSetTab(adminTab);
+      clearInterval(adminTimer);
+      adminTimer = setInterval(adminTick, 1000);
     }
-    function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
+    function closeAdminModal() {
+      const m = document.getElementById('adminModal');
+      if (m) m.classList.add('hidden');
+      clearInterval(adminTimer); adminTimer = null;
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      const m = document.getElementById('adminModal');
+      if (m && !m.classList.contains('hidden')) closeAdminModal();
+    });
+
+    function adminSetTab(t) {
+      if (!ADMIN_TABS.includes(t) || (ADMIN_OWNER_TABS.includes(t) && !isOwnerMe())) t = 'users';
+      adminTab = t;
+      ADMIN_TABS.forEach(x => document.getElementById('adminTab-' + x).classList.toggle('hidden', x !== t));
+      document.querySelectorAll('#adminTabs [data-tab]').forEach(b => {
+        const hide = b.dataset.owner === '1' && !isOwnerMe();
+        const on = b.dataset.tab === t;
+        b.className = 'px-3 py-1.5 text-xs rounded-lg border whitespace-nowrap transition ' +
+          (on ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-semibold' : 'text-gray-400 border-transparent hover:bg-gray-800 hover:text-gray-200') +
+          (hide ? ' hidden' : '');
+      });
+      renderAdminStats();
+      if (t === 'users') renderAdminUsers();
+      else if (t === 'banned') renderAdminBanned();
+      else if (t === 'log') renderAdminLog();
+      else if (t === 'roles') { renderRolesList(); adminRolePreview(); }
+      else if (t === 'create') adminCheckUsername();
+    }
+
+    const adminIsOnline = k => { const s = userStatuses[k]; return !!(s && s.state === 'online'); };
+    const adminMutedLeft = a => (a && a.mutedUntil && a.mutedUntil > Date.now() ? Math.ceil((a.mutedUntil - Date.now()) / 1000) : 0);
+    function fmtLeft(s) {
+      s = Math.max(0, Math.ceil(s));
+      const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), r = s % 60;
+      return h ? h + ' h ' + String(m).padStart(2, '0') + ' min' : m ? m + ' min ' + String(r).padStart(2, '0') + ' s' : r + ' s';
+    }
+    function fmtDur(s) { return s % 3600 === 0 ? (s / 3600) + ' h' : s % 60 === 0 ? (s / 60) + ' min' : s + ' s'; }
+    function canSanction(k) {
+      const a = accounts[k];
+      if (!a || !currentUser || !isStaffRole(currentUser.role)) return false;
+      if (k === 'rayqua' || k === meKey) return false;
+      if (k === 'ee' && !isOwnerMe()) return false;
+      if (a.role === 'Owner' && !isOwnerMe()) return false;
+      return true;
+    }
+
+    function renderAdminStats() {
+      const el = document.getElementById('adminStats'); if (!el) return;
+      const ks = Object.keys(accounts).filter(k => accounts[k]);
+      const cards = [
+        ['Comptes', ks.length, 'text-gray-100'],
+        ['En ligne', ks.filter(adminIsOnline).length, 'text-emerald-300'],
+        ['Muets', ks.filter(k => adminMutedLeft(accounts[k])).length, 'text-blue-300'],
+        ['Staff', ks.filter(k => isStaffRole(accounts[k].role)).length, 'text-amber-300']
+      ];
+      el.innerHTML = cards.map(c => `<div class="rounded-xl bg-gray-900 border border-gray-800 px-3 py-2"><p class="text-lg font-bold leading-none ${c[2]}">${c[1]}</p><p class="text-[10px] text-gray-400 mt-1">${c[0]}</p></div>`).join('');
+    }
+
+    function renderAdminFilters() {
+      const f = [['all', 'Tous'], ['online', 'En ligne'], ['staff', 'Staff'], ['muted', 'Muets']];
+      const el = document.getElementById('adminFilters');
+      el.innerHTML = f.map(([id, l]) => `<button data-f="${id}" class="px-2.5 py-1.5 text-[11px] rounded-lg border transition ${adminFilter === id ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'text-gray-400 border-gray-700 hover:bg-gray-800'}">${l}</button>`).join('');
+      el.querySelectorAll('[data-f]').forEach(b => { b.onclick = () => { adminFilter = b.dataset.f; renderAdminUsers(); }; });
+    }
+
+    function renderAdminUsers() {
+      const box = document.getElementById('adminUsersList'); if (!box) return;
+      renderAdminFilters();
+      const q = (document.getElementById('adminSearch').value || '').trim().toLowerCase();
+      const rank = r => (r === 'Owner' ? 0 : r === 'Admin' ? 1 : r === 'Testeur' ? 2 : 3);
+      const ks = Object.keys(accounts).filter(k => {
+        const a = accounts[k]; if (!a) return false;
+        if (q && !(String(a.name || '').toLowerCase().includes(q) || k.includes(q))) return false;
+        if (adminFilter === 'online') return adminIsOnline(k);
+        if (adminFilter === 'staff') return isStaffRole(a.role);
+        if (adminFilter === 'muted') return !!adminMutedLeft(a);
+        return true;
+      }).sort((a, b) => rank(accounts[a].role) - rank(accounts[b].role) || (adminIsOnline(b) - adminIsOnline(a)) || String(accounts[a].name).localeCompare(String(accounts[b].name)));
+      document.getElementById('adminCount').textContent = ks.length + (ks.length > 1 ? ' comptes' : ' compte');
+      box.innerHTML = '';
+      if (!ks.length) { box.innerHTML = '<p class="text-center text-gray-500 py-6">Aucun compte ne correspond.</p>'; return; }
+      ks.forEach(k => box.appendChild(adminUserCard(k)));
+      lucide.createIcons();
+    }
+
+    function adminUserCard(k) {
+      const a = accounts[k], on = adminIsOnline(k), left = adminMutedLeft(a), st = userStatuses[k];
+      const open = adminOpen.has(k), sanction = canSanction(k);
+      const card = document.createElement('div');
+      card.className = 'rounded-xl bg-gray-900 border border-gray-800 p-3';
+      const sub = left
+        ? `<span class="text-blue-300">🔇 Muet · <span data-mute="${a.mutedUntil}">${fmtLeft(left)}</span></span>`
+        : on ? '<span class="text-emerald-300">● En ligne</span>'
+        : (st && st.at ? `<span class="text-gray-400">🕒 Vu le ${fmtDateTime(st.at)}</span>` : '<span class="text-gray-500">Jamais vu</span>');
+      const roleCtl = (isOwnerMe() && k !== 'rayqua' && a.role !== 'Owner')
+        ? `<select data-role-sel="1" class="text-[11px] py-1 px-1.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-200 outline-none max-w-[120px]">${roleOptionsHtml(roleSelectValue(a))}</select>`
+        : roleBadgeFor(a, 'text-[10px]');
+      const muteRow = `<div class="flex flex-wrap items-center gap-1.5"><span class="text-[11px] text-gray-400 mr-1">Rendre muet :</span>${[60, 600, 3600, 86400].map(s => `<button data-mute-sec="${s}" class="${ABTN}">${fmtDur(s)}</button>`).join('')}${left ? '<button data-act="unmute" class="px-2.5 py-1.5 text-[11px] rounded-lg bg-blue-500/20 text-blue-300 border border-blue-500/30 transition">Lever le mute</button>' : ''}</div><button data-act="ban" class="px-2.5 py-1.5 text-[11px] rounded-lg bg-red-500/15 hover:bg-red-500/25 text-red-300 border border-red-500/30 transition flex items-center gap-1"><i data-lucide="ban" class="w-3.5 h-3.5"></i>Bannir ce compte</button>`;
+      card.innerHTML = `
+        <div class="flex items-center gap-3">
+          <div class="relative shrink-0">${avatarHtml(k, 'w-9 h-9', 'text-sm')}<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-gray-900 ${left ? 'bg-blue-400' : on ? 'bg-emerald-400' : 'bg-gray-600'}"></span></div>
+          <div class="min-w-0 flex-1">
+            <p class="font-bold text-gray-200 truncate">${esc(a.name)} <span class="text-[10px] font-normal text-gray-500">(${esc(a.username || k)})</span>${k === 'ee' ? ' <span class="text-[10px] text-amber-400">🔒</span>' : ''}</p>
+            <p class="text-[11px] leading-snug truncate">${sub}</p>
+          </div>
+          <div class="shrink-0">${roleCtl}</div>
+          <button data-toggle="1" class="p-1 text-gray-400 hover:text-white rounded shrink-0" title="Actions"><i data-lucide="${open ? 'chevron-up' : 'chevron-down'}" class="w-4 h-4"></i></button>
+        </div>
+        <div class="${open ? '' : 'hidden'} mt-3 pt-3 border-t border-gray-800 space-y-2">
+          <div class="flex flex-wrap gap-2">
+            <button data-act="prof" class="${ABTN}">Fiche</button>
+            ${k !== meKey ? `<button data-act="dm" class="${ABTN}">Message privé</button>` : ''}
+          </div>
+          ${sanction ? muteRow : '<p class="text-[11px] text-gray-500">Compte protégé : aucune sanction possible.</p>'}
+        </div>`;
+      card.querySelector('[data-toggle]').onclick = () => { if (adminOpen.has(k)) adminOpen.delete(k); else adminOpen.add(k); renderAdminUsers(); };
+      const sel = card.querySelector('[data-role-sel]');
+      if (sel) sel.addEventListener('change', () => setUserRole(k, sel.value));
+      card.querySelectorAll('[data-act]').forEach(b => {
+        b.onclick = () => {
+          const act = b.dataset.act;
+          if (act === 'prof') openProfile(k);
+          else if (act === 'dm') { closeAdminModal(); openDm(k); }
+          else if (act === 'unmute') adminUnmute(k);
+          else if (act === 'ban') deleteUser(k);
+        };
+      });
+      card.querySelectorAll('[data-mute-sec]').forEach(b => { b.onclick = () => adminMute(k, Number(b.dataset.muteSec)); });
+      return card;
+    }
+
+    function adminMute(k, sec) {
+      const a = accounts[k];
+      if (!a || !canSanction(k) || !(sec > 0)) return;
+      db.ref('accounts/' + k + '/mutedUntil').set(Date.now() + sec * 1000)
+        .then(() => { sendSystemMessage(`${a.name} a été rendu muet pour ${fmtDur(sec)} par ${currentUser.name}.`, false); showToast(a.name + ' est muet pour ' + fmtDur(sec)); })
+        .catch(err => alert('Mute impossible : ' + (err.code || err.message)));
+    }
+    function adminUnmute(k) {
+      const a = accounts[k];
+      if (!a || !canSanction(k)) return;
+      db.ref('accounts/' + k + '/mutedUntil').remove()
+        .then(() => { sendSystemMessage(`${a.name} n'est plus muet (levé par ${currentUser.name}).`, false); showToast('Mute levé pour ' + a.name); })
+        .catch(err => alert('Action impossible : ' + (err.code || err.message)));
+    }
+    function adminTick() {
+      let expired = false;
+      document.querySelectorAll('#adminModal [data-mute]').forEach(el => {
+        const left = (Number(el.dataset.mute) - Date.now()) / 1000;
+        if (left <= 0) expired = true; else el.textContent = fmtLeft(left);
+      });
+      if (expired) updateAdminUsersList();
+    }
+    function updateAdminUsersList() {
+      const m = document.getElementById('adminModal');
+      if (!m || m.classList.contains('hidden')) return;
+      renderAdminStats();
+      if (adminTab === 'users') renderAdminUsers();
+      else if (adminTab === 'log') renderAdminLog();
+    }
+
+    async function renderAdminBanned() {
+      const box = document.getElementById('adminBannedList'); if (!box) return;
+      box.innerHTML = '<p class="text-gray-500 py-4 text-center">Chargement…</p>';
+      let keys = [];
+      try { keys = Object.keys((await db.ref('banned').once('value')).val() || {}).sort(); }
+      catch (e) { box.innerHTML = `<p class="text-red-300 py-4 text-center">Lecture impossible : ${esc(e.code || e.message)}</p>`; return; }
+      if (adminTab !== 'banned') return;
+      if (!keys.length) { box.innerHTML = '<p class="text-gray-500 py-6 text-center">Aucun compte banni.</p>'; return; }
+      box.innerHTML = `<p class="text-[11px] text-gray-500">${keys.length} identifiant${keys.length > 1 ? 's' : ''} banni${keys.length > 1 ? 's' : ''}. Recréer un compte avec le même identifiant lève le bannissement.</p>`;
+      keys.forEach(k => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between gap-2 p-2.5 bg-gray-900 rounded-xl border border-gray-800';
+        row.innerHTML = `<span class="flex items-center gap-2 text-gray-200 min-w-0"><span>⛔</span><span class="font-mono truncate">${esc(k)}</span></span>` + (isOwnerMe() ? `<button class="${ABTN}">Recréer…</button>` : '');
+        const b = row.querySelector('button'); if (b) b.onclick = () => adminPrefillCreate(k);
+        box.appendChild(row);
+      });
+    }
+    function adminPrefillCreate(k) {
+      adminSetTab('create');
+      document.getElementById('newUsername').value = k;
+      adminCheckUsername();
+      document.getElementById('newDisplayName').focus();
+    }
+
+    function renderAdminLog() {
+      const box = document.getElementById('adminLogList'); if (!box) return;
+      const list = messagesList.filter(m => m && m.isSystem).sort((a, b) => Number(b.id || 0) - Number(a.id || 0)).slice(0, 50);
+      if (!list.length) { box.innerHTML = '<p class="text-gray-500 py-6 text-center">Aucune sanction récente.</p>'; return; }
+      box.innerHTML = '<p class="text-[11px] text-gray-500">Dernières sanctions annoncées dans les salons.</p>' + list.map(m =>
+        `<div class="flex items-start gap-2 p-2.5 bg-gray-900 rounded-xl border border-gray-800"><span class="shrink-0">${m.isBan ? '⛔' : '🔇'}</span><div class="min-w-0 flex-1"><p class="text-gray-200 break-words">${esc(m.text)}</p><p class="text-[10px] text-gray-500 mt-0.5">${esc(msgStamp(m))}</p></div></div>`
+      ).join('');
+    }
+
+    function adminCheckUsername() {
+      const inp = document.getElementById('newUsername'), h = document.getElementById('newUsernameHint');
+      if (!inp || !h) return;
+      const v = inp.value.trim().toLowerCase();
+      const set = (cls, txt) => { h.className = 'mt-1 text-[11px] ' + cls; h.textContent = txt; };
+      if (!v) set('text-gray-500', '2 à 30 caractères : lettres minuscules, chiffres, - ou _.');
+      else if (!/^[a-z0-9_-]{2,30}$/.test(v)) set('text-red-300', 'Format invalide : 2 à 30 caractères, a-z, 0-9, - ou _.');
+      else if (accounts[v]) set('text-red-300', 'Cet identifiant existe déjà.');
+      else set('text-emerald-300', 'Identifiant disponible.');
+    }
+    function adminTogglePass() {
+      const i = document.getElementById('newPassword'), b = document.getElementById('newPassToggle');
+      const show = i.type === 'password';
+      i.type = show ? 'text' : 'password';
+      b.textContent = show ? 'Masquer' : 'Afficher';
+    }
+    function adminGenPass() {
+      const cs = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      const buf = new Uint32Array(12); crypto.getRandomValues(buf);
+      const i = document.getElementById('newPassword');
+      i.value = Array.from(buf, n => cs[n % cs.length]).join('');
+      i.type = 'text';
+      document.getElementById('newPassToggle').textContent = 'Masquer';
+    }
+    function adminShowCreated(key, pass, roleName) {
+      const c = document.getElementById('createdCard'); if (!c) return;
+      c.classList.remove('hidden');
+      c.innerHTML = `<div class="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 space-y-2"><p class="text-xs font-bold text-emerald-300">Compte créé · ${esc(roleName)}</p><div class="font-mono text-[12px] text-gray-100 bg-gray-900 rounded-lg p-2 select-all break-all">Identifiant : ${esc(key)}<br>Mot de passe : ${esc(pass)}</div><div class="flex flex-wrap items-center gap-2"><button type="button" id="copyCreds" class="${ABTN}">Copier</button><span class="text-[11px] text-gray-400">Transmets-les à la personne : le mot de passe ne sera plus affiché.</span></div></div>`;
+      document.getElementById('copyCreds').onclick = () => {
+        const txt = 'Identifiant : ' + key + '\nMot de passe : ' + pass;
+        (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => showToast('Identifiants copiés')).catch(() => showToast('Copie impossible : sélectionne le texte'));
+      };
+      const i = document.getElementById('newPassword'); i.type = 'password';
+      document.getElementById('newPassToggle').textContent = 'Afficher';
+      adminCheckUsername();
+    }
+    function adminRolePreview() {
+      const el = document.getElementById('rolePreview'); if (!el) return;
+      const n = (document.getElementById('newRoleName').value || '').trim() || 'Aperçu';
+      const c = safeColor(document.getElementById('newRoleColor').value);
+      el.innerHTML = `<span class="text-[10px] px-1.5 py-0.5 rounded font-semibold" style="color:${c};background:${c}22;border:1px solid ${c}55">${esc(n)}</span>`;
+    }
     function openChangelogModal() { document.getElementById('changelogModal').classList.remove('hidden'); }
     function closeChangelogModal() { document.getElementById('changelogModal').classList.add('hidden'); }
 
@@ -2579,7 +2868,7 @@
         await sec.database().ref('uidMap/' + cred.user.uid + '/proof').remove();
         await sec.auth().signOut();
         await db.ref('banned/' + key).remove().catch(() => {});
-        alert('Le compte "' + key + '" a été créé avec le rôle ' + (customRole ? rolesData[customRole].name : role) + ' !');
+        adminShowCreated(key, pass, customRole ? rolesData[customRole].name : role);
         document.getElementById('newUsername').value = '';
         document.getElementById('newDisplayName').value = '';
         document.getElementById('newPassword').value = '';
@@ -2612,35 +2901,6 @@
         id: Date.now(), isSystem: true, isBan: isBan,
         text: text, time: nowTime(), channel: currentChannel
       });
-    }
-
-    function updateAdminUsersList() {
-      const container = document.getElementById('adminUsersList');
-      if (!container) return;
-      container.innerHTML = '';
-      Object.keys(accounts).forEach(accKey => {
-        const acc = accounts[accKey];
-        const div = document.createElement('div');
-        const selHtml = (currentUser && currentUser.role === 'Owner' && accKey !== 'rayqua' && acc.role !== 'Owner')
-          ? `<select data-role-sel="1" class="text-[11px] py-1 px-1.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-200 outline-none max-w-[130px]">${roleOptionsHtml(roleSelectValue(acc))}</select>`
-          : roleBadgeFor(acc, 'text-[10px]');
-        div.className = "flex flex-wrap items-center justify-between gap-2 p-2.5 bg-gray-900 rounded-xl border border-gray-800";
-        div.innerHTML = `
-          <div>
-            <p class="font-bold text-gray-200">${esc(acc.name)} <span class="text-[10px] text-gray-500">(${esc(acc.username)})</span>${accKey === 'ee' ? ' <span class="text-[10px] text-amber-400">🔒 verrouillé · ban : Owner seul</span>' : ''}</p>
-          </div>
-          <div class="flex items-center gap-2">
-            ${selHtml}
-            ${accKey !== 'rayqua' && (accKey !== 'ee' || (currentUser && currentUser.role === 'Owner')) ? `<button data-del="1" class="p-1 text-red-400 hover:bg-red-500/20 rounded transition" title="Supprimer"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
-          </div>
-        `;
-        const sel = div.querySelector('[data-role-sel]');
-        if (sel) sel.addEventListener('change', () => setUserRole(accKey, sel.value));
-        const delBtn = div.querySelector('[data-del]');
-        if (delBtn) delBtn.addEventListener('click', () => deleteUser(accKey));
-        container.appendChild(div);
-      });
-      lucide.createIcons();
     }
 
     const EMOJIS = ['👍', '❤️', '😂', '😮', '😢', '🔥'];
@@ -4218,6 +4478,9 @@ body.theme-musket #muCross{display:block}
     THEMES.push({ id: 'jurassic', name: 'Jurassic Park', icon: '🦖', kind: 'secret', flag: 'sJurassic', bg: 'linear-gradient(120deg,#0b3d1e,#f2b134,#c4381a)' });
     THEME_COLORS.jurassic = '#06140e';
     // JP_SCENE_START
+    function jpLogo(px) {
+      return `<svg width="${px}" height="${px}" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#06140e" stroke="#f2b134" stroke-width="5"/><circle cx="50" cy="50" r="37" fill="none" stroke="#f2b134" stroke-width="1.4"/><g fill="#f2b134" stroke="#f2b134" stroke-linecap="round" stroke-linejoin="round"><path d="M13 41L29 28L43 30L47 38L39 42L29 42L21 47Z" stroke-width="1"/><path d="M23 50L38 47L44 42L35 54Z" stroke-width="1"/><circle cx="35" cy="34" r="2" fill="#06140e" stroke="none"/><g fill="none" stroke-width="4"><path d="M47 37C62 34 76 43 85 60L93 68"/></g><g fill="none" stroke-width="2.6"><path d="M53 39Q53 55 63 61M61 39Q63 54 73 60M69 43Q73 54 79 60"/><path d="M60 56L55 73L46 81M72 56L71 73L64 83"/></g></g></svg>`;
+    }
     (function () {
       const U = (w, h, inner) => 'url("data:image/svg+xml,' + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='" + w + "' height='" + h + "' viewBox='0 0 " + w + " " + h + "'>" + inner + "</svg>") + '")';
       // Palmier : tronc courbe + frondes
@@ -4233,45 +4496,80 @@ body.theme-musket #muCross{display:block}
       const farPalms = palms(700, 280, [[40, 150, 14], [150, 210, -18], [260, 120, 10], [380, 230, 20], [480, 140, -12], [590, 200, 16], [670, 110, -8]], '#0b2a21');
       const midPalms = palms(800, 250, [[60, 210, 30], [230, 140, -24], [350, 220, 20], [500, 150, -30], [640, 215, 26], [760, 140, -16]], '#051510');
       const mount = U(800, 200, "<path fill='#0f2f27' d='M0 200V120L60 72L110 110L170 40L240 100L300 60L380 122L450 50L520 112L600 70L680 122L740 80L800 120V200Z'/><path fill='#0a211c' d='M0 200V150L80 110L150 150L230 98L330 150L420 104L520 154L620 112L720 156L800 130V200Z'/>");
+      // Clôture électrifiée avec panneau « haute tension »
       const fence = U(200, 84, "<g stroke='#252b27' stroke-width='1.6'><path d='M0 22H200M0 40H200M0 58H200M0 76H200'/></g><g fill='#1b201d'><rect x='8' y='6' width='5' height='78'/><rect x='108' y='6' width='5' height='78'/></g><g fill='#f2b134'><circle cx='10.5' cy='22' r='2.4'/><circle cx='10.5' cy='40' r='2.4'/><circle cx='10.5' cy='58' r='2.4'/><circle cx='10.5' cy='76' r='2.4'/><circle cx='110.5' cy='22' r='2.4'/><circle cx='110.5' cy='40' r='2.4'/><circle cx='110.5' cy='58' r='2.4'/><circle cx='110.5' cy='76' r='2.4'/></g><path d='M150 12L170 46H130Z' fill='#f2b134' stroke='#111' stroke-width='2'/><path d='M151 22L146 36H152L149 44L158 31H152Z' fill='#111'/>");
-      const trex = U(400, 260, "<g><path fill='#06100b' stroke='#2f7a63' stroke-width='1.6' stroke-linejoin='round' d='M12 72L58 46L100 50L128 62C150 52 190 50 225 66C262 82 290 110 340 128L396 138L340 146C300 150 270 150 250 150L238 196L252 232L276 240L276 252L226 252L214 214L196 160C176 160 160 154 148 146L146 202L152 236L178 244L178 254L126 254L116 206L112 150C112 130 124 110 120 96L104 96L98 112L88 108L92 92L60 96L38 106L16 96Z'/><path fill='#06100b' stroke='#2f7a63' stroke-width='1.2' d='M112 112L130 120L132 128L118 126Z'/><path fill='#e8e8d8' d='M22 94L26 86L30 95L36 87L40 97L46 90L50 98L56 92L58 98Z'/><circle cx='64' cy='62' r='3.4' fill='#f2b134'/></g>");
       const bronto = U(300, 200, "<g fill='#0b241d'><path d='M40 170C40 140 90 128 150 130C190 130 220 140 230 160L234 200L214 200L208 168L190 168L186 200L166 200L164 170L104 172L100 202L80 202L76 172L60 190L40 200Z'/><path d='M196 140C232 116 236 66 248 34L264 28C262 44 258 66 252 100C246 134 232 152 214 160Z'/><ellipse cx='258' cy='28' rx='14' ry='7'/><path d='M44 168C22 178 10 190 0 200L40 196Z'/></g>");
-      const ptero = U(120, 60, "<g fill='#050d0a'><path class='wl' d='M60 32C48 14 24 8 4 12C22 16 34 28 46 40Z'/><path class='wr' d='M60 32C72 14 96 8 116 12C98 16 86 28 74 40Z'/><ellipse cx='60' cy='36' rx='10' ry='5'/><path d='M66 34L98 30L68 40Z'/><path d='M56 32L40 24L58 36Z'/></g>");
+      // Ptérosaure : sprite à 2 images (ailes hautes / ailes basses) pour un vrai battement
+      const ptF = (dx, up) => {
+        const w = up ? 'M60 32C50 16 28 8 6 6C24 16 36 28 46 40Z' : 'M60 34C48 44 26 52 6 56C26 46 38 40 46 38Z';
+        return `<path transform='translate(${dx} 0)' d='${w}'/><path transform='translate(${dx + 120} 0) scale(-1 1)' d='${w}'/><ellipse cx='${dx + 58}' cy='36' rx='11' ry='5'/><path d='M${dx + 72} 33L${dx + 110} 31L${dx + 74} 40Z'/><path d='M${dx + 74} 31L${dx + 54} 23L${dx + 72} 37Z'/><path d='M${dx + 50} 36L${dx + 30} 45L${dx + 52} 41Z'/>`;
+      };
+      const ptero = U(240, 60, "<g fill='#050d0a'>" + ptF(0, true) + ptF(120, false) + '</g>');
       const fernLeaf = (a, l) => `<path transform='translate(20 230) rotate(${a}) scale(${l})' d='M0 0C20 -40 60 -70 120 -84C74 -52 40 -26 0 0Z'/>`;
-      const fern = U(260, 240, "<g fill='#041109'>" + [-96, -78, -60, -42, -24, -8].map((a, i) => fernLeaf(a, 1 + (i % 3) * .12)).join('') + "</g><g fill='#082a1a'>" + [-88, -66, -48, -30, -14].map(a => fernLeaf(a, .78)).join('') + "</g>");
+      const fern = U(260, 240, "<g fill='#041109'>" + [-96, -78, -60, -42, -24, -8].map((a, i) => fernLeaf(a, 1 + (i % 3) * .12)).join('') + "</g><g fill='#082a1a'>" + [-88, -66, -48, -30, -14].map(a => fernLeaf(a, .78)).join('') + '</g>');
       const rain = U(200, 200, "<g stroke='#a9d4ff' stroke-opacity='.5' stroke-width='1.1'><path d='M20 10l-5 22M80 60l-5 22M150 20l-5 22M60 130l-5 22M120 100l-5 22M180 150l-5 22M30 180l-5 22M100 30l-5 22M160 90l-5 22'/></g>");
-      const bolt = "<svg viewBox='0 0 100 100' preserveAspectRatio='none' style='width:100%;height:100%'><polyline points='72,0 68,18 74,22 66,44 71,47 62,70 66,72 58,96' fill='none' stroke='#eaf6ff' stroke-width='.7' stroke-linejoin='round'/></svg>";
+      const rain2 = U(140, 140, "<g stroke='#9fc8e6' stroke-opacity='.55' stroke-width='.8'><path d='M12 8l-3 13M70 40l-3 13M118 14l-3 13M40 92l-3 13M96 78l-3 13M130 120l-3 13M20 128l-3 13'/></g>");
+      const bolt = "<svg viewBox='0 0 100 100' preserveAspectRatio='none' style='width:100%;height:100%'><polyline points='72,0 68,18 74,22 66,44 71,47 62,70 66,72 58,96' fill='none' stroke='#eaf6ff' stroke-width='.7' stroke-linejoin='round'/><polyline points='66,44 58,52 60,60' fill='none' stroke='#eaf6ff' stroke-width='.4' stroke-linejoin='round'/></svg>";
       const ff = [[12, 40], [26, 22], [38, 48], [52, 30], [64, 52], [78, 26], [88, 44], [46, 18]].map((p, i) => `<i class="jp-ff" style="left:${p[0]}%;bottom:${p[1]}%;animation-delay:${-i * 1.3}s"></i>`).join('');
+      const sparks = [9, 32, 58, 81].map((p, i) => `<i class="jp-sp" style="left:${p}%;animation-delay:${-(i * 2.3 + 1)}s"></i>`).join('');
+
+      // ===== Tyrannosaure en SVG inline (tête et mâchoire animées pour le rugissement) =====
+      const LEG = 'M300 226C350 214 404 240 392 292C388 312 372 328 356 338L362 372L396 384L398 399L322 399L326 386L340 380L328 344C306 330 282 300 280 268C278 246 286 232 300 226Z';
+      const BODY = 'M214 176C214 146 236 118 280 108C330 98 380 104 420 122C470 142 540 140 600 168L603 176C540 186 480 200 436 232C420 262 380 276 330 272C280 268 236 236 220 204C216 194 214 186 214 176Z';
+      const SKULL = 'M232 150C228 118 208 92 166 90C130 88 96 96 60 106C42 111 26 112 22 122C20 130 30 134 44 134L190 148C206 150 220 156 232 164Z';
+      const JAW = 'M190 148L48 138C40 142 40 150 52 152L170 164C192 166 206 160 214 152Z';
+      const ARM = 'M224 194L196 218L180 216L176 224L192 232L210 230L230 212Z';
+      const teethU = Array.from({ length: 10 }, (_, i) => { const x = 50 + i * 13, y = 134 + (x - 44) * 14 / 146; return `M${x} ${y}L${x + 4} ${y + 9}L${x + 8} ${y + .6}Z`; }).join('');
+      const teethL = Array.from({ length: 7 }, (_, i) => { const x = 64 + i * 16, y = 138 + (x - 48) * 10 / 142; return `M${x} ${y}L${x + 3.5} ${y - 8}L${x + 7} ${y}Z`; }).join('');
+      const trexSvg = `<svg class='tx' viewBox='0 0 620 400' preserveAspectRatio='xMaxYMax meet' aria-hidden='true'><defs><linearGradient id='jpSkin' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#143328'/><stop offset='.5' stop-color='#071611'/><stop offset='1' stop-color='#030a07'/></linearGradient></defs><g stroke='#2f8a70' stroke-width='1.6' stroke-linejoin='round'><path transform='translate(-68 -3)' fill='#040d09' stroke='#1d5a49' d='${LEG}'/><path fill='url(#jpSkin)' d='${BODY}'/><path fill='url(#jpSkin)' d='${LEG}'/><path fill='url(#jpSkin)' d='${ARM}'/><g class='tx-head'><path fill='url(#jpSkin)' d='${SKULL}'/><path fill='none' stroke='#3fa88a' stroke-width='1.4' d='M146 101Q160 94 178 103'/><path fill='#e8e4d4' stroke='none' d='${teethU}'/><g class='tx-jaw'><path fill='url(#jpSkin)' d='${JAW}'/><path fill='#e8e4d4' stroke='none' d='${teethL}'/></g><circle class='tx-eye' cx='160' cy='109' r='3.4' fill='#f2b134' stroke='none'/><circle cx='45' cy='117' r='2' fill='#000' stroke='none'/></g></g></svg>`;
+
       const st = document.createElement('style');
       st.textContent = `
 body.theme-jurassic{background-color:#06140e!important}
 body.theme-jurassic input,body.theme-jurassic textarea{font-family:"Courier New",Consolas,monospace!important;color:#9dffc0}
-#jpScene{display:none;position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;contain:strict;transform:translateZ(0);background:#06140e}
+/* ---------- Scène : un seul grand moment (éclair, puis rugissement, puis secousse), cycle de 16 s ---------- */
+#jpScene{display:none;position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;contain:strict;transform:translateZ(0);background:#06140e;--jpo:-5s}
 body.theme-jurassic #jpScene{display:block}
 #jpScene>*{position:absolute;pointer-events:none}
-#jpScene .jp-sky{inset:0;background:linear-gradient(180deg,#03100e,#0a2b26 42%,#0e3d2e 72%,#06140e)}
-#jpScene .jp-flash{inset:0;opacity:0;background:radial-gradient(ellipse 85% 65% at 70% 12%,rgba(225,243,255,.95),rgba(130,180,205,.6) 45%,rgba(40,90,100,.25));animation:jpFlash 12s linear infinite;animation-delay:-2.6s}
-#jpScene .jp-bolt{left:0;top:0;width:100%;height:62%;opacity:0;filter:drop-shadow(0 0 5px #bfe6ff);animation:jpFlash 12s linear infinite;animation-delay:-2.6s}
+#jpScene .jp-world{inset:-14px;will-change:transform;animation:jpShake 16s linear var(--jpo) infinite}
+#jpScene .jp-world>*{position:absolute;pointer-events:none}
+#jpScene .jp-sky{inset:0;background:radial-gradient(ellipse 70% 28% at 40% 80%,rgba(63,191,106,.16),transparent),linear-gradient(180deg,#03100e,#0a2b26 42%,#0e3d2e 72%,#06140e)}
+#jpScene .jp-flash{inset:0;opacity:0;background:radial-gradient(ellipse 85% 65% at 70% 12%,rgba(225,243,255,.95),rgba(130,180,205,.6) 45%,rgba(40,90,100,.25));animation:jpLight 16s linear var(--jpo) infinite}
+#jpScene .jp-bolt{left:0;top:0;width:100%;height:62%;opacity:0;filter:drop-shadow(0 0 5px #bfe6ff);animation:jpLight 16s linear var(--jpo) infinite}
 #jpScene .jp-moon{left:66%;top:7%;width:130px;height:130px;border-radius:50%;opacity:.7;background:radial-gradient(circle,#eef6ea 0 26%,rgba(200,230,215,.45) 38%,transparent 70%)}
 #jpScene .jp-clouds{left:0;top:0;width:300%;height:42%;background:radial-gradient(ellipse 50% 42% at 50% 45%,rgba(3,14,12,.78),transparent 75%) 0 0/33.3333% 100% repeat-x;animation:jpDrift 120s linear infinite}
 #jpScene .jp-mount{left:0;right:0;bottom:30%;height:200px;background:${mount} left bottom/800px 200px repeat-x}
 #jpScene .jp-bronto{left:5%;bottom:27%;width:36vh;height:24vh;opacity:.55;background:${bronto} left bottom/contain no-repeat;animation:jpWalk 50s ease-in-out infinite alternate}
+#jpScene .jp-bronto.far{left:46%;bottom:31%;width:15vh;height:10vh;opacity:.3;animation-duration:80s;animation-direction:alternate-reverse}
 #jpScene .jp-far{left:0;right:0;bottom:21%;height:280px;background:${farPalms} left bottom/700px 280px repeat-x;animation:jpSway 7s ease-in-out infinite alternate;transform-origin:50% 100%}
 #jpScene .jp-fog{left:0;width:300%;background:radial-gradient(ellipse 50% 40% at 50% 55%,rgba(150,200,185,.2),transparent 72%) 0 0/33.3333% 100% repeat-x}
 #jpScene .jp-fog1{bottom:16%;height:30%;animation:jpDrift 80s linear infinite}
 #jpScene .jp-fog2{bottom:2%;height:30%;opacity:.85;animation:jpDrift 50s linear infinite reverse}
-#jpScene .jp-trex{right:2vw;bottom:7%;width:80vh;height:52vh;background:${trex} right bottom/contain no-repeat;transform-origin:72% 100%;animation:jpBreathe 5s ease-in-out infinite}
+#jpScene .jp-trex{right:2vw;bottom:7%;width:80vh;height:52vh;transform-origin:72% 100%;animation:jpBreathe 5s ease-in-out infinite}
+#jpScene .tx{display:block;width:100%;height:100%;overflow:visible;transform-origin:58% 100%;animation:jpRoarBody 16s linear var(--jpo) infinite,jpRim 16s linear var(--jpo) infinite}
+#jpScene .tx-head{transform-box:view-box;transform-origin:222px 156px;animation:jpHead 16s ease-in-out var(--jpo) infinite}
+#jpScene .tx-jaw{transform-box:view-box;transform-origin:194px 148px;animation:jpJaw 16s ease-in-out var(--jpo) infinite}
+#jpScene .tx-eye{filter:drop-shadow(0 0 4px #f2b134);animation:jpEye 16s linear var(--jpo) infinite}
+#jpScene .jp-rip{right:calc(2vw + 20.6vh);bottom:calc(7% - 2.5vh);width:26vh;height:5vh;border-radius:50%;border:2px solid rgba(170,225,215,.55);opacity:0;animation:jpRip 16s ease-out var(--jpo) infinite}
+#jpScene .jp-rip.b{animation-delay:calc(var(--jpo) + .8s)}
 #jpScene .jp-mid{left:0;right:0;bottom:7%;height:250px;background:${midPalms} left bottom/800px 250px repeat-x;animation:jpSway 5.5s ease-in-out infinite alternate;transform-origin:50% 100%}
+#jpScene .jp-eyes{left:17%;bottom:19%;width:34px;height:8px;opacity:0;animation:jpEyes 21s linear var(--jpo) infinite}
+#jpScene .jp-eyes::before,#jpScene .jp-eyes::after{content:"";position:absolute;top:0;width:9px;height:4px;border-radius:50%;background:#ffb02e;box-shadow:0 0 6px 2px rgba(255,150,30,.8)}
+#jpScene .jp-eyes::before{left:0;transform:rotate(12deg)}
+#jpScene .jp-eyes::after{right:0;transform:rotate(-12deg)}
 #jpScene .jp-ground{left:0;right:0;bottom:0;height:14%;background:linear-gradient(180deg,#0a1a10,#050d08)}
-#jpScene .jp-fence{left:0;right:0;bottom:0;height:84px;background:${fence} left bottom/200px 84px repeat-x}
-#jpScene .jp-fernL,#jpScene .jp-fernR{bottom:-14px;width:min(40vw,340px);height:min(37vw,314px);background:${fern} left bottom/contain no-repeat;transform-origin:10% 100%;animation:jpSway 4.5s ease-in-out infinite alternate}
-#jpScene .jp-fernL{left:-20px}
-#jpScene .jp-fernR{right:-20px;scale:-1 1}
-#jpScene .jp-pt{top:9%;width:110px;height:55px;background:${ptero} center/contain no-repeat;animation:jpFly 30s linear infinite}
-#jpScene .jp-pt.b{top:19%;width:80px;height:40px;animation-duration:42s;animation-delay:-18s}
+#jpScene .jp-fence{left:0;right:0;bottom:14px;height:84px;background:${fence} left bottom/200px 84px repeat-x}
+#jpScene .jp-sp{bottom:60px;width:3px;height:3px;border-radius:50%;background:#e8f6ff;box-shadow:0 0 6px 3px rgba(140,205,255,.9);opacity:0;animation:jpSpark 7s linear infinite}
+#jpScene .jp-fernL,#jpScene .jp-fernR{bottom:0;width:min(40vw,340px);height:min(37vw,314px);background:${fern} left bottom/contain no-repeat;transform-origin:10% 100%;animation:jpSway 4.5s ease-in-out infinite alternate}
+#jpScene .jp-fernL{left:-6px}
+#jpScene .jp-fernR{right:-6px;scale:-1 1}
+#jpScene .jp-pt{top:9%;width:110px;height:55px;background:${ptero} 0 0/200% 100% no-repeat;animation:jpFly 30s linear infinite,jpFlap .55s steps(1) infinite}
+#jpScene .jp-pt.b{top:19%;width:80px;height:40px;animation-duration:42s,.7s;animation-delay:-18s,0s}
 #jpScene .jp-ff{width:5px;height:5px;border-radius:50%;background:#f2e27a;box-shadow:0 0 8px 3px rgba(242,226,122,.7);opacity:0;animation:jpFf 7s ease-in-out infinite}
+#jpScene .jp-rain2{left:0;top:0;width:100%;height:calc(100% + 200px);opacity:.2;background:${rain2} 0 0/140px 140px;animation:jpRain2 .95s linear infinite}
 #jpScene .jp-vig{inset:0;background:radial-gradient(ellipse 120% 95% at 50% 42%,transparent 50%,rgba(0,0,0,.65))}
 html:has(body.theme-jurassic)::after{content:"";position:fixed;left:0;top:0;width:100%;height:calc(100% + 200px);z-index:61;pointer-events:none;opacity:.3;will-change:transform;background:${rain} 0 0/200px 200px;animation:jpRain .7s linear infinite}
+/* ---------- Interface : salle de contrôle du parc ---------- */
 body.theme-jurassic .bg-darkbg,body.theme-jurassic .bg-darkpanel{background-color:rgba(6,20,14,.9)!important}
 body.theme-jurassic #appContainer,body.theme-jurassic #appContainer>main,body.theme-jurassic main.bg-darkbg{background-color:transparent!important}
 body.theme-jurassic main.bg-darkbg{background-image:linear-gradient(180deg,rgba(2,8,5,.3),rgba(2,8,5,.45))!important}
@@ -4279,8 +4577,9 @@ body.theme-jurassic .bg-gray-950,body.theme-jurassic .bg-gray-900{background-col
 body.theme-jurassic .bg-gray-800{background-color:#0d2218!important}
 body.theme-jurassic .bg-gray-700{background-color:#17382a!important}
 body.theme-jurassic .hover\\:bg-gray-800:hover,body.theme-jurassic .hover\\:bg-gray-700:hover{background-color:#17382a!important}
+body.theme-jurassic .hover\\:bg-gray-800:hover{box-shadow:inset 3px 0 0 #f2b134}
 body.theme-jurassic .border-gray-800,body.theme-jurassic .border-gray-700,body.theme-jurassic .border-gray-800\\/60{border-color:rgba(242,177,52,.22)!important}
-body.theme-jurassic .glass-panel{background:linear-gradient(180deg,rgba(9,28,20,.98),rgba(4,14,10,.98));border:2px solid rgba(242,177,52,.6);border-radius:8px;box-shadow:0 0 0 1px #000,0 0 22px rgba(242,177,52,.18),inset 0 0 26px rgba(0,0,0,.6),0 10px 28px rgba(0,0,0,.65);-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+body.theme-jurassic .glass-panel{background:radial-gradient(circle at 10px 10px,#f2b134 0 2px,#7a5a12 2.6px,transparent 3.4px),radial-gradient(circle at calc(100% - 10px) 10px,#f2b134 0 2px,#7a5a12 2.6px,transparent 3.4px),radial-gradient(circle at 10px calc(100% - 10px),#f2b134 0 2px,#7a5a12 2.6px,transparent 3.4px),radial-gradient(circle at calc(100% - 10px) calc(100% - 10px),#f2b134 0 2px,#7a5a12 2.6px,transparent 3.4px),repeating-linear-gradient(0deg,rgba(63,191,106,.035) 0 1px,transparent 1px 4px),linear-gradient(180deg,rgba(9,28,20,.98),rgba(4,14,10,.98));border:2px solid rgba(242,177,52,.6);border-radius:8px;box-shadow:0 0 0 1px #000,0 0 22px rgba(242,177,52,.18),inset 0 0 26px rgba(0,0,0,.6),0 10px 28px rgba(0,0,0,.65);-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 body.theme-jurassic .backdrop-blur-sm{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 body.theme-jurassic .bg-brand-500,body.theme-jurassic .bg-brand-600,body.theme-jurassic .bg-brand-700{background-color:#c4381a!important;background-image:linear-gradient(180deg,rgba(255,255,255,.18),transparent 55%);border:1px solid #f2b134;text-shadow:0 1px 0 #000;box-shadow:0 0 10px rgba(196,56,26,.45)}
 body.theme-jurassic .hover\\:bg-brand-500:hover,body.theme-jurassic .hover\\:bg-brand-600:hover{background-color:#e0451f!important}
@@ -4288,11 +4587,22 @@ body.theme-jurassic .text-brand-300,body.theme-jurassic .text-brand-400,body.the
 body.theme-jurassic .bg-brand-500\\/10,body.theme-jurassic .bg-brand-500\\/20,body.theme-jurassic .hover\\:bg-brand-500\\/20,body.theme-jurassic .bg-brand-600\\/30{background-color:rgba(196,56,26,.35)!important}
 body.theme-jurassic .border-brand-500,body.theme-jurassic .border-brand-500\\/20,body.theme-jurassic .border-brand-500\\/30,body.theme-jurassic .border-brand-500\\/50,body.theme-jurassic .focus\\:border-brand-500{border-color:rgba(242,177,52,.6)!important}
 body.theme-jurassic header{background-image:linear-gradient(90deg,rgba(196,56,26,.4),rgba(6,30,20,.75))!important;border-bottom:7px solid!important;border-image:repeating-linear-gradient(45deg,#f2b134 0 12px,#15110a 12px 24px) 7!important;box-shadow:0 6px 22px rgba(0,0,0,.6)}
-body.theme-jurassic h1,body.theme-jurassic h3{font-family:Impact,"Arial Black",sans-serif;color:#f2b134;letter-spacing:.12em;text-transform:uppercase;text-shadow:0 0 14px rgba(196,56,26,.7),0 2px 0 #000}
-body.theme-jurassic .msg-bubble{border-radius:4px!important}
+body.theme-jurassic h1,body.theme-jurassic h3,body.theme-jurassic header h2{font-family:Impact,"Arial Black",sans-serif;color:#f2b134;letter-spacing:.12em;text-transform:uppercase;text-shadow:0 0 14px rgba(196,56,26,.7),0 2px 0 #000}
+body.theme-jurassic header h2 button{font-family:"Courier New",Consolas,monospace;letter-spacing:0;text-transform:none;text-shadow:none}
+body.theme-jurassic #sidebar{border-right:2px solid rgba(242,177,52,.45)!important;box-shadow:6px 0 24px rgba(0,0,0,.5)}
+body.theme-jurassic #sidebar button[id^="chan-"]{font-family:"Courier New",Consolas,monospace;letter-spacing:.03em}
+body.theme-jurassic #currentChannelTitle{font-family:"Courier New",Consolas,monospace;color:#9dffc0;letter-spacing:.06em;text-shadow:0 0 8px rgba(63,191,106,.55)}
+body.theme-jurassic #currentChannelTitle::before{content:"> ";color:#f2b134}
+body.theme-jurassic #currentChannelTitle::after{content:"_";color:#f2b134;animation:jpCursor 1s steps(1) infinite}
+body.theme-jurassic #messagesContainer{background-image:repeating-linear-gradient(0deg,rgba(63,191,106,.028) 0 1px,transparent 1px 4px)}
+body.theme-jurassic #typingIndicator{font-family:"Courier New",Consolas,monospace;color:rgba(63,191,106,.85)}
+body.theme-jurassic .composer{border-top:2px dashed rgba(242,177,52,.4)!important;background:linear-gradient(180deg,rgba(8,24,17,.96),rgba(4,12,8,.98))!important}
+body.theme-jurassic .msg-bubble{border-radius:4px!important;transition:filter .2s}
+body.theme-jurassic .msg-bubble:hover{filter:brightness(1.12)}
 body.theme-jurassic .msg-bubble.bg-brand-600{background:repeating-linear-gradient(45deg,#f2b134 0 7px,#15110a 7px 14px) left/5px 100% no-repeat,linear-gradient(135deg,#7a1f12,#c4381a)!important;border:1px solid #f2b134!important;box-shadow:0 2px 0 #000,0 0 14px rgba(196,56,26,.5)!important}
-body.theme-jurassic .msg-bubble.bg-gray-800{background:repeating-linear-gradient(0deg,rgba(63,191,106,.07) 0 1px,transparent 1px 3px),#0b1f16!important;border:1px solid rgba(63,191,106,.35)!important;border-left:4px solid #f2b134!important;box-shadow:0 2px 0 #000,0 0 12px rgba(63,191,106,.12)!important}
+body.theme-jurassic .msg-bubble.bg-gray-800{background:repeating-linear-gradient(0deg,rgba(63,191,106,.07) 0 1px,transparent 1px 3px),#0b1f16!important;border:1px solid rgba(63,191,106,.35)!important;border-left:4px solid #f2b134!important;box-shadow:0 2px 0 #000,0 0 12px rgba(63,191,106,.12)!important;font-family:"Courier New",Consolas,monospace}
 body.theme-jurassic input,body.theme-jurassic textarea{background-color:#030a06!important;border-color:rgba(63,191,106,.4)!important;caret-color:#f2b134;box-shadow:inset 0 2px 6px rgba(0,0,0,.7)}
+body.theme-jurassic input::placeholder,body.theme-jurassic textarea::placeholder{color:rgba(63,191,106,.5)!important}
 body.theme-jurassic input:focus,body.theme-jurassic textarea:focus{border-color:#f2b134!important;box-shadow:0 0 0 2px rgba(242,177,52,.3),0 0 14px rgba(63,191,106,.25),inset 0 2px 6px rgba(0,0,0,.7)!important;outline:none}
 body.theme-jurassic button{transition:transform .12s,box-shadow .12s}
 body.theme-jurassic button:hover{box-shadow:0 0 0 1px rgba(242,177,52,.6)}
@@ -4304,9 +4614,29 @@ body.theme-jurassic ::-webkit-scrollbar-thumb{background:linear-gradient(90deg,#
 body.theme-jurassic .status-dot.bg-brand-500{background-color:#3fbf3f!important;background-image:none!important;border:0;box-shadow:none}
 body.theme-jurassic .status-dot.bg-red-500{background-color:#ef4444!important;background-image:none!important;border:0}
 body.theme-jurassic .status-dot.bg-blue-500{background-color:#3b82f6!important;background-image:none!important;border:0}
-#jpBadge{display:none;position:fixed;right:12px;bottom:10px;z-index:59;pointer-events:none;padding:5px 10px 4px;border:2px solid #f2b134;border-radius:999px;background:rgba(6,20,14,.7);color:#f2b134;font:700 9px/1 Impact,"Arial Black",sans-serif;letter-spacing:.18em;text-align:center;opacity:.7}
-body.theme-jurassic #jpBadge{display:block}
-@keyframes jpFlash{0%,29%{opacity:0}30%{opacity:1}31%{opacity:.25}32%{opacity:.9}35%{opacity:.15}38%,100%{opacity:0}}
+/* Badge : logo du parc + ping de détecteur de mouvement, posé sur la ligne de saisie */
+#jpBadge{display:none;position:fixed;right:14px;bottom:68px;z-index:59;pointer-events:none;align-items:center;gap:6px;padding:3px 10px 3px 3px;border:1.5px solid rgba(242,177,52,.8);border-radius:999px;background:rgba(6,20,14,.78);opacity:.85}
+body.theme-jurassic #jpBadge{display:flex}
+body.theme-jurassic:has(#replyBar:not([style*="none"])) #jpBadge{opacity:0}
+#jpBadge .jpLogo{position:relative;width:18px;height:18px}
+#jpBadge .jpLogo svg{display:block}
+#jpBadge .jpLogo::after{content:"";position:absolute;inset:0;border-radius:50%;border:1.5px solid #3fbf6a;animation:jpPing 3s ease-out infinite}
+#jpBadge b{font:700 9px/1 Impact,"Arial Black",sans-serif;letter-spacing:.18em;color:#f2b134}
+@media(min-width:640px){#jpBadge{bottom:76px}}
+/* ---------- Animations ---------- */
+@keyframes jpLight{0%,52%{opacity:0}53%{opacity:1}54%{opacity:.2}55.5%{opacity:.95}58%{opacity:.12}62%,100%{opacity:0}}
+@keyframes jpRim{0%,52%{filter:drop-shadow(0 0 5px rgba(70,160,135,.22)) brightness(1)}53%{filter:drop-shadow(0 0 16px rgba(200,240,255,.95)) brightness(2.4)}54%{filter:drop-shadow(0 0 6px rgba(70,160,135,.3)) brightness(1.2)}55.5%{filter:drop-shadow(0 0 14px rgba(200,240,255,.85)) brightness(2)}60%{filter:drop-shadow(0 0 8px rgba(70,160,135,.35)) brightness(1.15)}66%,100%{filter:drop-shadow(0 0 5px rgba(70,160,135,.22)) brightness(1)}}
+@keyframes jpHead{0%,57%{transform:rotate(0)}60%{transform:rotate(-10deg)}68%{transform:rotate(-10deg)}75%,100%{transform:rotate(0)}}
+@keyframes jpJaw{0%,58%{transform:rotate(0)}60.5%{transform:rotate(-27deg)}67.5%{transform:rotate(-27deg)}72%,100%{transform:rotate(0)}}
+@keyframes jpEye{0%,56%{opacity:.6}58%,68%{opacity:1}74%,100%{opacity:.6}}
+@keyframes jpRoarBody{0%,57%{transform:none}59%{transform:scale(1.01) translate(0,-2px)}60%{transform:scale(1.03) translate(2px,-4px)}61%{transform:scale(1.03) translate(-2px,-4px)}62%{transform:scale(1.03) translate(2px,-3px)}63%{transform:scale(1.03) translate(-2px,-4px)}64%{transform:scale(1.03) translate(2px,-4px)}65%{transform:scale(1.03) translate(-1px,-3px)}68%{transform:scale(1.03) translate(0,-4px)}74%,100%{transform:none}}
+@keyframes jpShake{0%,58.5%{transform:translate3d(0,0,0)}59%{transform:translate3d(0,4px,0)}59.6%{transform:translate3d(-5px,-3px,0)}60.2%{transform:translate3d(5px,3px,0)}60.8%{transform:translate3d(-4px,2px,0)}61.4%{transform:translate3d(4px,-3px,0)}62.2%{transform:translate3d(-3px,2px,0)}63%{transform:translate3d(3px,-1px,0)}64%{transform:translate3d(-2px,1px,0)}65.5%{transform:translate3d(1px,0,0)}67%,100%{transform:translate3d(0,0,0)}}
+@keyframes jpRip{0%,58.8%{opacity:0;transform:scale(.15)}59%{opacity:.85;transform:scale(.15)}70%{opacity:0;transform:scale(1.5)}100%{opacity:0;transform:scale(1.5)}}
+@keyframes jpEyes{0%,28%{opacity:0}30%{opacity:.9}36%{opacity:.9}36.6%{opacity:0}37.4%{opacity:.9}46%{opacity:.9}48%,100%{opacity:0}}
+@keyframes jpSpark{0%,90%,100%{opacity:0}91%{opacity:1}92%{opacity:.1}93%{opacity:1}94.5%{opacity:0}}
+@keyframes jpFlap{0%{background-position:0 0}50%{background-position:100% 0}}
+@keyframes jpCursor{50%{opacity:0}}
+@keyframes jpPing{0%{transform:scale(1);opacity:.9}70%,100%{transform:scale(2.2);opacity:0}}
 @keyframes jpDrift{from{transform:translateX(0)}to{transform:translateX(-33.3333%)}}
 @keyframes jpSway{from{transform:rotate(-.8deg)}to{transform:rotate(.8deg)}}
 @keyframes jpBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.012,1.02) rotate(-.4deg)}}
@@ -4314,23 +4644,41 @@ body.theme-jurassic #jpBadge{display:block}
 @keyframes jpFly{from{transform:translate(-20vw,0)}25%{transform:translate(20vw,14px)}50%{transform:translate(60vw,-10px)}to{transform:translate(125vw,10px)}}
 @keyframes jpFf{0%,100%{opacity:0;transform:translate(0,0)}30%{opacity:1}60%{opacity:.8;transform:translate(26px,-18px)}85%{opacity:0}}
 @keyframes jpRain{from{transform:translate3d(0,-200px,0)}to{transform:translate3d(0,0,0)}}
-@media(max-width:700px){#jpScene .jp-bronto{display:none}#jpScene .jp-trex{right:-8vw;height:36vh;width:56vh}}
-@media (prefers-reduced-motion:reduce){#jpScene *,html:has(body.theme-jurassic)::after{animation:none!important}}`;
+@keyframes jpRain2{from{transform:translate3d(0,-140px,0)}to{transform:translate3d(0,0,0)}}
+@media(max-width:700px){#jpScene .jp-bronto{display:none}#jpScene .jp-trex{right:-8vw;height:36vh;width:56vh}#jpScene .jp-rip{right:calc(-8vw + 14.5vh);width:18vh;height:3.5vh;bottom:calc(7% - 1.7vh)}#jpScene .jp-eyes{left:8%}}
+@media (prefers-reduced-motion:reduce){#jpScene *,html:has(body.theme-jurassic)::after,body.theme-jurassic #currentChannelTitle::after,#jpBadge .jpLogo::after{animation:none!important}}`;
       document.head.appendChild(st);
-      const bd = document.createElement('div'); bd.id = 'jpBadge'; bd.innerHTML = 'JURASSIC PARK<br><span style="font-size:7px;letter-spacing:.3em;opacity:.8">ISLA NUBLAR</span>'; document.body.appendChild(bd);
+      const bd = document.createElement('div'); bd.id = 'jpBadge';
+      bd.innerHTML = '<span class="jpLogo">' + jpLogo(18) + '</span><b>JURASSIC PARK</b>';
+      document.body.appendChild(bd);
       const sc = document.createElement('div'); sc.id = 'jpScene';
-      sc.innerHTML = '<div class="jp-sky"></div><div class="jp-flash"></div><div class="jp-bolt">' + bolt + '</div><div class="jp-moon"></div><div class="jp-clouds"></div><div class="jp-mount"></div><div class="jp-bronto"></div><div class="jp-far"></div><div class="jp-fog jp-fog1"></div><div class="jp-pt"></div><div class="jp-pt b"></div><div class="jp-mid"></div><div class="jp-ground"></div><div class="jp-trex"></div><div class="jp-fog jp-fog2"></div>' + ff + '<div class="jp-fence"></div><div class="jp-fernL"></div><div class="jp-fernR"></div><div class="jp-vig"></div>';
+      sc.innerHTML = '<div class="jp-world"><div class="jp-sky"></div><div class="jp-flash"></div><div class="jp-bolt">' + bolt + '</div><div class="jp-moon"></div><div class="jp-clouds"></div><div class="jp-mount"></div><div class="jp-bronto"></div><div class="jp-bronto far"></div><div class="jp-far"></div><div class="jp-fog jp-fog1"></div><div class="jp-pt"></div><div class="jp-pt b"></div><div class="jp-eyes"></div><div class="jp-mid"></div><div class="jp-ground"></div><div class="jp-trex">' + trexSvg + '</div><div class="jp-rip"></div><div class="jp-rip b"></div><div class="jp-fog jp-fog2"></div>' + ff + '<div class="jp-rain2"></div><div class="jp-fence"></div>' + sparks + '<div class="jp-fernL"></div><div class="jp-fernR"></div><div class="jp-vig"></div></div>';
       document.body.insertBefore(sc, document.body.firstChild);
     })();
     // JP_SCENE_END
     function showJurassicScreen() {
       const o = document.createElement('div');
-      o.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#020906;display:flex;align-items:center;justify-content:center;font-family:"Courier New",monospace;cursor:pointer';
-      const L = (t, d, c, big) => `<div style="opacity:0;animation:jpL .3s ${d}s forwards;color:${c || '#3fbf6a'};${big ? 'font-size:min(6.4vw,30px);font-family:Impact,Arial Black,sans-serif;letter-spacing:.1em;margin-top:14px' : 'font-size:min(3.8vw,15px)'}">${t}</div>`;
-      o.innerHTML = `<style>@keyframes jpL{to{opacity:1}}@keyframes jpBlink{50%{opacity:.2}}</style><div style="width:min(88vw,520px);line-height:1.7;text-shadow:0 0 8px rgba(63,191,106,.6)">${L('&gt; ACCESS: SECURITY', .2)}${L('&gt; ACCESS: SECURITY GRID', .9)}${L('&gt; ACCESS: MAIN SECURITY PROGRAM', 1.6)}${L('PERMISSION DENIED.', 2.4, '#ff5a3c')}${L('<span style="animation:jpBlink .5s infinite">Ah ah ah ! Vous n\'avez pas dit le mot magique !</span><br><span style="animation:jpBlink .5s .1s infinite">Ah ah ah ! Vous n\'avez pas dit le mot magique !</span><br><span style="animation:jpBlink .5s .2s infinite">Ah ah ah ! Vous n\'avez pas dit le mot magique !</span>', 3, '#f2b134')}${L('JURASSIC PARK', 4.6, '#f2b134', true)}${L('THÈME « JURASSIC PARK » DÉBLOQUÉ', 5.1, '#e8e4d4')}${L('Activé ! Tu peux le changer dans 🎨 Décorations &amp; thèmes.', 5.5, '#9dffc0')}</div>`;
+      o.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#020906;display:flex;align-items:center;justify-content:center;font-family:"Courier New",monospace;cursor:pointer;overflow:hidden;transition:opacity .6s';
+      const L = (t, d, c) => `<div class="jpuL" style="animation-delay:${d}s;color:${c || '#3fbf6a'}">${t}</div>`;
+      const magic = [0, .1, .2].map(d => `<span style="animation:jpBlink .5s ${d}s infinite">Ah ah ah ! Vous n'avez pas dit le mot magique !</span>`).join('<br>');
+      o.innerHTML = `<style>
+.jpu{position:relative;width:min(88vw,540px);line-height:1.75;text-shadow:0 0 8px rgba(63,191,106,.6)}
+.jpuL{opacity:0;font-size:min(3.8vw,15px);animation:jpL .3s forwards}
+.jpuLogo{display:flex;align-items:center;gap:14px;margin:18px 0 6px;opacity:0;animation:jpL .9s 4.8s forwards}
+.jpuLogo b{font:400 min(7vw,34px)/1 Impact,"Arial Black",sans-serif;letter-spacing:.1em;color:#f2b134;text-shadow:0 0 18px rgba(242,177,52,.7),0 2px 0 #000}
+.jpuLogo svg{filter:drop-shadow(0 0 10px rgba(242,177,52,.6));animation:jpuPulse 2.4s 5.6s ease-in-out infinite}
+.jpuScan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px),radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.75))}
+.jpuFlash{position:absolute;inset:0;pointer-events:none;opacity:0;animation:jpuFl .9s forwards}
+@keyframes jpL{to{opacity:1}}
+@keyframes jpBlink{50%{opacity:.2}}
+@keyframes jpuPulse{50%{filter:drop-shadow(0 0 20px rgba(242,177,52,.95))}}
+@keyframes jpuFl{0%{opacity:0}4%{opacity:.85}12%{opacity:.1}18%{opacity:.6}40%,100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.jpuL,.jpuLogo{animation-duration:.01s!important;animation-delay:0s!important}.jpuFlash{display:none}.jpuLogo svg{animation:none}}
+</style><div class="jpu">${L('&gt; ACCESS: SECURITY', .2)}${L('&gt; ACCESS: SECURITY GRID', .9)}${L('&gt; ACCESS: MAIN SECURITY PROGRAM', 1.6)}${L('PERMISSION DENIED.', 2.4, '#ff5a3c')}${L(magic, 3, '#f2b134')}<div class="jpuLogo">${jpLogo(64)}<b>JURASSIC PARK</b></div>${L('THÈME « JURASSIC PARK » DÉBLOQUÉ', 5.4, '#e8e4d4')}${L('Activé ! Tu peux le changer dans 🎨 Décorations &amp; thèmes.', 5.8, '#9dffc0')}</div><div class="jpuScan"></div><div class="jpuFlash" style="background:#ff3a1a;animation-delay:2.4s;animation-duration:.5s"></div><div class="jpuFlash" style="background:#eaf6ff;animation-delay:4.8s"></div>`;
       document.body.appendChild(o);
+      const close = () => { o.style.opacity = '0'; setTimeout(() => { if (o.isConnected) o.remove(); }, 650); };
       o.onclick = () => o.remove();
-      setTimeout(() => { if (o.isConnected) o.remove(); }, 12000);
+      setTimeout(() => { if (o.isConnected) close(); }, 12000);
     }
     async function jurassicGive() {
       if (!meKey) return;
