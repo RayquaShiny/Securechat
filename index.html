@@ -646,6 +646,7 @@
           <button data-tab="users" onclick="adminSetTab('users')">Comptes</button>
           <button data-tab="create" data-owner="1" onclick="adminSetTab('create')">Créer</button>
           <button data-tab="roles" data-owner="1" onclick="adminSetTab('roles')">Rôles</button>
+          <button data-tab="themes" data-owner="1" onclick="adminSetTab('themes')">Thèmes</button>
           <button data-tab="banned" onclick="adminSetTab('banned')">Bannis</button>
           <button data-tab="log" onclick="adminSetTab('log')">Journal</button>
         </div>
@@ -705,6 +706,10 @@
             <div class="flex items-center gap-2 text-[11px] text-gray-500"><span>Aperçu :</span><span id="rolePreview"></span></div>
             <div id="rolesList" class="flex flex-wrap gap-2"></div>
           </div>
+        </section>
+
+        <section id="adminTab-themes" class="hidden">
+          <div id="adminThemesBody" class="space-y-4 text-xs"></div>
         </section>
 
         <section id="adminTab-banned" class="hidden">
@@ -1199,7 +1204,7 @@
       upd['avatars/' + k] = null;
       upd['notes/' + k] = null;
       upd['banned/' + k] = true;
-      if (currentUser && currentUser.role === 'Owner') { upd['secrets/' + k] = null; upd['grants/' + k] = null; }
+      if (currentUser && currentUser.role === 'Owner') { upd['secrets/' + k] = null; upd['grants/' + k] = null; upd['themeOverrides/' + k] = null; }
       return db.ref().update(upd).catch(err => {
         alert("Bannissement impossible : " + (err.code || err.message) + "\n(Les règles Firebase à jour sont-elles publiées ?)");
         return new Promise(() => {});
@@ -1383,13 +1388,21 @@
       { id: 'partyplus', name: 'Anniversaire ★', icon: '🌟', kind: 'secret', flag: 'ePartyPlus', bg: 'linear-gradient(120deg,#78350f,#eab308,#fde68a)' }
     ];
     const SECRET_WORDS = [{ word: 'halloween', theme: 'halloween' }];
-    let gameData = {}, grantsData = {}, gameTimers = [], gameRunning = false, lastGain = null;
+    let gameData = {}, grantsData = {}, themeOvData = {}, themeOvTimer = null, gameTimers = [], gameRunning = false, lastGain = null;
     function ownsTheme(k, t) { return !!t && (gameData[k] || {})[t.flag] === true; }
     function themeFor(k) {
       const g = gameData[k];
       if (!k || !g || !g.theme) return null;
       const t = THEMES.find(x => x.id === g.theme);
-      return t && ownsTheme(k, t) ? t : null;
+      return t && (ownsTheme(k, t) || themeOvActive(k)) ? t : null;
+    }
+    // Dérogation : l'Owner donne à quelqu'un, pour une durée limitée, le droit de choisir n'importe quel thème malgré le thème de saison
+    function themeOvLeft(k) { const o = themeOvData[k], u = o && Number(o.until); return u && u > nowS() ? u - nowS() : 0; }
+    function themeOvActive(k) { return !!k && themeOvLeft(k) > 0; }
+    function scheduleThemeOvExpiry() {
+      clearTimeout(themeOvTimer); themeOvTimer = null;
+      const left = meKey ? themeOvLeft(meKey) : 0;
+      if (left > 0) themeOvTimer = setTimeout(() => { scheduleThemeOvExpiry(); applyTheme(); renderDecoModal(); renderAdminThemes(); }, Math.min(left + 500, 2147000000));
     }
     function inSeason(t) {
       if (!t.season) return false;
@@ -1397,14 +1410,8 @@
       return md >= t.season.from[0] * 100 + t.season.from[1] && md <= t.season.to[0] * 100 + t.season.to[1];
     }
     function seasonNow() { return THEMES.find(inSeason) || null; }
-    // Option : désactiver le thème de saison en cours (préférence locale, par compte, sur cet appareil)
-    function seasonOptOut() { try { return !!meKey && localStorage.getItem('seasonOff:' + meKey) === '1'; } catch (e) { return false; } }
-    // Thème de saison réellement imposé : il y en a un ET la personne ne l'a pas désactivé
-    function seasonForced() { return seasonOptOut() ? null : seasonNow(); }
-    function setSeasonOptOut(off) {
-      try { if (off) localStorage.setItem('seasonOff:' + meKey, '1'); else localStorage.removeItem('seasonOff:' + meKey); } catch (e) {}
-      applyTheme(); renderDecoModal();
-    }
+    // Thème de saison réellement imposé : il y en a un ET la personne n'a pas de dérogation en cours
+    function seasonForced() { return themeOvActive(meKey) ? null : seasonNow(); }
     // Thème réellement affiché : celui que tu as équipé ; sinon le thème de saison ; « classic » désactive tout
     // Un cosmétique qui n'est plus obtenable n'est visible que par ceux qui l'ont déjà
     function themeObtainable(t) {
@@ -1419,6 +1426,9 @@
       if (typeof ownerPreview !== 'undefined' && ownerPreview.theme) { const pt = THEMES.find(x => x.id === ownerPreview.theme); if (pt) return pt; }
       const sn = seasonForced();
       if (sn) return sn;
+      const sNow = seasonNow();
+      // Dérogation en cours pendant une saison : sans choix explicite, le thème de saison reste ; « classique » ou un autre thème le remplace
+      if (sNow && !(gameData[meKey] || {}).theme) return sNow;
       return themeFor(meKey) || null;
     }
     const THEME_COLORS = { halloween: '#0f0805', arcade: '#07031a', noel: '#07140d', valentin: '#1a0710', ete: '#06141f', party: '#150a2a', partyplus: '#120c02' };
@@ -1469,14 +1479,14 @@
     async function equipTheme(id) {
       if (!meKey) return;
       const sn = seasonForced();
-      if (sn) { alert('Le thème « ' + sn.name + ' » est imposé jusqu\'au ' + seasonEnd(sn) + ' : impossible de changer de thème tant que tu ne le désactives pas (menu 🎨).'); return; }
+      if (sn) { alert('Le thème « ' + sn.name + ' » est imposé à tout le monde jusqu\'au ' + seasonEnd(sn) + '. Impossible de changer de thème avant la fin de la saison.'); return; }
       const g = gameData[meKey];
       let val;
       if (id === 'auto') val = null;
       else if (id === 'classic') val = 'classic';
       else {
         const t = THEMES.find(x => x.id === id);
-        if (!t || !ownsTheme(meKey, t)) return;
+        if (!t || (!ownsTheme(meKey, t) && !themeOvActive(meKey))) return;
         val = (g && g.theme === id) ? null : id;
       }
       const upd = { theme: val };
@@ -1881,11 +1891,22 @@
         ...DECOS.filter(d => d.kind === 'secret').map(d => ({ kind: 'Décoration', owned: ownsDeco(meKey, d), eq: !!cur && cur.id === d.id, icon: d.icon, name: d.name, cls: d.cls, attr: `data-equip="${d.id}"` })),
         ...THEMES.filter(t => t.kind === 'secret' && (ownsTheme(meKey, t) || themeObtainable(t))).map(t => ({ kind: "Thème d'application", owned: ownsTheme(meKey, t), eq: !!curTh && curTh.id === t.id, locked: !!seasonForced(), hint: t.season ? 'Thème de saison : à trouver pendant sa période' : '', icon: t.icon, name: t.name, bg: t.bg, attr: `data-theme="${t.id}"` }))
       ];
-      const seasonT = seasonNow(), seasonOn = !!seasonT && !seasonOptOut();
-      const themeMode = curTh ? curTh.id : 'auto';
+      const seasonT = seasonNow(), ovLeft = themeOvLeft(meKey), ovOn = ovLeft > 0;
+      const rawTh = (gameData[meKey] || {}).theme;
+      const themeMode = rawTh === 'classic' ? 'classic' : (curTh ? curTh.id : 'auto');
       const thRow = (id, icon, name, sub) => `<div class="flex items-center gap-2.5 p-2 rounded-xl bg-gray-900/50 border border-gray-800"><div class="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-sm shrink-0">${icon}</div><div class="flex-1 min-w-0"><p class="text-xs font-semibold text-gray-100 truncate">${name}</p><p class="text-[10px] text-gray-400">${sub}</p></div><button type="button" data-theme="${id}" class="px-2.5 py-1 rounded-lg text-[11px] ${themeMode === id ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${themeMode === id ? 'Actif ✓' : 'Choisir'}</button></div>`;
-      const seasonToggle = seasonT ? `<div class="p-3 rounded-xl border border-amber-500/30 bg-amber-500/10 text-[11px] text-amber-100 leading-relaxed flex items-center gap-3"><div class="flex-1 min-w-0">${seasonT.icon} <b>Thème de saison : ${esc(seasonT.name)}</b><br>${seasonOn ? `Actif jusqu'au ${seasonEnd(seasonT)}. Tu peux le désactiver si tu préfères ton thème habituel.` : `Désactivé sur cet appareil. Il reste disponible jusqu'au ${seasonEnd(seasonT)}.`}</div><button type="button" data-season-toggle class="px-2.5 py-1 rounded-lg text-[11px] shrink-0 ${seasonOn ? 'bg-gray-700 text-white' : 'bg-brand-600 hover:bg-brand-500 text-white'}">${seasonOn ? 'Désactiver' : 'Activer'}</button></div>` : '';
-      const themeChoiceHtml = `<div class="space-y-2"><p class="font-semibold text-white">Thème de l'application</p>${seasonToggle}${seasonOn ? '' : thRow('auto', '🌑', 'Classique', 'Aucun thème. Tes thèmes débloqués sont dans Secrets, tout en bas.')}</div>`;
+      const banner = (cls, html) => `<div class="p-3 rounded-xl border ${cls} text-[11px] leading-relaxed">${html}</div>`;
+      let themeBanner = '', themeRows = '';
+      if (seasonT && !ovOn) {
+        themeBanner = banner('border-amber-500/30 bg-amber-500/10 text-amber-100', `${seasonT.icon} <b>Thème de saison : ${esc(seasonT.name)}</b><br>Imposé à tout le monde jusqu'au ${seasonEnd(seasonT)}. Tu retrouveras ton choix de thème ensuite.`);
+      } else if (ovOn) {
+        themeBanner = banner('border-emerald-500/30 bg-emerald-500/10 text-emerald-100', `🔓 <b>Dérogation active</b><br>Tu peux choisir n'importe quel thème jusqu'au ${esc(fmtDateTime(nowS() + ovLeft))}${seasonT ? ` (malgré le thème de saison ${esc(seasonT.name)})` : ''}.`);
+        themeRows = (seasonT ? thRow('auto', seasonT.icon, 'Thème de saison : ' + esc(seasonT.name), 'Par défaut') + thRow('classic', '🌑', 'Classique', 'Aucun thème') : thRow('auto', '🌑', 'Classique', 'Aucun thème'))
+          + THEMES.map(t => thRow(t.id, t.icon, esc(t.name), ownsTheme(meKey, t) ? 'Débloqué' : 'Prêté pendant la dérogation')).join('');
+      } else {
+        themeRows = thRow('auto', '🌑', 'Classique', 'Aucun thème. Tes thèmes débloqués sont dans Secrets, tout en bas.');
+      }
+      const themeChoiceHtml = `<div class="space-y-2"><p class="font-semibold text-white">Thème de l'application</p>${themeBanner}${themeRows}</div>`;
       const secretsHtml = `<div class="space-y-2"><p class="font-semibold text-white">🤫 Secrets <span class="text-[10px] font-normal text-gray-400">${secrets.filter(x => x.owned).length}/${secrets.length} trouvés</span></p>${secrets.map(secRow).join('')}</div>`;
       body.innerHTML = `
         <div class="space-y-2">
@@ -1917,7 +1938,6 @@
       body.querySelectorAll('[data-avatar-pick]').forEach(b => { b.onclick = pickAvatar; });
       body.querySelectorAll('[data-avatar-clear]').forEach(b => { b.onclick = clearAvatar; });
       body.querySelectorAll('[data-theme]').forEach(b => { b.onclick = () => equipTheme(b.dataset.theme); });
-      body.querySelectorAll('[data-season-toggle]').forEach(b => { b.onclick = () => setSeasonOptOut(!seasonOptOut()); });
     }
     async function equipDeco(id) {
       const d = DECOS.find(x => x.id === id);
@@ -2330,6 +2350,7 @@
       startGroupListeners();
       soft(db.ref('pins'), (pn) => { pinsData = pn.val() || {}; renderMessages(); });
       soft(db.ref('grants'), (gr) => { grantsData = gr.val() || {}; renderUsersList(); renderDecoButton(); renderDecoModal(); });
+      soft(db.ref('themeOverrides'), (o) => { themeOvData = o.val() || {}; scheduleThemeOvExpiry(); applyTheme(); renderDecoModal(); renderProfile(); renderAdminThemes(); });
       listen(db.ref('status'), (snap2) => { userStatuses = snap2.val() || {}; renderUsersList(); });
       listen(db.ref('typing'), (t) => { typingData = t.val() || {}; updateTypingLabel(); });
       renderNotifBtn();
@@ -2350,7 +2371,7 @@
       if (meKey) { try { await db.ref('status/' + meKey).set({ state: 'offline', at: firebase.database.ServerValue.TIMESTAMP }); } catch (e) {} }
       abortRound(); stopListeners(); wipeKeys(); gameData = {}; avatarsData = {}; groupsData = {}; userGroupsData = {}; gameLoaded = false; evData = {}; pendingRollUpd = null; closeRoll(); closeProfile(); closeOwner(); ownerPreview = { deco: null, theme: null }; { const pp = document.getElementById('previewPill'); if (pp) pp.remove(); } renderRollPanel(); Object.keys(groupWatch).forEach(k => delete groupWatch[k]); Object.keys(groupKeyCache).forEach(k => delete groupKeyCache[k]); pendingChan = ''; lastMsgsSnap = null; applyTheme();
       currentUser = null; meKey = ''; starting = false;
-      accounts = {}; rolesData = {}; gameData = {}; grantsData = {}; notesList = []; messagesList = []; unreadChannels = {};
+      accounts = {}; rolesData = {}; gameData = {}; grantsData = {}; themeOvData = {}; clearTimeout(themeOvTimer); notesList = []; messagesList = []; unreadChannels = {};
       currentChannel = 'general';
       endBoot(true);
       document.getElementById('appContainer').classList.add('hidden');
@@ -2362,8 +2383,8 @@
 
     // ===== Centre d'administration : onglets, stats, sanctions rapides, bannis, journal =====
     const ABTN = 'px-2.5 py-1.5 text-[11px] rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 transition';
-    const ADMIN_TABS = ['users', 'create', 'roles', 'banned', 'log'];
-    const ADMIN_OWNER_TABS = ['create', 'roles'];
+    const ADMIN_TABS = ['users', 'create', 'roles', 'themes', 'banned', 'log'];
+    const ADMIN_OWNER_TABS = ['create', 'roles', 'themes'];
     let adminTab = 'users', adminFilter = 'all', adminTimer = null;
     const adminOpen = new Set();
     const isOwnerMe = () => !!(currentUser && currentUser.role === 'Owner');
@@ -2404,6 +2425,7 @@
       else if (t === 'log') renderAdminLog();
       else if (t === 'roles') { renderRolesList(); adminRolePreview(); }
       else if (t === 'create') adminCheckUsername();
+      else if (t === 'themes') renderAdminThemes();
     }
 
     const adminIsOnline = k => { const s = userStatuses[k]; return !!(s && s.state === 'online'); };
@@ -2529,6 +2551,12 @@
         if (left <= 0) expired = true; else el.textContent = fmtLeft(left);
       });
       if (expired) updateAdminUsersList();
+      let ovExpired = false;
+      document.querySelectorAll('#adminModal [data-ovleft]').forEach(el => {
+        const left = (Number(el.dataset.ovleft) - nowS()) / 1000;
+        if (left <= 0) ovExpired = true; else el.textContent = fmtLeft(left);
+      });
+      if (ovExpired) renderAdminThemes();
     }
     function updateAdminUsersList() {
       const m = document.getElementById('adminModal');
@@ -2569,6 +2597,60 @@
       box.innerHTML = '<p class="text-[11px] text-gray-500">Dernières sanctions annoncées dans les salons.</p>' + list.map(m =>
         `<div class="flex items-start gap-2 p-2.5 bg-gray-900 rounded-xl border border-gray-800"><span class="shrink-0">${m.isBan ? '⛔' : '🔇'}</span><div class="min-w-0 flex-1"><p class="text-gray-200 break-words">${esc(m.text)}</p><p class="text-[10px] text-gray-500 mt-0.5">${esc(msgStamp(m))}</p></div></div>`
       ).join('');
+    }
+
+
+    // ===== Admin > Thèmes : dérogations au thème de saison (Owner) =====
+    let adminOv = { target: '', n: 1, unit: 3600 };
+    const OV_UNITS = [[60, 'minutes'], [3600, 'heures'], [86400, 'jours']];
+    const OV_PRESETS = [['30 min', 30, 60], ['1 h', 1, 3600], ['24 h', 24, 3600], ['7 jours', 7, 86400]];
+    function renderAdminThemes() {
+      const box = document.getElementById('adminThemesBody'), m = document.getElementById('adminModal');
+      if (!box || !m || m.classList.contains('hidden') || adminTab !== 'themes' || !isOwnerMe()) return;
+      const sn = seasonNow();
+      const keys = Object.keys(accounts).filter(k => accounts[k]).sort((a, b) => String(accounts[a].name).localeCompare(String(accounts[b].name)));
+      if (!adminOv.target || !accounts[adminOv.target]) adminOv.target = keys[0] || '';
+      const inp = 'py-2 px-3 bg-gray-900 border border-gray-700 rounded-xl text-xs text-white outline-none focus:border-amber-500';
+      const banner = sn
+        ? `<div class="p-3 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-100 leading-relaxed">${sn.icon} <b>Thème de saison en cours : ${esc(sn.name)}</b><br>Imposé à tout le monde jusqu'au ${seasonEnd(sn)}. Personne ne peut le retirer, sauf avec une dérogation.</div>`
+        : `<div class="p-3 rounded-xl border border-gray-800 bg-gray-900/50 text-gray-400 leading-relaxed">Aucun thème de saison en ce moment. Une dérogation sert quand même à prêter n'importe quel thème, même non débloqué.</div>`;
+      const active = Object.keys(themeOvData).filter(k => accounts[k] && themeOvLeft(k) > 0).sort((a, b) => Number(themeOvData[a].until) - Number(themeOvData[b].until));
+      const list = active.length
+        ? active.map(k => { const o = themeOvData[k]; return `<div class="flex items-center gap-2 p-2.5 bg-gray-900 rounded-xl border border-gray-800"><div class="min-w-0 flex-1"><p class="text-gray-100 font-medium truncate">${esc(accounts[k].name)} <span class="text-gray-500 font-normal">@${esc(k)}</span></p><p class="text-[10px] text-gray-500">Reste <span class="font-mono text-emerald-300" data-ovleft="${Number(o.until)}">${fmtLeft(themeOvLeft(k) / 1000)}</span> · fin le ${esc(fmtDateTime(Number(o.until)))}</p></div><button type="button" data-ovrevoke="${esc(k)}" class="${ABTN}">Révoquer</button></div>`; }).join('')
+        : '<p class="text-gray-500 py-3 text-center">Aucune dérogation en cours.</p>';
+      box.innerHTML = banner
+        + `<div class="space-y-2"><p class="font-semibold text-white">Accorder une dérogation</p>`
+        + `<p class="text-[11px] text-gray-400">La personne peut choisir n'importe quel thème (même non débloqué) pendant la durée choisie. À la fin, le thème de saison revient tout seul.</p>`
+        + `<select id="ovWho" class="w-full ${inp}">${keys.map(k => `<option value="${esc(k)}" ${k === adminOv.target ? 'selected' : ''}>${esc(accounts[k].name)} (@${esc(k)})</option>`).join('')}</select>`
+        + `<div class="flex gap-2"><input id="ovN" type="number" min="1" step="1" value="${adminOv.n}" class="w-24 ${inp}"><select id="ovUnit" class="flex-1 ${inp}">${OV_UNITS.map(([v, l]) => `<option value="${v}" ${v === adminOv.unit ? 'selected' : ''}>${l}</option>`).join('')}</select></div>`
+        + `<div class="flex flex-wrap gap-1.5">${OV_PRESETS.map(([l, n, u]) => `<button type="button" data-ovpreset="${n}:${u}" class="${ABTN}">${l}</button>`).join('')}</div>`
+        + `<button type="button" id="ovGrant" class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-white font-medium text-xs rounded-xl transition">Accorder la dérogation</button>`
+        + `<p class="text-[10px] text-gray-500">Si la personne en a déjà une, elle est remplacée (le compte à rebours repart de maintenant).</p></div>`
+        + `<div class="space-y-2"><p class="font-semibold text-white">En cours <span class="text-[10px] font-normal text-gray-400">${active.length}</span></p>${list}</div>`;
+      const who = document.getElementById('ovWho'), n = document.getElementById('ovN'), un = document.getElementById('ovUnit');
+      who.onchange = () => { adminOv.target = who.value; };
+      n.oninput = () => { adminOv.n = n.value; };
+      un.onchange = () => { adminOv.unit = Number(un.value); };
+      box.querySelectorAll('[data-ovpreset]').forEach(b => { b.onclick = () => { const [pn, pu] = b.dataset.ovpreset.split(':').map(Number); adminOv.n = pn; adminOv.unit = pu; renderAdminThemes(); }; });
+      document.getElementById('ovGrant').onclick = adminGrantThemeOv;
+      box.querySelectorAll('[data-ovrevoke]').forEach(b => { b.onclick = () => adminRevokeThemeOv(b.dataset.ovrevoke); });
+    }
+    async function adminGrantThemeOv() {
+      if (!isOwnerMe()) return;
+      const k = adminOv.target, n = Number(adminOv.n), secs = n * adminOv.unit;
+      if (!accounts[k]) { alert('Choisis un compte.'); return; }
+      if (!isFinite(n) || n <= 0) { alert('Durée invalide.'); return; }
+      if (secs > 365 * 86400) { alert('Durée maximale : 365 jours.'); return; }
+      try {
+        await db.ref('themeOverrides/' + k).set({ until: nowS() + Math.round(secs * 1000), by: meKey, at: nowS() });
+        showToast('🔓 Dérogation accordée à ' + accounts[k].name + ' (' + fmtDur(Math.round(secs)) + ')');
+      } catch (e) { alert('Impossible : ' + (e.code || e.message) + "\n(Les règles Firebase pour « themeOverrides » sont-elles publiées ?)"); }
+    }
+    async function adminRevokeThemeOv(k) {
+      if (!isOwnerMe() || !accounts[k]) return;
+      if (!confirm('Révoquer la dérogation de ' + accounts[k].name + ' ?')) return;
+      try { await db.ref('themeOverrides/' + k).remove(); showToast('Dérogation révoquée pour ' + accounts[k].name); }
+      catch (e) { alert('Impossible : ' + (e.code || e.message)); }
     }
 
     function adminCheckUsername() {
