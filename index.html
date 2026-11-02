@@ -496,7 +496,7 @@
               <span class="hidden sm:inline">Securechat</span>
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v4.1.0</span>
+                <span>v5.0.0</span>
               </button>
             </h2>
           </div>
@@ -792,223 +792,22 @@
         <h3 class="text-base font-bold text-white flex items-center gap-2"><i data-lucide="git-commit" class="w-5 h-5 text-brand-400"></i><span>Changelog & Historique des Versions</span></h3>
         <button onclick="closeChangelogModal()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
-      <div class="space-y-4 text-gray-300">
-        <div class="border-l-2 border-amber-500 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v4.1.0</span>
-            <span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Événement anniversaire : le Roll (décoration, thème, et les deux améliorés)</li>
-            <li>1500 étoiles d'événement offertes à tous, indépendantes de celles du jeu</li>
-            <li>Fiche de profil : touche la photo d'un membre</li>
-            <li>De nouveaux secrets à découvrir…</li>
-            <li>Tous les thèmes améliorés : décors animés légers, en-têtes et boutons retravaillés</li>
-            <li>Thèmes de saison (Halloween, Noël, Saint-Valentin, Été) : actifs pendant leur période, avec une option pour les désactiver</li>
-            <li>Décoration « 1 semaine » pour tous les participants</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v4.0.0</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Messages épinglés (salons et groupes)</li>
-            <li>« Vu » dans les messages privés</li>
-            <li>Groupes privés chiffrés (créés par l'Owner)</li>
-            <li>Thèmes de saison automatiques, avec des secrets cachés</li>
-            <li>Ouverture plus rapide et lecture hors ligne</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.9.3</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Un nouveau thème secret</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.9.2</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Une décoration secrète a changé de look</li>
-            <li>De nouvelles façons de fouiller…</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.9.1</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Dernière déconnexion plus lisible sur téléphone</li>
-            <li>Une nouvelle décoration secrète</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.9.0</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Date et heure de dernière déconnexion dans la liste des membres</li>
-            <li>Date affichée sur chaque message</li>
-            <li>Thème secret refait, points de connexion corrigés</li>
-            <li>Memory et titres retirés</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.8.0</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Photo de profil : visible dans la liste des membres et les messages</li>
-            <li>Thèmes d'application, à choisir dans le menu « Décorations &amp; thèmes »</li>
-            <li>Un premier thème secret à découvrir</li>
-            <li>Les secrets (décorations, titres, thèmes) sont regroupés en bas du menu</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.7.0</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Deuxième jeu : Memory (3 niveaux), qui rapporte des points</li>
-            <li>Titres à débloquer, affichés à côté du nom</li>
-            <li>Menu « Décorations &amp; thèmes »</li>
-            <li>Nouveau look pour la décoration secrète</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.6.0</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Menu « Décorations » séparé du jeu, avec aperçu</li>
-            <li>Décorations exclusives (attribuées par l'Owner)</li>
-            <li>Une décoration secrète à découvrir</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.5.0</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>« Projets Privés » devient un espace de notes que toi seul peux lire (chiffré avec tes clés)</li>
-            <li>Suppression du Salon Vocal</li>
-            <li>Guide ntfy iPhone : installation en PWA via Safari</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.4.0</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Event « Chasse aux étoiles » : mini-jeu de 30 secondes</li>
-            <li>5 décorations à débloquer pour ton bouton de message privé</li>
-            <li>Classement des joueurs</li>
-            <li>Retrait des appels vocaux et des messages vocaux</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.3.0</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Notifications app fermée via l'app gratuite ntfy (icône téléphone)</li>
-            <li>Bannir un compte le retire de la base, des clés et des notifications</li>
-            <li>Le compte Firebase d'un banni est supprimé à sa prochaine tentative de connexion</li>
-            <li>Affichage téléphone corrigé : plus de flou en haut, zones sûres iPhone, boutons adaptés aux petits écrans</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.2.0</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Salon Vocal : appels vocaux (retiré en v3.4.0)</li>
-            <li>Messages vocaux (retirés en v3.4.0)</li>
-            <li>Sondages : /poll Question | choix 1 | choix 2</li>
-            <li>Commandes /roll (dés) et /pile (pile ou face)</li>
-            <li>Notifications (cloche) : DM, mentions ou tout</li>
-            <li>Nouveau rôle Testeur (jaune) : mêmes droits qu'un Admin, non supprimable</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.1.0</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Rôles personnalisés (nom + couleur) créés par l'Owner</li>
-            <li>Un seul rôle par personne : Membre, Ami, Admin, Testeur ou personnalisé</li>
-            <li>Badges de rôle dans la liste des membres et les messages</li>
-            <li>Bannière de mise à jour automatique</li>
-            <li>Droits Admin mis à jour sans reconnexion</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v3.0.0</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Chiffrement AES-256 des messages et des images, directement sur l'appareil</li>
-            <li>Salons protégés par une phrase secrète de groupe</li>
-            <li>Messages privés chiffrés de bout en bout (clés par personne)</li>
-            <li>Clés effacées de l'appareil à la déconnexion</li>
-            <li>Application installable (PWA) sur iPhone, PC et Raspberry Pi</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white text-sm">v2.0.0</span>
-          </div>
-          <ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">
-            <li>Connexion sécurisée avec de vrais comptes, mots de passe protégés</li>
-            <li>Migration automatique des anciens comptes à la première connexion</li>
-            <li>Réponses aux messages, réactions emoji, modification et suppression</li>
-            <li>Mentions @pseudo mises en évidence</li>
-            <li>Recherche dans chaque salon et indicateur « écrit… »</li>
-            <li>Compteurs de messages non lus par salon et par DM</li>
-            <li>Images compressées et protection contre l'injection HTML</li>
-            <li>Nouvelles règles de sécurité</li>
-          </ul>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <span class="font-bold text-white text-sm">v1.9.2</span>
-          <p class="text-xs text-gray-400">Correction du salon Général et des notifications : plus de faux points, messages sécurisés, images compressées, annonce sans doublons.</p>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <span class="font-bold text-white text-sm">v1.9.1</span>
-          <p class="text-xs text-gray-400">Correction des notifications : suppression des faux points verts apparaissant dans Général et les DMs lors de la publication d'une annonce.</p>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <span class="font-bold text-white text-sm">v1.9.0</span>
-          <p class="text-xs text-gray-400">Création du salon exclusif <code class="text-amber-300">📢 • annonce-update</code> réservé à l'Owner Rayqua.</p>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <span class="font-bold text-white text-sm">v1.8.2</span>
-          <p class="text-xs text-gray-400">Optimisation des notifications : le point vert ne s'affiche plus sur le salon actif.</p>
-        </div>
-        <div class="border-l-2 border-gray-700 pl-3 space-y-1">
-          <span class="font-bold text-white text-sm">v1.8.1</span>
-          <p class="text-xs text-gray-400">Correction d'affichage sur iPhone (menu latéral et émojis).</p>
-        </div>
-      </div>
+      <div class="space-y-3 text-gray-300"></div>
     </div>
   </div>
 
   <script>
-    const CURRENT_VERSION = "v4.1.0";
+    const CURRENT_VERSION = "v5.0.0";
     const DEV_MODE = false; // true = aucune annonce automatique
     const VERSION_CHANGELOG =
-      "🎂 Securechat fête sa première semaine : ÉVÉNEMENT !\n\n" +
-      "À partir de ce soir 20h00 et jusqu'à demain minuit :\n" +
-      "🎲 Le ROLL de l'anniversaire : tout le monde reçoit 1500 ⭐ d'événement pour tirer des récompenses exclusives\n" +
-      "🎂 Rare : la décoration Anniversaire\n" +
-      "🎉 Épique : le thème Anniversaire\n" +
-      "🌟 Légendaire : les deux en version améliorée !\n\n" +
-      "👤 Touche la photo d'un membre pour voir sa fiche de profil\n\n" +
-      "Ces étoiles sont à part : tes étoiles du jeu et tes paliers ne bougent pas.\n🕵️ Et de nouveaux secrets traînent quelque part… Bonne chance !";
+      "🚀 Securechat v5.0 : la grande mise à jour !\n\n" +
+      "Voici les nouveautés :\n" +
+      "👤 Fiche de profil : touche la photo d'un membre pour voir sa fiche\n" +
+      "🎨 Tous les thèmes ont été améliorés, avec des décors animés légers\n" +
+      "🗓️ Les thèmes de saison s'activent tout seuls pendant leur période (Halloween, Noël, Saint-Valentin, Été), avec une option pour les désactiver dans le menu 🎨\n" +
+      "⚡ Mises à jour beaucoup plus rapides : l'appli installée se recharge toute seule\n" +
+      "📜 L'historique des versions est rangé par grande version\n" +
+      "🕵️ Et de nouveaux secrets traînent quelque part… Bonne chance !";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
 
@@ -2801,7 +2600,216 @@
       const c = safeColor(document.getElementById('newRoleColor').value);
       el.innerHTML = `<span class="text-[10px] px-1.5 py-0.5 rounded font-semibold" style="color:${c};background:${c}22;border:1px solid ${c}55">${esc(n)}</span>`;
     }
-    function openChangelogModal() { document.getElementById('changelogModal').classList.remove('hidden'); }
+    // ===== Historique des versions : rangé par grande version (v1.0.0, v2.0.0 …) =====
+    const CHANGELOG = [
+ {
+  "v": "5.0.0",
+  "items": [
+   "Fiche de profil : touche la photo d'un membre pour voir sa décoration, ses étoiles et ses secrets trouvés",
+   "Tous les thèmes améliorés : décors animés légers, en-têtes et boutons retravaillés",
+   "Thèmes de saison (Halloween, Noël, Saint-Valentin, Été) : ils s'activent tout seuls pendant leur période, avec une option pour les désactiver",
+   "Ce qui n'est plus obtenable n'est visible que par ceux qui l'ont",
+   "Centre d'administration refait : comptes, création, rôles, bannis et journal des sanctions",
+   "Mises à jour beaucoup plus rapides : l'appli installée se recharge toute seule",
+   "Historique des versions rangé par grande version",
+   "De nouveaux secrets à découvrir…"
+  ]
+ },
+ {
+  "v": "4.1.0",
+  "items": [
+   "Événement anniversaire : le Roll de l'anniversaire",
+   "1500 étoiles d'événement offertes à tous, indépendantes de celles du jeu",
+   "3 récompenses : la décoration, le thème, et les deux en version améliorée"
+  ]
+ },
+ {
+  "v": "4.0.0",
+  "items": [
+   "Messages épinglés (salons et groupes)",
+   "« Vu » dans les messages privés",
+   "Groupes privés chiffrés (créés par l'Owner)",
+   "Thèmes de saison automatiques, avec des secrets cachés",
+   "Ouverture plus rapide et lecture hors ligne"
+  ]
+ },
+ {
+  "v": "3.9.3",
+  "items": [
+   "Un nouveau thème secret"
+  ]
+ },
+ {
+  "v": "3.9.2",
+  "items": [
+   "Une décoration secrète a changé de look",
+   "De nouvelles façons de fouiller…"
+  ]
+ },
+ {
+  "v": "3.9.1",
+  "items": [
+   "Dernière déconnexion plus lisible sur téléphone",
+   "Une nouvelle décoration secrète"
+  ]
+ },
+ {
+  "v": "3.9.0",
+  "items": [
+   "Date et heure de dernière déconnexion dans la liste des membres",
+   "Date affichée sur chaque message",
+   "Thème secret refait, points de connexion corrigés",
+   "Memory et titres retirés"
+  ]
+ },
+ {
+  "v": "3.8.0",
+  "items": [
+   "Photo de profil : visible dans la liste des membres et les messages",
+   "Thèmes d'application, à choisir dans le menu « Décorations &amp; thèmes »",
+   "Un premier thème secret à découvrir",
+   "Les secrets (décorations, titres, thèmes) sont regroupés en bas du menu"
+  ]
+ },
+ {
+  "v": "3.7.0",
+  "items": [
+   "Deuxième jeu : Memory (3 niveaux), qui rapporte des points",
+   "Titres à débloquer, affichés à côté du nom",
+   "Menu « Décorations &amp; thèmes »",
+   "Nouveau look pour la décoration secrète"
+  ]
+ },
+ {
+  "v": "3.6.0",
+  "items": [
+   "Menu « Décorations » séparé du jeu, avec aperçu",
+   "Décorations exclusives (attribuées par l'Owner)",
+   "Une décoration secrète à découvrir"
+  ]
+ },
+ {
+  "v": "3.5.0",
+  "items": [
+   "« Projets Privés » devient un espace de notes que toi seul peux lire (chiffré avec tes clés)",
+   "Suppression du Salon Vocal",
+   "Guide ntfy iPhone : installation en PWA via Safari"
+  ]
+ },
+ {
+  "v": "3.4.0",
+  "items": [
+   "Event « Chasse aux étoiles » : mini-jeu de 30 secondes",
+   "5 décorations à débloquer pour ton bouton de message privé",
+   "Classement des joueurs",
+   "Retrait des appels vocaux et des messages vocaux"
+  ]
+ },
+ {
+  "v": "3.3.0",
+  "items": [
+   "Notifications app fermée via l'app gratuite ntfy (icône téléphone)",
+   "Bannir un compte le retire de la base, des clés et des notifications",
+   "Le compte Firebase d'un banni est supprimé à sa prochaine tentative de connexion",
+   "Affichage téléphone corrigé : plus de flou en haut, zones sûres iPhone, boutons adaptés aux petits écrans"
+  ]
+ },
+ {
+  "v": "3.2.0",
+  "items": [
+   "Salon Vocal : appels vocaux (retiré en v3.4.0)",
+   "Messages vocaux (retirés en v3.4.0)",
+   "Sondages : /poll Question | choix 1 | choix 2",
+   "Commandes /roll (dés) et /pile (pile ou face)",
+   "Notifications (cloche) : DM, mentions ou tout",
+   "Nouveau rôle Testeur (jaune) : mêmes droits qu'un Admin, non supprimable"
+  ]
+ },
+ {
+  "v": "3.1.0",
+  "items": [
+   "Rôles personnalisés (nom + couleur) créés par l'Owner",
+   "Un seul rôle par personne : Membre, Ami, Admin, Testeur ou personnalisé",
+   "Badges de rôle dans la liste des membres et les messages",
+   "Bannière de mise à jour automatique",
+   "Droits Admin mis à jour sans reconnexion"
+  ]
+ },
+ {
+  "v": "3.0.0",
+  "items": [
+   "Chiffrement AES-256 des messages et des images, directement sur l'appareil",
+   "Salons protégés par une phrase secrète de groupe",
+   "Messages privés chiffrés de bout en bout (clés par personne)",
+   "Clés effacées de l'appareil à la déconnexion",
+   "Application installable (PWA) sur iPhone, PC et Raspberry Pi"
+  ]
+ },
+ {
+  "v": "2.0.0",
+  "items": [
+   "Connexion sécurisée avec de vrais comptes, mots de passe protégés",
+   "Migration automatique des anciens comptes à la première connexion",
+   "Réponses aux messages, réactions emoji, modification et suppression",
+   "Mentions @pseudo mises en évidence",
+   "Recherche dans chaque salon et indicateur « écrit… »",
+   "Compteurs de messages non lus par salon et par DM",
+   "Images compressées et protection contre l'injection HTML",
+   "Nouvelles règles de sécurité"
+  ]
+ },
+ {
+  "v": "1.9.2",
+  "items": [
+   "Correction du salon Général et des notifications : plus de faux points, messages sécurisés, images compressées, annonce sans doublons."
+  ]
+ },
+ {
+  "v": "1.9.1",
+  "items": [
+   "Correction des notifications : suppression des faux points verts apparaissant dans Général et les DMs lors de la publication d'une annonce."
+  ]
+ },
+ {
+  "v": "1.9.0",
+  "items": [
+   "Création du salon exclusif <code class=\"text-amber-300\">📢 • annonce-update</code> réservé à l'Owner Rayqua."
+  ]
+ },
+ {
+  "v": "1.8.2",
+  "items": [
+   "Optimisation des notifications : le point vert ne s'affiche plus sur le salon actif."
+  ]
+ },
+ {
+  "v": "1.8.1",
+  "items": [
+   "Correction d'affichage sur iPhone (menu latéral et émojis)."
+  ]
+ }
+];
+    let clOpen = {};
+    function renderChangelog() {
+      const box = document.querySelector('#changelogModal .text-gray-300'); if (!box) return;
+      const majors = [...new Set(CHANGELOG.map(e => e.v.split('.')[0]))].sort((x, y) => Number(y) - Number(x));
+      const curMajor = CURRENT_VERSION.replace('v', '').split('.')[0];
+      if (!Object.keys(clOpen).length) clOpen[curMajor] = true;
+      box.className = 'space-y-3 text-gray-300';
+      box.innerHTML = majors.map(mj => {
+        const list = CHANGELOG.filter(e => e.v.split('.')[0] === mj);
+        const open = !!clOpen[mj], isCur = mj === curMajor;
+        return `<div class="rounded-xl border ${isCur ? 'border-amber-500/40' : 'border-gray-800'} bg-gray-900/40 overflow-hidden">
+          <button type="button" data-clg="${mj}" class="w-full flex items-center justify-between gap-2 px-3 py-2.5 text-left hover:bg-gray-800/60 transition">
+            <span class="flex items-center gap-2"><span class="font-bold text-white text-sm">v${mj}.0.0</span>${isCur ? '<span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>' : ''}<span class="text-[10px] text-gray-500">${list.length} mise${list.length > 1 ? 's' : ''} à jour</span></span>
+            <svg viewBox="0 0 24 24" class="w-4 h-4 text-gray-400 shrink-0 transition-transform ${open ? 'rotate-180' : ''}" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="${open ? '' : 'hidden'} px-3 pb-3 space-y-3">${list.map(e => `<div class="border-l-2 ${'v' + e.v === CURRENT_VERSION ? 'border-amber-500' : 'border-gray-700'} pl-3 space-y-1"><div class="flex items-center justify-between"><span class="font-semibold text-gray-100 text-xs">v${e.v}</span>${'v' + e.v === CURRENT_VERSION ? '<span class="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">Actuelle</span>' : ''}</div><ul class="text-xs text-gray-400 list-disc pl-4 space-y-0.5">${e.items.map(t => '<li>' + t + '</li>').join('')}</ul></div>`).join('')}</div>
+        </div>`;
+      }).join('');
+      box.querySelectorAll('[data-clg]').forEach(b => { b.onclick = () => { clOpen[b.dataset.clg] = !clOpen[b.dataset.clg]; renderChangelog(); }; });
+    }
+    function openChangelogModal() { renderChangelog(); document.getElementById('changelogModal').classList.remove('hidden'); }
     function closeChangelogModal() { document.getElementById('changelogModal').classList.add('hidden'); }
 
     function triggerImageUpload() {
