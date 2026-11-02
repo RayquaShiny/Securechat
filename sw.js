@@ -1,10 +1,10 @@
-/* Securechat : service worker (v4.1.0)
+/* Securechat : service worker (v5.0.0)
    - Ouvre l'appli instantanément : la page et les bibliothèques viennent du cache.
    - Mises à jour rapides : à chaque ouverture, la page est re-téléchargée en contournant tous les caches ;
      si elle a changé, l'appli est prévenue et se recharge toute seule (dès que tu n'es pas en train d'écrire).
    - Les appels Firebase / notifications ne sont jamais mis en cache (aucun message n'est stocké ici).
    - Ouvre l'appli au clic sur une notification. */
-const VERSION = 'securechat-v4.1.0';
+const VERSION = 'securechat-v5.0.0';
 const SHELL = 'shell-' + VERSION;
 const LIBS = 'libs-' + VERSION;
 const LIB_HOSTS = ['cdn.tailwindcss.com', 'unpkg.com', 'www.gstatic.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
