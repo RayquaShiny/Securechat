@@ -2167,7 +2167,23 @@
       lastUpdateCheck = now;
       navigator.serviceWorker.getRegistration().then(r => { if (r) r.update(); }).catch(() => {});
       if (navigator.serviceWorker.controller) navigator.serviceWorker.controller.postMessage({ type: 'check' });
+      verifyLatest();
     }
+    // v5.1.0 : filet de sécurité pour iPhone. Compare la version du serveur à celle affichée, sans passer par le cache
+    async function verifyLatest() {
+      try {
+        if (!navigator.onLine || offlineMode) return;
+        const r = await fetch(location.pathname + '?chk=' + Date.now(), { cache: 'no-store' });
+        const m = (await r.text()).match(/const CURRENT_VERSION = "(v[\d.]+)"/);
+        if (!m || !isNewer(m[1], CURRENT_VERSION)) return;
+        const k = 'sc_upd_' + m[1];
+        if (sessionStorage.getItem(k)) return;
+        sessionStorage.setItem(k, '1');
+        const b = document.getElementById('updateBanner');
+        if (b) b.classList.remove('hidden'); else updateApp();
+      } catch (e) {}
+    }
+    setTimeout(() => checkForUpdate(true), 4000);
     setInterval(() => checkForUpdate(false), 10 * 60 * 1000);
     let hiddenAt = 0;
     document.addEventListener('visibilitychange', () => {
