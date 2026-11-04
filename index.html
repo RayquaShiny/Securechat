@@ -509,7 +509,7 @@
               <span class="hidden sm:inline">Securechat</span>
               <button onclick="openChangelogModal()" class="px-2 py-0.5 text-[10px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded hover:bg-brand-500/20 transition flex items-center gap-1" title="Voir le Changelog">
                 <i data-lucide="git-branch" class="w-3 h-3"></i>
-                <span>v5.0.0</span>
+                <span>v5.1.0</span>
               </button>
             </h2>
           </div>
@@ -815,17 +815,16 @@
   </div>
 
   <script>
-    const CURRENT_VERSION = "v5.0.0";
+    const CURRENT_VERSION = "v5.1.0";
     const DEV_MODE = false; // true = aucune annonce automatique
     const VERSION_CHANGELOG =
-      "🚀 Securechat v5.0 : la grande mise à jour !\n\n" +
-      "Voici les nouveautés :\n" +
-      "👤 Fiche de profil : touche la photo d'un membre pour voir sa fiche\n" +
-      "🎨 Tous les thèmes ont été améliorés, avec des décors animés légers\n" +
-      "🗓️ Les thèmes de saison s'activent tout seuls pendant leur période (Halloween, Noël, Saint-Valentin, Été), avec une option pour les désactiver dans le menu 🎨\n" +
-      "⚡ Mises à jour beaucoup plus rapides : l'appli installée se recharge toute seule\n" +
-      "📜 L'historique des versions est rangé par grande version\n" +
-      "🕵️ Et de nouveaux secrets traînent quelque part… Bonne chance !";
+      "🦖 Securechat v5.1 : le thème Jurassic Park passe au niveau supérieur !\n\n" +
+      "🚨 Alerte « brèche dans l'enclos » synchronisée avec le rugissement du T-Rex\n" +
+      "🔴 Lumières d'urgence rouges et en-tête qui clignote pendant le rugissement\n" +
+      "⚡ Les éclairs illuminent aussi l'interface\n" +
+      "📡 Détecteur de mouvement avec radar et signaux\n" +
+      "💧 Ondes d'eau quand tu touches l'écran, comme le verre qui tremble\n" +
+      "📳 Vibration du téléphone à chaque rugissement (Android)";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
 
@@ -2178,6 +2177,56 @@
       if (meKey && hiddenAt && Date.now() - hiddenAt > 30000) { db.goOffline(); db.goOnline(); }
       hiddenAt = 0;
     });
+    // ===== v5.1.0 : Jurassic Park, effets d'interface synchronisés avec la scène =====
+    (function jpUiFx() {
+      const st = document.createElement('style');
+      st.textContent = `
+.jpfx{display:none;position:fixed;pointer-events:none}
+html body.theme-jurassic .jpfx{display:block}
+#jpRed{inset:0;z-index:58;opacity:0;background:radial-gradient(ellipse at center,transparent 45%,rgba(255,30,10,.45) 100%);animation:jpRedPulse 16s linear -5s infinite}
+#jpFlashUI{inset:0;z-index:57;opacity:0;background:rgba(205,232,255,.13);animation:jpLight 16s linear -5s infinite}
+#jpAlert{left:50%;top:calc(env(safe-area-inset-top,0px) + 70px);transform:translateX(-50%);z-index:61;opacity:0;padding:7px 16px;border:2px solid #f2b134;border-radius:4px;background:repeating-linear-gradient(45deg,rgba(122,31,18,.95) 0 12px,rgba(70,14,8,.95) 12px 24px);color:#ffe8a3;font:700 12px/1.2 Impact,"Arial Black",sans-serif;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;box-shadow:0 0 22px rgba(255,40,20,.8);animation:jpAlertShow 16s linear -5s infinite}
+html body.theme-jurassic header{animation:jpHdrAlert 16s linear -5s infinite}
+#jpRadar{right:14px;bottom:112px;z-index:59;width:54px;height:54px;border-radius:50%;border:1.5px solid #3fbf6a;opacity:.8;overflow:hidden;background:repeating-radial-gradient(circle,transparent 0 8px,rgba(63,191,106,.4) 8px 9px),radial-gradient(circle,rgba(6,28,18,.92),rgba(6,20,14,.8));box-shadow:0 0 12px rgba(63,191,106,.35)}
+@media(min-width:640px){#jpRadar{bottom:122px}}
+html body.theme-jurassic:has(#replyBar:not([style*="none"])) #jpRadar{opacity:0}
+#jpRadar::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(120,255,160,.7),transparent 28%);animation:jpSweep 4s linear infinite}
+#jpRadar::after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px;border-radius:50%;background:#f2b134}
+#jpRadar i{position:absolute;width:4px;height:4px;border-radius:50%;background:#ff5a36;box-shadow:0 0 5px #ff5a36;opacity:0;animation:jpBlip 4s linear infinite}
+.jp-tap{position:fixed;z-index:62;width:12px;height:12px;margin:-6px;border-radius:50%;border:2px solid rgba(150,230,190,.8);pointer-events:none;animation:jpTap .8s ease-out forwards}
+.jp-tap::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(150,230,190,.5);animation:jpTap .8s ease-out .12s forwards}
+@keyframes jpRedPulse{0%,58.5%{opacity:0}59.5%,61.5%,63.5%,65.5%{opacity:1}60.5%,62.5%,64.5%{opacity:.25}67.5%,100%{opacity:0}}
+@keyframes jpAlertShow{0%,58.5%{opacity:0}59.5%,61.5%,63.5%,65.5%{opacity:1}60.5%,62.5%,64.5%{opacity:.35}68%,100%{opacity:0}}
+@keyframes jpHdrAlert{0%,58.5%{box-shadow:0 6px 22px rgba(0,0,0,.6)}59.5%,61.5%,63.5%,65.5%{box-shadow:0 6px 34px rgba(255,40,20,.95)}60.5%,62.5%,64.5%{box-shadow:0 6px 22px rgba(0,0,0,.6)}67.5%,100%{box-shadow:0 6px 22px rgba(0,0,0,.6)}}
+@keyframes jpSweep{to{transform:rotate(360deg)}}
+@keyframes jpBlip{0%{opacity:0}4%{opacity:1}30%,100%{opacity:0}}
+@keyframes jpTap{from{transform:scale(1);opacity:.9}to{transform:scale(7);opacity:0}}
+@media(prefers-reduced-motion:reduce){#jpRed,#jpFlashUI,#jpAlert,.jp-tap{display:none!important}html body.theme-jurassic header{animation:none}#jpRadar::before,#jpRadar i{animation:none}}`;
+      document.head.appendChild(st);
+      const mk = (id, html) => { const d = document.createElement('div'); d.id = id; d.className = 'jpfx'; d.setAttribute('aria-hidden', 'true'); if (html) d.innerHTML = html; document.body.appendChild(d); };
+      mk('jpRed'); mk('jpFlashUI'); mk('jpAlert', '⚠ Alerte · Brèche dans l’enclos du T-Rex');
+      mk('jpRadar', '<i style="left:68%;top:26%;animation-delay:-3.2s"></i><i style="left:30%;top:62%;animation-delay:-1.9s"></i><i style="left:58%;top:70%;animation-delay:-.6s"></i>');
+      const on = () => document.body.classList.contains('theme-jurassic');
+      // Ondes d'eau au toucher
+      document.addEventListener('pointerdown', (e) => {
+        if (!on() || document.hidden) return;
+        const r = document.createElement('div'); r.className = 'jp-tap';
+        r.style.left = e.clientX + 'px'; r.style.top = e.clientY + 'px';
+        document.body.appendChild(r); setTimeout(() => r.remove(), 1000);
+      }, { passive: true });
+      // Vibration synchronisée avec le rugissement (cycle de 16 s, rugissement à ~4,4 s après l'activation)
+      let t1 = 0, t2 = 0;
+      const buzz = () => { if (!document.hidden && on() && navigator.vibrate) navigator.vibrate([60, 40, 80, 40, 120, 60, 120]); };
+      const sync = () => {
+        clearTimeout(t1); clearInterval(t2);
+        if (!on()) return;
+        t1 = setTimeout(() => { buzz(); t2 = setInterval(buzz, 16000); }, 4440);
+      };
+      let was = on();
+      new MutationObserver(() => { const n = on(); if (n !== was) { was = n; sync(); } }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      sync();
+    })();
+
     window.addEventListener('pageshow', (e) => { if (e.persisted && meKey) { db.goOffline(); db.goOnline(); } });
 
     // PWA : fonctionne uniquement en https (GitHub Pages, Firebase Hosting...)
@@ -2697,6 +2746,15 @@
     }
     // ===== Historique des versions : rangé par grande version (v1.0.0, v2.0.0 …) =====
     const CHANGELOG = [
+ {
+  "v": "5.1.0",
+  "items": [
+   "Jurassic Park : alerte « brèche dans l'enclos » synchronisée avec le rugissement",
+   "Jurassic Park : lumières d'urgence rouges, en-tête clignotant et éclairs sur toute l'interface",
+   "Jurassic Park : détecteur de mouvement avec radar",
+   "Jurassic Park : ondes d'eau au toucher et vibration au rugissement"
+  ]
+ },
  {
   "v": "5.0.0",
   "items": [
