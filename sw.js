@@ -1,10 +1,11 @@
-/* Securechat : service worker (v5.0.0)
+/* Securechat : service worker (v5.1.0)
    - Ouvre l'appli instantanément : la page et les bibliothèques viennent du cache.
    - Mises à jour rapides : à chaque ouverture, la page est re-téléchargée en contournant tous les caches ;
      si elle a changé, l'appli est prévenue et se recharge toute seule (dès que tu n'es pas en train d'écrire).
+   - Quand une nouvelle version du service worker s'installe, l'ancien cache est supprimé et l'appli se recharge.
    - Les appels Firebase / notifications ne sont jamais mis en cache (aucun message n'est stocké ici).
    - Ouvre l'appli au clic sur une notification. */
-const VERSION = 'securechat-v5.0.0';
+const VERSION = 'securechat-v5.1.0';
 const SHELL = 'shell-' + VERSION;
 const LIBS = 'libs-' + VERSION;
 const LIB_HOSTS = ['cdn.tailwindcss.com', 'unpkg.com', 'www.gstatic.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
@@ -21,8 +22,13 @@ self.addEventListener('install', (e) => {
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== SHELL && k !== LIBS).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim())
+      .then((keys) => {
+        const hadOld = keys.some((k) => k !== SHELL && k !== LIBS && k.indexOf('shell-') === 0);
+        return Promise.all(keys.filter((k) => k !== SHELL && k !== LIBS).map((k) => caches.delete(k)))
+          .then(() => self.clients.claim())
+          // Mise à jour d'une version déjà installée : on prévient la page pour qu'elle se recharge
+          .then(() => (hadOld ? notifyClients() : null));
+      })
   );
 });
 
