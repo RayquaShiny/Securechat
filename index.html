@@ -824,7 +824,8 @@
       "⚡ Les éclairs illuminent aussi l'interface\n" +
       "📡 Détecteur de mouvement avec radar et signaux\n" +
       "💧 Ondes d'eau quand tu touches l'écran, comme le verre qui tremble\n" +
-      "📳 Vibration du téléphone à chaque rugissement (Android)";
+      "📳 Vibration du téléphone à chaque rugissement (Android)\n" +
+      "🤖 Le compte E devient E bot, un assistant IA : écris-lui en message privé ou mentionne @E bot dans un salon";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
 
@@ -1975,15 +1976,18 @@
     // Un seul badge par personne : Owner/Admin d'abord, sinon rôle personnalisé, sinon rôle de base
     function roleBadgeFor(u, size) {
       if (!u) return '';
+      if (u.isBot) return botBadgeHtml(size);
       if (isStaffRole(u.role)) return builtinBadgeHtml(u.role, size);
       return customBadgeHtml(u, size) || builtinBadgeHtml(u.role, size);
     }
     function msgBadgeHtml(u) {
       if (!u) return '';
+      if (u.isBot) return botBadgeHtml();
       return (isStaffRole(u.role) || (u.customRole && rolesData[u.customRole])) ? roleBadgeFor(u) : '';
     }
     function roleLabel(u) {
       if (!u) return '';
+      if (u.isBot) return 'Bot';
       if (isStaffRole(u.role)) return u.role;
       const r = u.customRole && rolesData[u.customRole];
       return r ? r.name : u.role;
@@ -2098,8 +2102,12 @@
       if (currentUser) { alert("Accès refusé ou compte supprimé."); logout(); }
     }
 
+    // v5.1.0 : le compte « ee » est E bot, l'assistant IA
+    const BOT_KEY = 'ee', BOT_NAME = 'E bot';
+    function applyBot(a) { if (a && a[BOT_KEY]) { a[BOT_KEY].name = BOT_NAME; a[BOT_KEY].isBot = true; } return a; }
+    function botBadgeHtml(size) { return `<span class="${size || 'text-[9px]'} px-1.5 py-0.5 rounded text-cyan-300 font-bold bg-cyan-500/10 border border-cyan-500/30 truncate">🤖 BOT</span>`; }
     function onAccounts(snapshot) {
-      accounts = snapshot.val() || {};
+      accounts = applyBot(snapshot.val() || {});
       saveAccountsCache(accounts);
       if (currentUser) {
         if (!accounts[meKey]) { alert("Ton compte a été supprimé."); logout(); return; }
@@ -2121,6 +2129,7 @@
       const msgs = snapshot.val() || {};
       const seq = ++msgSeq;
       const list = Object.entries(msgs).map(([k, v]) => ({ ...v, _key: k }));
+      list.forEach(x => { if (x.senderKey === BOT_KEY) x.sender = BOT_NAME; });
       await Promise.all(list.map(decryptMessage));
       if (seq !== msgSeq) return;
       messagesList = list;
@@ -2768,7 +2777,8 @@ html body.theme-jurassic:has(#replyBar:not([style*="none"])) #jpRadar{opacity:0}
    "Jurassic Park : alerte « brèche dans l'enclos » synchronisée avec le rugissement",
    "Jurassic Park : lumières d'urgence rouges, en-tête clignotant et éclairs sur toute l'interface",
    "Jurassic Park : détecteur de mouvement avec radar",
-   "Jurassic Park : ondes d'eau au toucher et vibration au rugissement"
+   "Jurassic Park : ondes d'eau au toucher et vibration au rugissement",
+   "Le compte E devient E bot, un assistant IA, avec un badge BOT"
   ]
  },
  {
