@@ -825,7 +825,7 @@
       "📡 Détecteur de mouvement avec radar et signaux\n" +
       "💧 Ondes d'eau quand tu touches l'écran, comme le verre qui tremble\n" +
       "📳 Vibration du téléphone à chaque rugissement (Android)\n" +
-      "🤖 Le compte E devient E bot, un assistant IA : écris-lui en message privé ou mentionne @E bot dans un salon";
+      "🤖 Voici E bot, un assistant IA : écris-lui en message privé ou mentionne @E bot dans un salon";
     const CHANNELS = ['annonce-update', 'general', 'self'];
     const CMD_HINT = '/clean | /ban [user] | /mute [user] [sec] | /toall [msg] | /admin | /help';
 
@@ -2102,8 +2102,8 @@
       if (currentUser) { alert("Accès refusé ou compte supprimé."); logout(); }
     }
 
-    // v5.1.0 : le compte « ee » est E bot, l'assistant IA
-    const BOT_KEY = 'ee', BOT_NAME = 'E bot';
+    // v5.1.0 : le compte « ebot » est E bot, l'assistant IA
+    const BOT_KEY = 'ebot', BOT_NAME = 'E bot';
     function applyBot(a) { if (a && a[BOT_KEY]) { a[BOT_KEY].name = BOT_NAME; a[BOT_KEY].isBot = true; } return a; }
     function botBadgeHtml(size) { return `<span class="${size || 'text-[9px]'} px-1.5 py-0.5 rounded text-cyan-300 font-bold bg-cyan-500/10 border border-cyan-500/30 truncate">🤖 BOT</span>`; }
     function onAccounts(snapshot) {
@@ -2778,7 +2778,7 @@ html body.theme-jurassic:has(#replyBar:not([style*="none"])) #jpRadar{opacity:0}
    "Jurassic Park : lumières d'urgence rouges, en-tête clignotant et éclairs sur toute l'interface",
    "Jurassic Park : détecteur de mouvement avec radar",
    "Jurassic Park : ondes d'eau au toucher et vibration au rugissement",
-   "Le compte E devient E bot, un assistant IA, avec un badge BOT"
+   "Nouveau compte E bot, un assistant IA, avec un badge BOT"
   ]
  },
  {
